@@ -1,18 +1,27 @@
-// src/App.js
+// src/App.jsx
 import React from 'react';
-import './App.css';
-import Navbar from './components/Navbar';
+import {BrowserRouter as Router, Routes, Route, Link, Navigate} from 'react-router-dom';
+import Login from './components/Auth/Login';
+import Register from './components/Auth/Register';
+import Dashboard from './components/Dashboard';
+import ProtectedRoute from './components/Auth/ProtectedRoute';
 
 function App() {
     return (
-        <div className="App">
-            <Navbar />
-            <header className="App-header">
-                <p>
-                    Questa è la home page
-                </p>
-            </header>
-        </div>
+        <Router>
+            <div>
+                <nav>
+                    <Link to="/login">Login</Link>
+                    <Link to="/register">Register</Link>
+                </nav>
+                <Routes>
+                    <Route path="/login" element={<Login />} />
+                    <Route path="/register" element={<Register />} />
+                    <Route path="/dashboard" element={<ProtectedRoute><Dashboard /></ProtectedRoute>} />
+                    <Route path="*" element={<Navigate to="/login" replace />} />
+                </Routes>
+            </div>
+        </Router>
     );
 }
 

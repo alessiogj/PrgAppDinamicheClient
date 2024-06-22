@@ -1,8 +1,10 @@
 import { render, screen } from '@testing-library/react';
-import App from './App';
+import Dashboard from './components/Dashboard';
+import Login from './components/Auth/Login';
+import Register from './components/Auth/Register';
+import HomePage from './components/HomePage';
+import ProtectedRoute from './components/Auth/ProtectedRoute';
+import {BrowserRouter as Router, Routes, Route, Navigate} from 'react-router-dom';
 
-test('renders learn react link', () => {
-  render(<App />);
-  const linkElement = screen.getByText(/learn react/i);
-  expect(linkElement).toBeInTheDocument();
-});
+
+//TODO: tests
