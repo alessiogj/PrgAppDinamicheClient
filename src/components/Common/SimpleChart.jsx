@@ -1,9 +1,8 @@
-// src/components/Common/SimpleChart.jsx
 import React from 'react';
 import PropTypes from 'prop-types';
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
 
-function SimpleChart({ data }) {
+const SimpleChart = ({ data }) => {
     return (
         <ResponsiveContainer width="100%" height={400}>
             <LineChart data={data}>
@@ -17,7 +16,7 @@ function SimpleChart({ data }) {
             </LineChart>
         </ResponsiveContainer>
     );
-}
+};
 
 SimpleChart.propTypes = {
     data: PropTypes.arrayOf(

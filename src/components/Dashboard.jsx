@@ -1,6 +1,5 @@
-// src/components/Dashboard.jsx
 import React from 'react';
-import '../styles/App.css';
+import '../styles/Dashboard.css';
 import Navbar from './Common/Navbar';
 import TableWithSearch from './Common/TableWithSearch';
 import SimpleChart from './Common/SimpleChart';
@@ -13,6 +12,36 @@ const chartData = [
     { name: 'May', uv: 189, pv: 4800, amt: 2181 },
     { name: 'Jun', uv: 239, pv: 3800, amt: 2500 },
     { name: 'Jul', uv: 349, pv: 4300, amt: 2100 },
+];
+
+const tableData = [
+    {
+        ORD_NUM: 100001,
+        ORD_AMOUNT: 5000.00,
+        ADVANCE_AMOUNT: 1000.00,
+        ORD_DATE: '2024-06-01',
+        CUST_CODE: 'C0001',
+        AGENT_CODE: 'A0001',
+        ORD_DESCRIPTION: 'Order description 1'
+    },
+    {
+        ORD_NUM: 100002,
+        ORD_AMOUNT: 3000.00,
+        ADVANCE_AMOUNT: 500.00,
+        ORD_DATE: '2024-06-15',
+        CUST_CODE: 'C0002',
+        AGENT_CODE: 'A0002',
+        ORD_DESCRIPTION: 'Order description 2'
+    },
+    {
+        ORD_NUM: 100003,
+        ORD_AMOUNT: 7000.00,
+        ADVANCE_AMOUNT: 1500.00,
+        ORD_DATE: '2024-06-20',
+        CUST_CODE: 'C0001',
+        AGENT_CODE: 'A0001',
+        ORD_DESCRIPTION: 'Order description 3'
+    }
 ];
 
 function Dashboard() {
@@ -40,7 +69,7 @@ function Dashboard() {
                     </div>
                     <div className="widget">
                         <h2>Manage Orders</h2>
-                        <TableWithSearch /> {/* Table component with search functionality */}
+                        <TableWithSearch initialData={tableData} /> {/* Pass initial data to the table */}
                     </div>
                 </div>
             </header>

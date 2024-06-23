@@ -1,7 +1,7 @@
-// src/components/Auth/Login.jsx
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import '../../styles/Global.css';
+import BackgroundCanvas from "../Common/BackgroundCanvas";
 
 const endpoint = 'http://localhost:5000/TODO';
 
@@ -52,33 +52,31 @@ const Login = () => {
         }
     };
 
-    const switchToRegisterPage = () => {
-        navigate('/register');
-    };
-
     return (
-        <div className="wrapper">
-            <div className="title">
-                Login
+        <div className="container">
+            <BackgroundCanvas />
+            <div className="wrapper">
+                <div className="title">
+                    Login
+                </div>
+                <form className="form" onSubmit={handleSubmit}>
+                    <div className="input_field">
+                        <input type="text" placeholder="Username" value={username} onChange={e => setUsername(e.target.value)} className="input"/>
+                        <i className="fas fa-user"></i>
+                    </div>
+                    <div className="input_field">
+                        <input type="password" placeholder="Password" value={password} onChange={e => setPassword(e.target.value)} className="input"/>
+                        <i className="fas fa-lock"></i>
+                    </div>
+                    {errorMessage && <div className="error-message">{errorMessage}</div>}
+                    <div className="btn" onClick={handleSubmit}>
+                        Submit
+                    </div>
+                    <div className="btn" onClick={() => navigate('/register')}>
+                        Register
+                    </div>
+                </form>
             </div>
-
-            <form className="form" onSubmit={handleSubmit}>
-                <div className="input_field">
-                    <input type="text" placeholder="Username" value={username} onChange={e => setUsername(e.target.value)} className="input"/>
-                    <i className="fas fa-user"></i>
-                </div>
-                <div className="input_field">
-                    <input type="password" placeholder="Password" value={password} onChange={e => setPassword(e.target.value)} className="input"/>
-                    <i className="fas fa-lock"></i>
-                </div>
-                {errorMessage && <div className="error-message">{errorMessage}</div>}
-                <div className="btn" onClick={handleSubmit}>
-                    Submit
-                </div>
-                <div className="btn" onClick={switchToRegisterPage}>
-                    Register
-                </div>
-            </form>
         </div>
     );
 };

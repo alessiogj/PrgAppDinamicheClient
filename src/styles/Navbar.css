@@ -1,56 +1,56 @@
-/* src/styles/Navbar.css */
+@import url('https://fonts.googleapis.com/css?family=Josefin+Sans');
+
 #navbar {
+    position: fixed;
+    top: 0;
+    left: 0;
     width: 100%;
     background-color: #007bff;
-    color: #ffffff;
-    box-shadow: 0 4px 6px rgba(0,0,0,0.2);
+    color: #fff;
+    display: flex;
+    justify-content: center;
+    align-items: center;
     padding: 10px 0;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    z-index: 100;
 }
 
 .navbar-items {
     list-style: none;
     display: flex;
-    justify-content: space-around;
+    justify-content: center;
     align-items: center;
-    padding: 0;
     margin: 0;
+    padding: 0;
 }
 
 .navbar-item {
-    cursor: pointer;
+    margin: 0 15px;
 }
 
 .navbar-item-inner {
     display: flex;
     align-items: center;
     text-decoration: none;
-    color: inherit;
-    padding: 10px 20px;
+    color: #fff;
+    font-family: 'Josefin Sans', sans-serif;
+    transition: color 0.3s ease;
 }
 
 .navbar-item-inner-icon-wrapper {
-    display: flex;
-    align-items: center;
-    margin-right: 10px;
+    margin-right: 8px;
+    font-size: 24px;
 }
 
 .link-text {
-    font-size: 1rem;
+    font-size: 18px;
     font-weight: bold;
-    display: block;
 }
 
-.navbar-item-inner:hover, .navbar-item-inner:focus {
-    background-color: #0056b3;
-    border-radius: 10px;
-    transition: background-color 0.3s ease-in-out;
+.navbar-item-inner:hover .link-text, .navbar-item-inner:focus .link-text {
+    color: #ffd700; /* Color on hover and focus */
 }
 
-@media (max-width: 768px) {
-    .navbar-items {
-        flex-direction: column;
-    }
-    .navbar-item-inner {
-        padding: 10px;
-    }
+.navbar-item-inner:hover .navbar-item-inner-icon-wrapper, .navbar-item-inner:focus .navbar-item-inner-icon-wrapper {
+    color: #ffd700; /* Icon color on hover and focus */
 }

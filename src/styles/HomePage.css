@@ -1,26 +1,37 @@
-/* src/styles/HomePage.css */
 @import url('https://fonts.googleapis.com/css?family=Josefin+Sans');
+
+body, html {
+    margin: 0;
+    padding: 0;
+    height: 100%;
+    overflow: auto; /* Allow scrolling */
+}
 
 .home-container {
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    height: 100vh;
+    min-height: 100vh;
     background: linear-gradient(to bottom, #007bff, #0056b3);
     color: #fff;
     font-family: 'Josefin Sans', sans-serif;
+    position: relative;
+    overflow: auto; /* Allow scrolling */
+    z-index: 1; /* Ensure it is above the canvas */
 }
 
 .home-title {
     margin-bottom: 30px;
     font-size: 3rem;
     text-shadow: 2px 2px 4px rgba(0,0,0,0.2);
+    z-index: 1;
 }
 
 .links-container {
     display: flex;
     gap: 25px;
+    z-index: 1;
 }
 
 .home-link {
