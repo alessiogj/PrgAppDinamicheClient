@@ -1,36 +1,42 @@
-/* src/components/HomePage.css */
+/* src/styles/HomePage.css */
+@import url('https://fonts.googleapis.com/css?family=Josefin+Sans');
+
 .home-container {
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
     height: 100vh;
-    background-color: #f0f0f0;
-    color: #333;
-    font-family: 'Arial', sans-serif;
+    background: linear-gradient(to bottom, #007bff, #0056b3);
+    color: #fff;
+    font-family: 'Josefin Sans', sans-serif;
 }
 
 .home-title {
-    margin-bottom: 20px;
-    font-size: 2.5rem;
-    color: #222;
+    margin-bottom: 30px;
+    font-size: 3rem;
+    text-shadow: 2px 2px 4px rgba(0,0,0,0.2);
 }
 
 .links-container {
     display: flex;
-    gap: 20px;
+    gap: 25px;
 }
 
 .home-link {
-    background-color: #007bff;
-    color: white;
-    padding: 10px 20px;
-    border-radius: 5px;
+    background-color: #ffffff;
+    color: #007bff;
+    padding: 12px 25px;
+    border-radius: 20px;
     text-decoration: none;
-    transition: background-color 0.3s ease-in-out, transform 0.2s ease;
+    font-weight: bold;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+    transition: all 0.3s ease-in-out;
 }
 
 .home-link:hover, .home-link:focus {
     background-color: #0056b3;
-    transform: translateY(-2px);
+    color: #fff;
+    transform: translateY(-3px);
+    box-shadow: 0 5px 10px rgba(0,0,0,0.3);
 }

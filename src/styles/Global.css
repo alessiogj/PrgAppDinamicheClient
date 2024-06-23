@@ -1,6 +1,7 @@
+/* src/styles/Global.css */
 @import url('https://fonts.googleapis.com/css?family=Josefin+Sans');
 
-*{
+* {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
@@ -9,95 +10,98 @@
     font-family: 'Josefin Sans', sans-serif;
 }
 
-body{
-    background: #3aaf9f;
+body {
+    background: linear-gradient(to right, #007bff, #0056b3);
 }
 
-.wrapper{
+.wrapper {
     max-width: 350px;
-    width: 100%;
-    height: auto;
+    width: 90%;
+    padding: 30px;
     background: #fff;
-    padding: 60px 45px;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+    border-radius: 10px;
     position: absolute;
     top: 50%;
     left: 50%;
-    transform: translate(-50%,-50%);
-    border-radius: 20px;
+    transform: translate(-50%, -50%);
 }
 
-.wrapper .title{
+.wrapper .title {
     margin-bottom: 20px;
     text-align: center;
     font-size: 26px;
     font-weight: bold;
-    color: #3aaf9f;
+    color: #007bff;
 }
 
-.wrapper .social_media{
+.wrapper .social_media {
     display: flex;
     justify-content: center;
     margin-bottom: 20px;
 }
 
-.wrapper .social_media .item{
-    margin: 0 5px;
-    width: 35px;
-    height: 35px;
-    line-height: 35px;
+.wrapper .social_media .item {
+    margin: 0 10px;
+    width: 40px;
+    height: 40px;
+    line-height: 40px;
     text-align: center;
     border: 2px solid #eeeeee;
     border-radius: 50%;
     cursor: pointer;
     color: #eeeeee;
-    transition: all 0.5s ease;
+    transition: all 0.3s ease;
 }
 
-.wrapper .social_media .item:hover{
-    border: 2px solid #3aaf9f;
-    color: #3aaf9f;
+.wrapper .social_media .item:hover {
+    background: #007bff;
+    color: #ffffff;
 }
 
-.wrapper .form .input_field{
+.wrapper .form .input_field {
     position: relative;
-    margin-bottom: 10px;
+    margin-bottom: 20px;
 }
 
-.wrapper .form .input_field .input{
+.wrapper .form .input_field .input {
     width: 100%;
-    padding: 12px;
-    padding-left: 30px;
-    border: none;
-    background: #eeeeee;
+    padding: 12px 30px 12px 40px;
+    border: 1px solid #cccccc;
+    background: #f9f9f9;
+    border-radius: 20px;
 }
 
-.wrapper .form .btn{
-    width: 70%;
+.wrapper .form .btn {
+    width: 80%;
     margin: 20px auto 0;
-    background: #3aaf9f;
+    background: #007bff;
+    color: #fff;
     text-align: center;
     padding: 12px;
     border-radius: 25px;
+    cursor: pointer;
+    transition: background 0.3s ease;
 }
 
-.wrapper .form .btn a{
-    color: #fff;
+.wrapper .form .btn:hover {
+    background: #0056b3;
 }
 
-.wrapper .form .input_field i{
+.wrapper .form .input_field i {
     position: absolute;
-    top: 10px;
-    left: 10px;
+    top: 15px;
+    left: 15px;
     font-size: 14px;
-    color: #1d2120;
+    color: #007bff;
 }
 
-::-webkit-input-placeholder { /* Chrome/Opera/Safari */
-    color: #1d2120;
+::placeholder { /* Chrome/Opera/Safari */
+    color: #666;
 }
 ::-moz-placeholder { /* Firefox 19+ */
-    color: #1d2120;
+    color: #666;
 }
 :-ms-input-placeholder { /* IE 10+ */
-    color: #1d2120;
+    color: #666;
 }
