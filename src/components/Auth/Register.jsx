@@ -1,42 +1,73 @@
-// src/auth/Register.jsx
+// src/components/Auth/Register.jsx
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import '../../styles/Global.css';
 
-const Register = ({ switchToLogin }) => {
+const Register = () => {
     const navigate = useNavigate();
     const [username, setUsername] = useState('');
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
+    const [errorMessage, setErrorMessage] = useState('');
 
     const handleSubmit = (event) => {
-        // TODO: logica di registrazione
         event.preventDefault();
         console.log("Register attempt with:", username, email, password);
-        navigate('/login');
+
+        if (username && email && password) {
+            navigate('/login');
+        } else {
+            setErrorMessage('Please fill all fields.');
+        }
     };
 
-    const switchToLoginPage = () => {
-        navigate('/login');
+    // Placeholder function for Google registration
+    const handleGoogleRegister = () => {
+        console.log("Register with Google");
+    };
+
+    // Placeholder function for Apple registration
+    const handleAppleRegister = () => {
+        console.log("Register with Apple");
     };
 
     return (
-        <div>
-            <form onSubmit={handleSubmit}>
-                <label>
-                    Username:
-                    <input type="text" value={username} onChange={e => setUsername(e.target.value)} />
-                </label>
-                <label>
-                    Email:
-                    <input type="email" value={email} onChange={e => setEmail(e.target.value)} />
-                </label>
-                <label>
-                    Password:
-                    <input type="password" value={password} onChange={e => setPassword(e.target.value)} />
-                </label>
-                <button type="submit">Register</button>
+        <div className="wrapper">
+            <div className="title">
+                Register Here
+            </div>
+            <div className="social_media">
+                <div className="item" onClick={handleGoogleRegister}>
+                    <i className="fab fa-google"></i> {/* Google icon */}
+                </div>
+                <div className="item" onClick={handleAppleRegister}>
+                    <i className="fab fa-apple"></i> {/* Apple icon */}
+                </div>
+            </div>
+            <form className="form" onSubmit={handleSubmit}>
+                <div className="input_field">
+                    <input type="text" placeholder="Username" className="input" value={username}
+                           onChange={e => setUsername(e.target.value)}/>
+                    <i className="fas fa-user"></i>
+                </div>
+                <div className="input_field">
+                    <input type="email" placeholder="Email" className="input" value={email}
+                           onChange={e => setEmail(e.target.value)}/>
+                    <i className="far fa-envelope"></i>
+                </div>
+                <div className="input_field">
+                    <input type="password" placeholder="Password" className="input" value={password}
+                           onChange={e => setPassword(e.target.value)}/>
+                    <i className="fas fa-lock"></i>
+                </div>
+                {errorMessage && <div className="error-message">{errorMessage}</div>}
+                <div className="btn" onClick={handleSubmit}>
+                    Register
+                </div>
+                <div className="btn" onClick={() => navigate('/login')}>
+                    Login
+                </div>
             </form>
-            <button onClick={switchToLoginPage}>Switch to Login</button>
         </div>
     );
 };
