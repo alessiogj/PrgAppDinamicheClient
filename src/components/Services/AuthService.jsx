@@ -1,7 +1,7 @@
 // /src/services/authService.js
 import bcrypt from 'bcryptjs';
 
-const endpoint = 'https://TODO';
+const endpoint = 'https://localhost:3000';
 
 export const getSalt = async (username) => {
     const response = await fetch(`${endpoint}/getsalt`, {
