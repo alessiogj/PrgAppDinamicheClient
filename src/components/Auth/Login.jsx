@@ -1,10 +1,8 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import '../../styles/Global.css';
-import bcrypt from 'bcryptjs'
+import { getSalt, login } from '../../api/AuthService';
 import BackgroundCanvas from "../Common/BackgroundCanvas";
-
-const endpoint = 'http://localhost:5000/TODO';
 
 const Login = () => {
     const navigate = useNavigate();
@@ -21,43 +19,14 @@ const Login = () => {
         }
 
         try {
-            // Step 1: Get salt from server
-            const saltResponse = await fetch(`${endpoint}/getsalt`, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ username })
-            });
-            const saltData = await saltResponse.json();
-            const salt = saltData.salt;
+            const salt = await getSalt(username);
+            const data = await login(username, password, salt);
 
-            if (!salt) {
-                throw new Error('Unable to retrieve salt.');
-            }
-
-            // Step 2: Hash the password with the received salt
-            const hashedPassword = bcrypt.hashSync(password, salt);
-
-            // Step 3: Send the hashed password and username to the server
-            const requestOptions = {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ username, password: hashedPassword })
-            };
-
-            const response = await fetch(`${endpoint}/login`, requestOptions);
-            const data = await response.json();
-
-            if (response.status === 200) {
-                // Save the token in local storage
-                localStorage.setItem('token', data.token);
-                navigate('/dashboard');
-            } else {
-                throw new Error(data.message || "Invalid username or password.");
-            }
+            localStorage.setItem('token', data.token);
+            navigate('/dashboard');
         } catch (error) {
             console.error('Login error:', error);
             setErrorMessage(error.message);
-            // Remove the token from local storage
             localStorage.removeItem('token');
         }
     };
