@@ -10,12 +10,22 @@ const Register = () => {
     const [password, setPassword] = useState('');
     const [errorMessage, setErrorMessage] = useState('');
 
+    const validateEmail = (email) => {
+        const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        return re.test(email);
+    };
+
     const handleSubmit = (event) => {
         event.preventDefault();
         console.log("Register attempt with:", username, email, password);
 
         if (username && email && password) {
-            navigate('/login');
+            if (validateEmail(email)) {
+                navigate('/login');
+            }
+            else {
+                setErrorMessage('Please insert a valid email address.')
+            }
         } else {
             setErrorMessage('Please fill all fields.');
         }
