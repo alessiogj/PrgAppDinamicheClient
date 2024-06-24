@@ -1,38 +1,48 @@
-// /src/services/authService.js
 import bcrypt from 'bcryptjs';
 
-const endpoint = 'https://localhost:3000';
+const endpoint = 'http://localhost:3100/users';
 
 export const getSalt = async (username) => {
-    const response = await fetch(`${endpoint}/getsalt`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ username })
-    });
+    try {
+        const response = await fetch(`${endpoint}/salt`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ username })
+        });
 
-    if (!response.ok) {
-        throw new Error('Unable to retrieve salt.');
+        if (!response.ok) {
+            const errorData = await response.json();
+            throw new Error(errorData.message || 'Failed to fetch.');
+        }
+
+        const data = await response.json();
+        return data.salt;
+    } catch (error) {
+        console.error(error);
+        throw error;
     }
-
-    const data = await response.json();
-    return data.salt;
 };
 
 export const login = async (username, password, salt) => {
-    const hashedPassword = bcrypt.hashSync(password, salt);
+    try {
+        const hashedPassword = bcrypt.hashSync(password, salt);
 
-    const requestOptions = {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ username, password: hashedPassword })
-    };
+        const requestOptions = {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ username, password: hashedPassword })
+        };
 
-    const response = await fetch(`${endpoint}/login`, requestOptions);
+        const response = await fetch(`${endpoint}/login`, requestOptions);
 
-    if (!response.ok) {
-        const data = await response.json();
-        throw new Error(data.message || 'Invalid username or password.');
+        if (!response.ok) {
+            const data = await response.json();
+            throw new Error(data.message || 'Invalid username or password.');
+        }
+
+        return response.json();
+    } catch (error) {
+        console.error('Error during login:', error);
+        throw error;
     }
-
-    return response.json();
 };
