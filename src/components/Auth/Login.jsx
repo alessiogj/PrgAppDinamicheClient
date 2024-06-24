@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import '../../styles/Global.css';
+import bcrypt from 'bcryptjs'
 import BackgroundCanvas from "../Common/BackgroundCanvas";
 
 const endpoint = 'http://localhost:5000/TODO';
@@ -13,28 +14,37 @@ const Login = () => {
 
     const handleSubmit = async (event) => {
         event.preventDefault();
-        console.log("Login attempt with:", username, password);
 
         if (!username || !password) {
             setErrorMessage('Please fill all fields.');
             return;
         }
 
-        // TODO: Backdoor for root user (remove this in production)
-        if (username === 'root' && password === 'root') {
-            localStorage.setItem('token', 'root');
-            navigate('/dashboard');
-            return;
-        }
-
-        const requestOptions = {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ username: username, password: password })
-        };
-
         try {
-            const response = await fetch(endpoint, requestOptions);
+            // Step 1: Get salt from server
+            const saltResponse = await fetch(`${endpoint}/getsalt`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ username })
+            });
+            const saltData = await saltResponse.json();
+            const salt = saltData.salt;
+
+            if (!salt) {
+                throw new Error('Unable to retrieve salt.');
+            }
+
+            // Step 2: Hash the password with the received salt
+            const hashedPassword = bcrypt.hashSync(password, salt);
+
+            // Step 3: Send the hashed password and username to the server
+            const requestOptions = {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ username, password: hashedPassword })
+            };
+
+            const response = await fetch(`${endpoint}/login`, requestOptions);
             const data = await response.json();
 
             if (response.status === 200) {
