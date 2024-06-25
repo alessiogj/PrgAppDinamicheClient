@@ -1,7 +1,7 @@
-import React, {useState} from 'react';
-import {useNavigate} from 'react-router-dom';
+import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import '../../styles/Global.css';
-import {getSalt, login} from '../Services/AuthService';
+import { login } from '../Services/AuthService';
 import BackgroundCanvas from "../Common/BackgroundCanvas";
 
 const Login = () => {
@@ -19,8 +19,7 @@ const Login = () => {
         }
 
         try {
-            const salt = await getSalt(username);
-            const data = await login(username, password, salt);
+            const data = await login(username, password);
             localStorage.setItem('token', data.token);
             navigate('/dashboard');
         } catch (error) {
@@ -32,7 +31,7 @@ const Login = () => {
 
     return (
         <div className="container">
-            <BackgroundCanvas/>
+            <BackgroundCanvas />
             <div className="wrapper">
                 <div className="title">
                     Login

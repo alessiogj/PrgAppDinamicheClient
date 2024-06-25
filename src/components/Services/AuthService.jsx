@@ -2,7 +2,7 @@ import bcrypt from 'bcryptjs';
 
 const endpoint = 'http://localhost:3100/users';
 
-export const getSalt = async (username) => {
+export const login = async (username, password) => {
     try {
         const response = await fetch(`${endpoint}/salt`, {
             method: 'POST',
@@ -12,19 +12,10 @@ export const getSalt = async (username) => {
 
         if (!response.ok) {
             const errorData = await response.json();
-            throw new Error(errorData.message || 'Failed to fetch.');
+            throw new Error(errorData.message || 'Invalid username or password.');
         }
 
-        const data = await response.json();
-        return data.salt;
-    } catch (error) {
-        console.error(error);
-        throw error;
-    }
-};
-
-export const login = async (username, password, salt) => {
-    try {
+        const { salt } = await response.json();
         const hashedPassword = bcrypt.hashSync(password, salt);
 
         const requestOptions = {
@@ -33,14 +24,14 @@ export const login = async (username, password, salt) => {
             body: JSON.stringify({ username, password: hashedPassword })
         };
 
-        const response = await fetch(`${endpoint}/login`, requestOptions);
+        const loginResponse = await fetch(`${endpoint}/login`, requestOptions);
 
-        if (!response.ok) {
-            const data = await response.json();
+        if (!loginResponse.ok) {
+            const data = await loginResponse.json();
             throw new Error(data.message || 'Invalid username or password.');
         }
 
-        return response.json();
+        return await loginResponse.json();
     } catch (error) {
         console.error('Error during login:', error);
         throw error;
