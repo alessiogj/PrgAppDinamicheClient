@@ -35,6 +35,8 @@
     color: #fff;
     font-family: 'Josefin Sans', sans-serif;
     transition: color 0.3s ease;
+    background-color: transparent; /* Sfondo trasparente */
+    border: none; /* Rimuove il bordo */
 }
 
 .navbar-item-inner-icon-wrapper {
@@ -47,10 +49,23 @@
     font-weight: bold;
 }
 
-.navbar-item-inner:hover .link-text, .navbar-item-inner:focus .link-text {
+.navbar-item-inner:hover .link-text,
+.navbar-item-inner:focus .link-text {
     color: #ffd700; /* Color on hover and focus */
 }
 
-.navbar-item-inner:hover .navbar-item-inner-icon-wrapper, .navbar-item-inner:focus .navbar-item-inner-icon-wrapper {
+.navbar-item-inner:hover .navbar-item-inner-icon-wrapper,
+.navbar-item-inner:focus .navbar-item-inner-icon-wrapper {
     color: #ffd700; /* Icon color on hover and focus */
+}
+
+/* Specific styles for the logout item */
+.logout-item .navbar-item-inner {
+    font-weight: bold;
+    border: 1px solid transparent; /* Trasparente per default */
+}
+
+.logout-item .navbar-item-inner:hover {
+    color: #ffd700; /* Color on hover */
+    border-color: transparent; /* Rimuove il colore del bordo al passaggio del mouse */
 }
