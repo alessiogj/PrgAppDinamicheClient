@@ -15,10 +15,9 @@ function Dashboard() {
         const fetchData = async () => {
             try {
                 const data = await getOrders(token);
-                console.log("Fetched data:", data);  // Log fetched data
-                // Check the structure of the data
+                console.log("Fetched data:", data);
                 if (data && Array.isArray(data.orders)) {
-                    setTableData(data.orders);  // Ensure correct data structure
+                    setTableData(data.orders);
                 } else {
                     console.error("Unexpected data structure:", data);
                     setError('Data structure error');
@@ -62,7 +61,7 @@ function Dashboard() {
                     <div className="widget">
                         <h2>Manage Orders</h2>
                         {Array.isArray(tableData) && tableData.length > 0 ? (
-                            <TableWithSearch initialData={tableData} />
+                            <TableWithSearch initialData={tableData} type="agent" />
                         ) : (
                             <p>No data available</p>
                         )}

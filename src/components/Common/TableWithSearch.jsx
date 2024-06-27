@@ -2,40 +2,40 @@ import React, { useState, useMemo, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import '../../styles/TableWithSearch.css';
 
-function TableWithSearch({ initialData }) {
+function TableWithSearch({ initialData, type }) {
     const [search, setSearch] = useState('');
     const [visibleColumns, setVisibleColumns] = useState({});
     const [sortConfig, setSortConfig] = useState({ key: null, direction: 'ascending' });
-    const [selectedCustomer, setSelectedCustomer] = useState(null);
-    const [agentDetails, setAgentDetails] = useState({});
+    const [selectedDetails, setSelectedDetails] = useState(null);
 
     useEffect(() => {
-        if (initialData.length > 0) {
+        const convertDataTypes = (data) => {
+            return data.map(item => ({
+                ...item,
+                ord_num: Number(item.ord_num),
+                ord_amount: Number(item.ord_amount),
+                advance_amount: Number(item.advance_amount),
+                commission: item.commission ? Number(item.commission) : undefined
+            }));
+        };
+
+        const processedData = convertDataTypes(initialData);
+
+        if (processedData.length > 0) {
             const dynamicColumns = {};
-            initialData.forEach(item => {
+            processedData.forEach(item => {
                 Object.keys(item).forEach(key => {
-                    if (key.match(/ord_num|ord_amount|advance_amount|ord_date|cust_code|agent_code|ord_description/)) {
+                    if (
+                        (type === 'agent' && key.match(/ord_num|ord_amount|advance_amount|ord_date|cust_code|ord_description/)) ||
+                        (type === 'customer' && key.match(/ord_num|ord_description|advance_amount|agent_code|commission/))
+                    ) {
                         dynamicColumns[key] = true;
                     }
                 });
             });
             setVisibleColumns(dynamicColumns);
-
-            const agents = {};
-            initialData.forEach(item => {
-                if (item.agent_code) {
-                    agents[item.agent_code.trim()] = {
-                        name: item.cust_name || 'Unknown',
-                        phone: item.phone_no || 'N/A',
-                        email: item.cust_name ? `${item.cust_name.toLowerCase().replace(' ', '.')}@example.com` : 'N/A',
-                        custCode: item.cust_code,
-                        custDescription: item.ord_description
-                    };
-                }
-            });
-            setAgentDetails(agents);
         }
-    }, [initialData]);
+    }, [initialData, type]);
 
     const handleVisibleColumnsChange = (field) => {
         setVisibleColumns({
@@ -88,6 +88,29 @@ function TableWithSearch({ initialData }) {
         });
     }, [search, visibleColumns, sortedData]);
 
+    const handleRowClick = (item) => {
+        if (type === 'customer') {
+            setSelectedDetails({
+                type: 'order',
+                ord_num: item.ord_num,
+                ord_amount: item.ord_amount,
+                advance_amount: item.advance_amount,
+                ord_date: new Date(item.ord_date).toLocaleDateString(),
+                cust_code: item.cust_code,
+                ord_description: item.ord_description,
+            });
+        } else if (type === 'agent') {
+            setSelectedDetails({
+                type: 'customer',
+                cust_code: item.cust_code,
+                name: item.cust_name || 'Unknown',
+                phone: item.phone_no || 'N/A',
+                email: item.cust_name ? `${item.cust_name.toLowerCase().replace(' ', '.')}@example.com` : 'N/A',
+                working_area: item.working_area || 'N/A',
+            });
+        }
+    };
+
     return (
         <div className="table-container">
             <div className="controls">
@@ -127,37 +150,68 @@ function TableWithSearch({ initialData }) {
                     {visibleColumns.cust_code && <th onClick={() => handleSort('cust_code')}>Customer Code</th>}
                     {visibleColumns.agent_code && <th onClick={() => handleSort('agent_code')}>Agent Code</th>}
                     {visibleColumns.ord_description && <th onClick={() => handleSort('ord_description')}>Description</th>}
+                    {visibleColumns.commission && <th onClick={() => handleSort('commission')}>Commission</th>}
                 </tr>
                 </thead>
                 <tbody>
                 {filteredData.map((item, index) => (
                     <tr key={item.ord_num || index}>
-                        {visibleColumns.ord_num && <td>{item.ord_num}</td>}
+                        {visibleColumns.ord_num && (
+                            <td>
+                                {type === 'customer' ? (
+                                    <a href="#!" onClick={() => handleRowClick(item)}>
+                                        {item.ord_num}
+                                    </a>
+                                ) : (
+                                    item.ord_num
+                                )}
+                            </td>
+                        )}
                         {visibleColumns.ord_amount && <td>{item.ord_amount}</td>}
                         {visibleColumns.advance_amount && <td>{item.advance_amount}</td>}
                         {visibleColumns.ord_date && <td>{new Date(item.ord_date).toLocaleDateString()}</td>}
-                        {visibleColumns.cust_code && <td>{item.cust_code}</td>}
-                        {visibleColumns.agent_code && (
+                        {visibleColumns.cust_code && (
                             <td>
-                                <a href="#!" onClick={() => setSelectedCustomer(agentDetails[item.agent_code.trim()])}>
-                                    {item.agent_code.trim()}
-                                </a>
+                                {type === 'agent' ? (
+                                    <a href="#!" onClick={() => handleRowClick(item)}>
+                                        {item.cust_code}
+                                    </a>
+                                ) : (
+                                    item.cust_code
+                                )}
                             </td>
                         )}
+                        {visibleColumns.agent_code && <td>{item.agent_code.trim()}</td>}
                         {visibleColumns.ord_description && <td>{item.ord_description}</td>}
+                        {visibleColumns.commission && <td>{item.commission}</td>}
                     </tr>
                 ))}
                 </tbody>
             </table>
-            {selectedCustomer && (
-                <div className="agent-details">
-                    <h3>Customer Details</h3>
-                    <p><strong>Name:</strong> {selectedCustomer.name}</p>
-                    <p><strong>Phone:</strong> {selectedCustomer.phone}</p>
-                    <p><strong>Email:</strong> {selectedCustomer.email}</p>
-                    <p><strong>Customer Code:</strong> {selectedCustomer.custCode}</p>
-                    <p><strong>Description:</strong> {selectedCustomer.custDescription}</p>
-                    <button onClick={() => setSelectedCustomer(null)} className="button">Close</button>
+            {selectedDetails && (
+                <div className="details">
+                    {selectedDetails.type === 'order' && (
+                        <>
+                            <h3>Order Details</h3>
+                            <p><strong>Order Number:</strong> {selectedDetails.ord_num}</p>
+                            <p><strong>Order Amount:</strong> {selectedDetails.ord_amount}</p>
+                            <p><strong>Advance Amount:</strong> {selectedDetails.advance_amount}</p>
+                            <p><strong>Order Date:</strong> {selectedDetails.ord_date}</p>
+                            <p><strong>Customer Code:</strong> {selectedDetails.cust_code}</p>
+                            <p><strong>Description:</strong> {selectedDetails.ord_description}</p>
+                        </>
+                    )}
+                    {selectedDetails.type === 'customer' && (
+                        <>
+                            <h3>Customer Details</h3>
+                            <p><strong>Customer Code:</strong> {selectedDetails.cust_code}</p>
+                            <p><strong>Name:</strong> {selectedDetails.name}</p>
+                            <p><strong>Phone:</strong> {selectedDetails.phone}</p>
+                            <p><strong>Email:</strong> {selectedDetails.email}</p>
+                            <p><strong>Working Area:</strong> {selectedDetails.working_area}</p>
+                        </>
+                    )}
+                    <button onClick={() => setSelectedDetails(null)} className="button">Close</button>
                 </div>
             )}
         </div>
@@ -175,9 +229,14 @@ TableWithSearch.propTypes = {
             agent_code: PropTypes.string,
             ord_description: PropTypes.string,
             cust_name: PropTypes.string,
-            phone_no: PropTypes.string
+            phone_no: PropTypes.string,
+            agent_name: PropTypes.string,
+            working_area: PropTypes.string,
+            commission: PropTypes.string,
+            country: PropTypes.string,
         })
     ).isRequired,
+    type: PropTypes.oneOf(['agent', 'customer']).isRequired
 };
 
 export default TableWithSearch;
