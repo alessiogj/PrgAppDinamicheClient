@@ -19,13 +19,13 @@ const Login = () => {
         }
 
         try {
-            const data = await login(username, password);
-            localStorage.setItem('token', data.token);
+            const { token } = await login(username, password);
+            localStorage.setItem('jwtToken', token);
             navigate('/dashboard');
         } catch (error) {
             console.error('Login error:', error);
             setErrorMessage(error.message || 'Failed to fetch');
-            localStorage.removeItem('token');
+            localStorage.removeItem('jwtToken');
         }
     };
 

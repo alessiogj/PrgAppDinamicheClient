@@ -1,23 +1,41 @@
-// src/components/TableWithSearch.js
-
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import '../../styles/TableWithSearch.css';
 
 function TableWithSearch({ initialData }) {
     const [search, setSearch] = useState('');
-    const [visibleColumns, setVisibleColumns] = useState({
-        ORD_NUM: true,
-        ORD_AMOUNT: true,
-        ADVANCE_AMOUNT: true,
-        ORD_DATE: true,
-        CUST_CODE: true,
-        AGENT_CODE: true,
-        ORD_DESCRIPTION: true
-    });
+    const [visibleColumns, setVisibleColumns] = useState({});
     const [sortConfig, setSortConfig] = useState({ key: null, direction: 'ascending' });
-    const [data] = useState(initialData);
-    const [selectedAgent, setSelectedAgent] = useState(null);
+    const [selectedCustomer, setSelectedCustomer] = useState(null);
+    const [agentDetails, setAgentDetails] = useState({});
+
+    useEffect(() => {
+        if (initialData.length > 0) {
+            const dynamicColumns = {};
+            initialData.forEach(item => {
+                Object.keys(item).forEach(key => {
+                    if (key.match(/ord_num|ord_amount|advance_amount|ord_date|cust_code|agent_code|ord_description/)) {
+                        dynamicColumns[key] = true;
+                    }
+                });
+            });
+            setVisibleColumns(dynamicColumns);
+
+            const agents = {};
+            initialData.forEach(item => {
+                if (item.agent_code) {
+                    agents[item.agent_code.trim()] = {
+                        name: item.cust_name || 'Unknown',
+                        phone: item.phone_no || 'N/A',
+                        email: item.cust_name ? `${item.cust_name.toLowerCase().replace(' ', '.')}@example.com` : 'N/A',
+                        custCode: item.cust_code,
+                        custDescription: item.ord_description
+                    };
+                }
+            });
+            setAgentDetails(agents);
+        }
+    }, [initialData]);
 
     const handleVisibleColumnsChange = (field) => {
         setVisibleColumns({
@@ -40,7 +58,7 @@ function TableWithSearch({ initialData }) {
     };
 
     const sortedData = useMemo(() => {
-        let sortableItems = [...data];
+        let sortableItems = [...initialData];
         if (sortConfig.key !== null) {
             sortableItems.sort((a, b) => {
                 if (a[sortConfig.key] < b[sortConfig.key]) {
@@ -53,7 +71,7 @@ function TableWithSearch({ initialData }) {
             });
         }
         return sortableItems;
-    }, [data, sortConfig]);
+    }, [initialData, sortConfig]);
 
     const filteredData = useMemo(() => {
         return sortedData.filter(item => {
@@ -65,15 +83,10 @@ function TableWithSearch({ initialData }) {
             if (Object.keys(visibleColumns).every(key => visibleColumns[key])) {
                 return itemString.includes(searchString);
             } else {
-                return Object.keys(visibleColumns).some(key => visibleColumns[key] && item[key].toString().toLowerCase().includes(searchString));
+                return Object.keys(visibleColumns).some(key => visibleColumns[key] && item[key]?.toString().toLowerCase().includes(searchString));
             }
         });
     }, [search, visibleColumns, sortedData]);
-
-    const agentDetails = {
-        A0001: { name: 'John Doe', phone: '123-456-7890', email: 'john.doe@example.com' },
-        A0002: { name: 'Jane Smith', phone: '987-654-3210', email: 'jane.smith@example.com' }
-    };
 
     return (
         <div className="table-container">
@@ -107,42 +120,44 @@ function TableWithSearch({ initialData }) {
             <table className="data-table">
                 <thead>
                 <tr>
-                    {visibleColumns.ORD_NUM && <th onClick={() => handleSort('ORD_NUM')}>Order Number</th>}
-                    {visibleColumns.ORD_AMOUNT && <th onClick={() => handleSort('ORD_AMOUNT')}>Order Amount</th>}
-                    {visibleColumns.ADVANCE_AMOUNT && <th onClick={() => handleSort('ADVANCE_AMOUNT')}>Advance Amount</th>}
-                    {visibleColumns.ORD_DATE && <th onClick={() => handleSort('ORD_DATE')}>Order Date</th>}
-                    {visibleColumns.CUST_CODE && <th onClick={() => handleSort('CUST_CODE')}>Customer Code</th>}
-                    {visibleColumns.AGENT_CODE && <th onClick={() => handleSort('AGENT_CODE')}>Agent Code</th>}
-                    {visibleColumns.ORD_DESCRIPTION && <th onClick={() => handleSort('ORD_DESCRIPTION')}>Description</th>}
+                    {visibleColumns.ord_num && <th onClick={() => handleSort('ord_num')}>Order Number</th>}
+                    {visibleColumns.ord_amount && <th onClick={() => handleSort('ord_amount')}>Order Amount</th>}
+                    {visibleColumns.advance_amount && <th onClick={() => handleSort('advance_amount')}>Advance Amount</th>}
+                    {visibleColumns.ord_date && <th onClick={() => handleSort('ord_date')}>Order Date</th>}
+                    {visibleColumns.cust_code && <th onClick={() => handleSort('cust_code')}>Customer Code</th>}
+                    {visibleColumns.agent_code && <th onClick={() => handleSort('agent_code')}>Agent Code</th>}
+                    {visibleColumns.ord_description && <th onClick={() => handleSort('ord_description')}>Description</th>}
                 </tr>
                 </thead>
                 <tbody>
-                {filteredData.map(item => (
-                    <tr key={item.ORD_NUM}>
-                        {visibleColumns.ORD_NUM && <td>{item.ORD_NUM}</td>}
-                        {visibleColumns.ORD_AMOUNT && <td>{item.ORD_AMOUNT}</td>}
-                        {visibleColumns.ADVANCE_AMOUNT && <td>{item.ADVANCE_AMOUNT}</td>}
-                        {visibleColumns.ORD_DATE && <td>{item.ORD_DATE}</td>}
-                        {visibleColumns.CUST_CODE && <td>{item.CUST_CODE}</td>}
-                        {visibleColumns.AGENT_CODE && (
+                {filteredData.map((item, index) => (
+                    <tr key={item.ord_num || index}>
+                        {visibleColumns.ord_num && <td>{item.ord_num}</td>}
+                        {visibleColumns.ord_amount && <td>{item.ord_amount}</td>}
+                        {visibleColumns.advance_amount && <td>{item.advance_amount}</td>}
+                        {visibleColumns.ord_date && <td>{new Date(item.ord_date).toLocaleDateString()}</td>}
+                        {visibleColumns.cust_code && <td>{item.cust_code}</td>}
+                        {visibleColumns.agent_code && (
                             <td>
-                                <a href="#!" onClick={() => setSelectedAgent(agentDetails[item.AGENT_CODE])}>
-                                    {item.AGENT_CODE}
+                                <a href="#!" onClick={() => setSelectedCustomer(agentDetails[item.agent_code.trim()])}>
+                                    {item.agent_code.trim()}
                                 </a>
                             </td>
                         )}
-                        {visibleColumns.ORD_DESCRIPTION && <td>{item.ORD_DESCRIPTION}</td>}
+                        {visibleColumns.ord_description && <td>{item.ord_description}</td>}
                     </tr>
                 ))}
                 </tbody>
             </table>
-            {selectedAgent && (
+            {selectedCustomer && (
                 <div className="agent-details">
-                    <h3>Agent Details</h3>
-                    <p><strong>Name:</strong> {selectedAgent.name}</p>
-                    <p><strong>Phone:</strong> {selectedAgent.phone}</p>
-                    <p><strong>Email:</strong> {selectedAgent.email}</p>
-                    <button onClick={() => setSelectedAgent(null)} className="button">Close</button>
+                    <h3>Customer Details</h3>
+                    <p><strong>Name:</strong> {selectedCustomer.name}</p>
+                    <p><strong>Phone:</strong> {selectedCustomer.phone}</p>
+                    <p><strong>Email:</strong> {selectedCustomer.email}</p>
+                    <p><strong>Customer Code:</strong> {selectedCustomer.custCode}</p>
+                    <p><strong>Description:</strong> {selectedCustomer.custDescription}</p>
+                    <button onClick={() => setSelectedCustomer(null)} className="button">Close</button>
                 </div>
             )}
         </div>
@@ -152,13 +167,15 @@ function TableWithSearch({ initialData }) {
 TableWithSearch.propTypes = {
     initialData: PropTypes.arrayOf(
         PropTypes.shape({
-            ORD_NUM: PropTypes.number.isRequired,
-            ORD_AMOUNT: PropTypes.number.isRequired,
-            ADVANCE_AMOUNT: PropTypes.number.isRequired,
-            ORD_DATE: PropTypes.string.isRequired,
-            CUST_CODE: PropTypes.string.isRequired,
-            AGENT_CODE: PropTypes.string.isRequired,
-            ORD_DESCRIPTION: PropTypes.string.isRequired,
+            ord_num: PropTypes.number,
+            ord_amount: PropTypes.number,
+            advance_amount: PropTypes.number,
+            ord_date: PropTypes.string,
+            cust_code: PropTypes.string,
+            agent_code: PropTypes.string,
+            ord_description: PropTypes.string,
+            cust_name: PropTypes.string,
+            phone_no: PropTypes.string
         })
     ).isRequired,
 };
