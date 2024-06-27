@@ -1,35 +1,54 @@
-import React, { useState, useEffect } from 'react';
-import Navbar from './Common/Navbar';
-import TableWithSearch from './Common/TableWithSearch';
-import { getOrders } from './Services/OrderService';
+import { jwtDecode } from 'jwt-decode';
+import { getOrders } from "./Services/OrderService";
+import { useEffect, useState } from "react";
+import Navbar from "./Common/Navbar";
+import TableWithSearch from "./Common/TableWithSearch";
 import '../styles/Dashboard.css';
 
 function Dashboard() {
     const [tableData, setTableData] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
+    const [userRole, setUserRole] = useState(null);
     const token = localStorage.getItem('jwtToken');
 
     useEffect(() => {
-        const fetchData = async () => {
+        if (token) {
             try {
-                const data = await getOrders(token, "customer");
-                console.log("Fetched data:", data);
-                if (data && Array.isArray(data.orders)) {
-                    setTableData(data.orders);
-                } else {
-                    console.error("Unexpected data structure:", data);
-                    setError('Data structure error');
-                }
+                const decodedToken = jwtDecode(token);
+                setUserRole(decodedToken.userRole);
+                fetchData(decodedToken.userRole);
             } catch (error) {
-                console.error('Failed to fetch data', error);
-                setError('Failed to fetch data');
-            } finally {
+                console.error("JWT decode error:", error);
+                setError('Error decoding token');
                 setLoading(false);
             }
-        };
-        fetchData();
+        } else {
+            setError('No token found');
+            setLoading(false);
+        }
     }, [token]);
+
+    const fetchData = async (role) => {
+        if (!role) return;
+
+        try {
+            console.log("User role:", role);
+            const data = await getOrders(token, role);
+            console.log("Fetched data:", data);
+            if (data && Array.isArray(data.orders)) {
+                setTableData(data.orders);
+            } else {
+                console.error("Unexpected data structure:", data);
+                setError('Data structure error');
+            }
+        } catch (error) {
+            console.error('Failed to fetch data', error);
+            setError('Failed to fetch data');
+        } finally {
+            setLoading(false);
+        }
+    };
 
     if (loading) {
         return <p>Loading...</p>;
@@ -51,7 +70,6 @@ function Dashboard() {
                     <div className="widget">
                         <h2>Recent Activities</h2>
                         <p>Display recent activities or notifications here.</p>
-                        {/* Implement or import a component to show recent activities */}
                     </div>
                     <div className="widget">
                         <h2>Quick Links</h2>
@@ -60,7 +78,7 @@ function Dashboard() {
                     <div className="widget">
                         <h2>Manage Orders</h2>
                         {Array.isArray(tableData) && tableData.length > 0 ? (
-                            <TableWithSearch initialData={tableData} type="customer" />
+                            <TableWithSearch initialData={tableData} type={userRole} />
                         ) : (
                             <p>No data available</p>
                         )}
