@@ -1,6 +1,6 @@
 const endpoint = 'http://localhost:3100/users';
 
-export const getOrders = async (token) => {
+export const getOrders = async (token, type) => {
     try {
 
         const requestOptions = {
@@ -11,7 +11,12 @@ export const getOrders = async (token) => {
             }
         };
 
-        const orderResponse = await fetch(`${endpoint}/getAgentOrders`, requestOptions);
+        let orderResponse;
+        if (type === 'agent') {
+            orderResponse = await fetch(`${endpoint}/getAgentOrders`, requestOptions);
+        }else if (type === 'customer') {
+            orderResponse = await fetch(`${endpoint}/getCustomerOrders`, requestOptions);
+        }
 
         if (!orderResponse.ok) {
             const data = await orderResponse.json();

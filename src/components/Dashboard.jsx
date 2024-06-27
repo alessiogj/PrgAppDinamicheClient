@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
 import Navbar from './Common/Navbar';
-import SimpleChart from './Common/SimpleChart';
 import TableWithSearch from './Common/TableWithSearch';
 import { getOrders } from './Services/OrderService';
 import '../styles/Dashboard.css';
@@ -14,7 +13,7 @@ function Dashboard() {
     useEffect(() => {
         const fetchData = async () => {
             try {
-                const data = await getOrders(token);
+                const data = await getOrders(token, "customer");
                 console.log("Fetched data:", data);
                 if (data && Array.isArray(data.orders)) {
                     setTableData(data.orders);
@@ -61,7 +60,7 @@ function Dashboard() {
                     <div className="widget">
                         <h2>Manage Orders</h2>
                         {Array.isArray(tableData) && tableData.length > 0 ? (
-                            <TableWithSearch initialData={tableData} type="agent" />
+                            <TableWithSearch initialData={tableData} type="customer" />
                         ) : (
                             <p>No data available</p>
                         )}
