@@ -22,6 +22,7 @@ const Login = () => {
             const { token } = await login(username, password);
             console.log('Token:', token);
             localStorage.setItem('jwtToken', token);
+            setErrorMessage(''); // Clear the error message
             navigate('/dashboard');
         } catch (error) {
             console.error('Login error:', error);
@@ -57,12 +58,14 @@ const Login = () => {
                         <i className="fas fa-lock"></i>
                     </div>
                     {errorMessage && <div className="error-message">{errorMessage}</div>}
-                    <button type="submit" className="btn">
-                        Submit
-                    </button>
-                    <button type="button" className="btn" onClick={() => navigate('/register')}>
-                        Register
-                    </button>
+                    <div className="button-container">
+                        <button type="submit" className="btn">
+                            Submit
+                        </button>
+                        <button type="button" className="btn" onClick={() => navigate('/register')}>
+                            Register
+                        </button>
+                    </div>
                 </form>
             </div>
         </div>

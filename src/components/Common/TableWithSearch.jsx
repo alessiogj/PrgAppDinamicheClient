@@ -12,8 +12,8 @@ function TableWithSearch({ initialData, type }) {
         advance_amount: true,
         order_date: true,
         order_time: true,
-        cust_code: type === 'agent',
-        agent_code: type === 'customer',
+        cust_name: type === 'agent',
+        agent_name: type === 'customer',
         commission: type === 'customer'
     });
 
@@ -23,8 +23,8 @@ function TableWithSearch({ initialData, type }) {
         advance_amount: { displayName: 'Advance Amount', type: 'number' },
         order_date: { displayName: 'Order Date', type: 'string' },
         order_time: { displayName: 'Order Time', type: 'string' },
-        cust_code: { displayName: 'Customer Code', type: 'string' },
-        agent_code: { displayName: 'Agent Code', type: 'string' },
+        cust_name: { displayName: 'Customer Name', type: 'string' },
+        agent_name: { displayName: 'Agent Name', type: 'string' },
         commission: { displayName: 'Commission', type: 'number' }
     }), []);
 
@@ -77,7 +77,7 @@ function TableWithSearch({ initialData, type }) {
     const handleRowClick = useCallback((item) => {
         const details = type === 'agent' ? {
             'Order Description': item.ord_description || 'N/A',
-            'Customer Name': item.cust_name || 'Unknown',
+            'Customer Code': item.cust_code || 'Unknown',
             'Customer City': item.cust_city || 'N/A',
             'Working Area': item.working_area || 'N/A',
             'Customer Country': item.cust_country || 'N/A',
@@ -89,7 +89,6 @@ function TableWithSearch({ initialData, type }) {
             'Phone Number': item.phone_no || 'N/A'
         } : {
             'Order Description': item.ord_description || 'N/A',
-            'Agent Name': item.agent_name || 'Unknown',
             'Country': item.country || 'N/A',
             'Agent Code': item.agent_code || 'N/A',
             'Working Area': item.working_area || 'N/A',
@@ -117,8 +116,8 @@ function TableWithSearch({ initialData, type }) {
                 />
                 <div className="filter-checkboxes">
                     {Object.keys(columnDefinitions).map(column => (
-                        ((column !== 'cust_code' || type === 'agent') &&
-                            (column !== 'agent_code' && column !== 'commission' || type === 'customer')) && (
+                        ((column !== 'cust_name' || type === 'agent') &&
+                            (column !== 'agent_name' && column !== 'commission' || type === 'customer')) && (
                             <label key={column}>
                                 <input
                                     type="checkbox"
@@ -145,8 +144,8 @@ function TableWithSearch({ initialData, type }) {
                 {filteredData.map((item, index) => (
                     <tr key={index}>
                         {Object.keys(visibleColumns).filter(key => visibleColumns[key]).map(column => (
-                            <td key={column} onClick={() => (column === 'cust_code' && type === 'agent') || (column === 'agent_code' && type === 'customer') ? handleRowClick(item) : null}>
-                                {(column === 'cust_code' && type === 'agent') || (column === 'agent_code' && type === 'customer') ?
+                            <td key={column} onClick={() => (column === 'cust_name' && type === 'agent') || (column === 'agent_name' && type === 'customer') ? handleRowClick(item) : null}>
+                                {(column === 'cust_name' && type === 'agent') || (column === 'agent_name' && type === 'customer') ?
                                     <a href="#!" style={{ color: 'blue' }}>{item[column]}</a> : item[column]}
                             </td>
                         ))}

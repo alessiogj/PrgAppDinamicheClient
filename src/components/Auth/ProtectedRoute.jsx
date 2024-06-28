@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { Navigate } from 'react-router-dom';
-import {jwtDecode} from 'jwt-decode'; // Import as default
+import {jwtDecode} from 'jwt-decode';
 import axios from 'axios';
 
 const endpoint = 'http://localhost:3100/users';
@@ -44,7 +44,6 @@ const ProtectedRoute = ({ children }) => {
     }, [token]);
 
     if (isAuthenticated === null) {
-        // Show a loading indicator while verifying the token
         return <div>Loading...</div>;
     }
 
