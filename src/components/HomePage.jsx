@@ -10,7 +10,6 @@ const HomePage = () => {
             <h1 className="home-title">Welcome!</h1>
             <div className="links-container">
                 <Link className="home-link" to="/login">Login</Link>
-                <Link className="home-link" to="/register">Register</Link>
             </div>
         </div>
     );
