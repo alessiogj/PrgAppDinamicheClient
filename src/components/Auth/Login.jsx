@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import '../../styles/Global.css';
 import { login } from '../Services/AuthService';
-import BackgroundCanvas from "../Common/BackgroundCanvas";
+import BackgroundCanvas from '../Common/BackgroundCanvas';
 
 const Login = () => {
     const navigate = useNavigate();
@@ -20,6 +20,7 @@ const Login = () => {
 
         try {
             const { token } = await login(username, password);
+            console.log('Token:', token);
             localStorage.setItem('jwtToken', token);
             navigate('/dashboard');
         } catch (error) {
@@ -33,16 +34,14 @@ const Login = () => {
         <div className="container">
             <BackgroundCanvas />
             <div className="wrapper">
-                <div className="title">
-                    Login
-                </div>
+                <div className="title">Login</div>
                 <form className="form" onSubmit={handleSubmit}>
                     <div className="input_field">
                         <input
                             type="text"
                             placeholder="Username"
                             value={username}
-                            onChange={e => setUsername(e.target.value)}
+                            onChange={(e) => setUsername(e.target.value)}
                             className="input"
                         />
                         <i className="fas fa-user"></i>
@@ -52,18 +51,18 @@ const Login = () => {
                             type="password"
                             placeholder="Password"
                             value={password}
-                            onChange={e => setPassword(e.target.value)}
+                            onChange={(e) => setPassword(e.target.value)}
                             className="input"
                         />
                         <i className="fas fa-lock"></i>
                     </div>
                     {errorMessage && <div className="error-message">{errorMessage}</div>}
-                    <div className="btn" onClick={handleSubmit}>
+                    <button type="submit" className="btn">
                         Submit
-                    </div>
-                    <div className="btn" onClick={() => navigate('/register')}>
+                    </button>
+                    <button type="button" className="btn" onClick={() => navigate('/register')}>
                         Register
-                    </div>
+                    </button>
                 </form>
             </div>
         </div>
