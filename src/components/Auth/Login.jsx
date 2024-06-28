@@ -22,7 +22,7 @@ const Login = () => {
             const { token } = await login(username, password);
             console.log('Token:', token);
             localStorage.setItem('jwtToken', token);
-            setErrorMessage(''); // Clear the error message
+            setErrorMessage('');
             navigate('/dashboard');
         } catch (error) {
             console.error('Login error:', error);

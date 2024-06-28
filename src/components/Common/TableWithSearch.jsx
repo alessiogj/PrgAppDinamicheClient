@@ -16,7 +16,7 @@ function TableWithSearch({ initialData, type }) {
         agent_name: type === 'customer',
         commission: type === 'customer'
     });
-    const [editElement, setEditElement] = useState(null); // State to track the element being edited
+    const [editElement, setEditElement] = useState(null);
 
     const columnDefinitions = useMemo(() => ({
         ord_num: { displayName: 'Order Number', type: 'number' },
@@ -35,7 +35,7 @@ function TableWithSearch({ initialData, type }) {
             return {
                 ...item,
                 order_date: date,
-                order_time: time.split('.')[0]  // Removing milliseconds
+                order_time: time.split('.')[0]
             };
         });
     }, [initialData]);
@@ -112,12 +112,23 @@ function TableWithSearch({ initialData, type }) {
     }, [type]);
 
     const handleConfirmEdit = useCallback(() => {
-        console.log('Modified Element:', editElement); // Replace this with the desired function
+        // TODO: gestire la modifica dell'elemento chiamando l'API in OrderService
+        console.log('Modified Element:', editElement);
         setEditElement(null);
     }, [editElement]);
 
     const handleInputChange = (key, value) => {
         setEditElement(prev => ({ ...prev, [key]: value }));
+    };
+
+    const displayNames = {
+        ord_amount: 'Order Amount',
+        advance_amount: 'Advance Amount',
+        order_date: 'Order Date',
+        order_time: 'Order Time',
+        cust_name: 'Customer Name',
+        agent_name: 'Agent Name',
+        commission: 'Commission'
     };
 
     return (
@@ -188,14 +199,16 @@ function TableWithSearch({ initialData, type }) {
                 <div className="edit-modal">
                     <h3>Edit Element</h3>
                     {Object.keys(editElement).map(key => (
-                        <p key={key}>
-                            <strong>{key}:</strong>
-                            <input
-                                type="text"
-                                value={editElement[key]}
-                                onChange={e => handleInputChange(key, e.target.value)}
-                            />
-                        </p>
+                        ['ord_amount', 'advance_amount', 'order_date', 'order_time', 'cust_name', 'agent_name', 'commission'].includes(key) && (
+                            <p key={key}>
+                                <strong>{displayNames[key]}:</strong>
+                                <input
+                                    type="text"
+                                    value={editElement[key]}
+                                    onChange={e => handleInputChange(key, e.target.value)}
+                                />
+                            </p>
+                        )
                     ))}
                     <button onClick={handleConfirmEdit} className="button">Confirm</button>
                     <button onClick={() => setEditElement(null)} className="button">Cancel</button>
