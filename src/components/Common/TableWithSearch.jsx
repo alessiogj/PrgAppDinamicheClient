@@ -16,6 +16,7 @@ function TableWithSearch({ initialData, type }) {
         agent_name: type === 'customer',
         commission: type === 'customer'
     });
+    const [editElement, setEditElement] = useState(null); // State to track the element being edited
 
     const columnDefinitions = useMemo(() => ({
         ord_num: { displayName: 'Order Number', type: 'number' },
@@ -104,6 +105,21 @@ function TableWithSearch({ initialData, type }) {
         }));
     }, []);
 
+    const handleEdit = useCallback((item) => {
+        if (type === 'agent') {
+            setEditElement(item);
+        }
+    }, [type]);
+
+    const handleConfirmEdit = useCallback(() => {
+        console.log('Modified Element:', editElement); // Replace this with the desired function
+        setEditElement(null);
+    }, [editElement]);
+
+    const handleInputChange = (key, value) => {
+        setEditElement(prev => ({ ...prev, [key]: value }));
+    };
+
     return (
         <div className="table-container">
             <div className="controls">
@@ -138,6 +154,7 @@ function TableWithSearch({ initialData, type }) {
                             {columnDefinitions[column].displayName}
                         </th>
                     ))}
+                    {type === 'agent' && <th>Actions</th>}
                 </tr>
                 </thead>
                 <tbody>
@@ -149,6 +166,11 @@ function TableWithSearch({ initialData, type }) {
                                     <a href="#!" style={{ color: 'blue' }}>{item[column]}</a> : item[column]}
                             </td>
                         ))}
+                        {type === 'agent' && (
+                            <td>
+                                <button className="button" onClick={(e) => { e.stopPropagation(); handleEdit(item); }}>Edit</button>
+                            </td>
+                        )}
                     </tr>
                 ))}
                 </tbody>
@@ -160,6 +182,23 @@ function TableWithSearch({ initialData, type }) {
                         <p key={key}><strong>{key}:</strong> {selectedDetails[key]}</p>
                     ))}
                     <button onClick={() => setSelectedDetails(null)} className="button">Close</button>
+                </div>
+            )}
+            {editElement && (
+                <div className="edit-modal">
+                    <h3>Edit Element</h3>
+                    {Object.keys(editElement).map(key => (
+                        <p key={key}>
+                            <strong>{key}:</strong>
+                            <input
+                                type="text"
+                                value={editElement[key]}
+                                onChange={e => handleInputChange(key, e.target.value)}
+                            />
+                        </p>
+                    ))}
+                    <button onClick={handleConfirmEdit} className="button">Confirm</button>
+                    <button onClick={() => setEditElement(null)} className="button">Cancel</button>
                 </div>
             )}
         </div>
