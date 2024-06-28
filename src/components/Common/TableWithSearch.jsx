@@ -6,33 +6,66 @@ function TableWithSearch({ initialData, type }) {
     const [search, setSearch] = useState('');
     const [sortConfig, setSortConfig] = useState({ key: null, direction: 'ascending' });
     const [selectedDetails, setSelectedDetails] = useState(null);
+    const [visibleColumns, setVisibleColumns] = useState({
+        ord_num: true,
+        ord_amount: true,
+        advance_amount: true,
+        order_date: true,
+        order_time: true,
+        cust_code: type === 'agent',
+        agent_code: type === 'customer',
+        commission: type === 'customer'
+    });
 
-    const visibleColumns = useMemo(() => ({
-        ord_num: { visible: true, fixed: true },
-        ord_amount: { visible: true, fixed: true },
-        advance_amount: { visible: true, fixed: true },
-        ord_date: { visible: true, fixed: true },
-        cust_code: { visible: type === 'agent', fixed: type === 'agent' },
-        agent_code: { visible: type === 'customer', fixed: type === 'customer' },
-        commission: { visible: type === 'customer', fixed: type === 'customer' }
-    }), [type]);
+    const columnDefinitions = useMemo(() => ({
+        ord_num: { displayName: 'Order Number', type: 'number' },
+        ord_amount: { displayName: 'Order Amount', type: 'number' },
+        advance_amount: { displayName: 'Advance Amount', type: 'number' },
+        order_date: { displayName: 'Order Date', type: 'string' },
+        order_time: { displayName: 'Order Time', type: 'string' },
+        cust_code: { displayName: 'Customer Code', type: 'string' },
+        agent_code: { displayName: 'Agent Code', type: 'string' },
+        commission: { displayName: 'Commission', type: 'number' }
+    }), []);
+
+    const processedData = useMemo(() => {
+        return initialData.map(item => {
+            const [date, time] = item.ord_date.split('T');
+            return {
+                ...item,
+                order_date: date,
+                order_time: time.split('.')[0]  // Removing milliseconds
+            };
+        });
+    }, [initialData]);
 
     const filteredData = useMemo(() => {
-        let sortableItems = [...initialData];
+        let sortableItems = [...processedData];
         if (sortConfig.key) {
             sortableItems.sort((a, b) => {
-                if (a[sortConfig.key] < b[sortConfig.key]) {
-                    return sortConfig.direction === 'ascending' ? -1 : 1;
+                const aValue = a[sortConfig.key];
+                const bValue = b[sortConfig.key];
+
+                if (columnDefinitions[sortConfig.key].type === 'number') {
+                    return sortConfig.direction === 'ascending'
+                        ? (parseFloat(aValue) || 0) - (parseFloat(bValue) || 0)
+                        : (parseFloat(bValue) || 0) - (parseFloat(aValue) || 0);
+                } else {
+                    const aStr = aValue?.toString().toLowerCase() || '';
+                    const bStr = bValue?.toString().toLowerCase() || '';
+                    return sortConfig.direction === 'ascending'
+                        ? aStr.localeCompare(bStr)
+                        : bStr.localeCompare(aStr);
                 }
-                if (a[sortConfig.key] > b[sortConfig.key]) {
-                    return sortConfig.direction === 'ascending' ? 1 : -1;
-                }
-                return 0;
             });
         }
         const searchString = search.toLowerCase();
-        return sortableItems.filter(item => item.cust_code.toLowerCase().includes(searchString) || !search);
-    }, [initialData, sortConfig, search]);
+        return sortableItems.filter(item =>
+            Object.keys(visibleColumns).some(column =>
+                visibleColumns[column] && item[column]?.toString().toLowerCase().includes(searchString)
+            )
+        );
+    }, [processedData, sortConfig, search, visibleColumns, columnDefinitions]);
 
     const handleSort = useCallback((key) => {
         setSortConfig(prevConfig => ({
@@ -43,45 +76,67 @@ function TableWithSearch({ initialData, type }) {
 
     const handleRowClick = useCallback((item) => {
         const details = type === 'agent' ? {
-            ord_description: item.ord_description || 'N/A',
-            cust_name: item.cust_name || 'Unknown',
-            cust_city: item.cust_city || 'N/A',
-            working_area: item.working_area || 'N/A',
-            cust_country: item.cust_country || 'N/A',
-            grade: item.grade || 'N/A',
-            opening_amt: item.opening_amt || '0.00',
-            receive_amt: item.receive_amt || '0.00',
-            payment_amt: item.payment_amt || '0.00',
-            outstanding_amt: item.outstanding_amt || '0.00',
-            phone_no: item.phone_no || 'N/A'
+            'Order Description': item.ord_description || 'N/A',
+            'Customer Name': item.cust_name || 'Unknown',
+            'Customer City': item.cust_city || 'N/A',
+            'Working Area': item.working_area || 'N/A',
+            'Customer Country': item.cust_country || 'N/A',
+            'Grade': item.grade || 'N/A',
+            'Opening Amount': item.opening_amt || '0.00',
+            'Receive Amount': item.receive_amt || '0.00',
+            'Payment Amount': item.payment_amt || '0.00',
+            'Outstanding Amount': item.outstanding_amt || '0.00',
+            'Phone Number': item.phone_no || 'N/A'
         } : {
-            ord_description: item.ord_description || 'N/A',
-            agent_name: item.agent_name || 'Unknown',
-            country : item.country || 'N/A',
-            agent_code: item.agent_code || 'N/A',
-            working_area: item.working_area || 'N/A',
-            phone_no: item.phone_no || 'N/A'
+            'Order Description': item.ord_description || 'N/A',
+            'Agent Name': item.agent_name || 'Unknown',
+            'Country': item.country || 'N/A',
+            'Agent Code': item.agent_code || 'N/A',
+            'Working Area': item.working_area || 'N/A',
+            'Phone Number': item.phone_no || 'N/A'
         };
         setSelectedDetails(details);
     }, [type]);
+
+    const handleColumnVisibilityChange = useCallback((column) => {
+        setVisibleColumns(prevVisibleColumns => ({
+            ...prevVisibleColumns,
+            [column]: !prevVisibleColumns[column]
+        }));
+    }, []);
 
     return (
         <div className="table-container">
             <div className="controls">
                 <input
                     type="text"
-                    placeholder={type === 'agent' ? "Search by Customer Code..." : "Search by Agent Code..."}
+                    placeholder={"Search..."}
                     value={search}
                     onChange={e => setSearch(e.target.value)}
                     className="search-input"
                 />
+                <div className="filter-checkboxes">
+                    {Object.keys(columnDefinitions).map(column => (
+                        ((column !== 'cust_code' || type === 'agent') &&
+                            (column !== 'agent_code' && column !== 'commission' || type === 'customer')) && (
+                            <label key={column}>
+                                <input
+                                    type="checkbox"
+                                    checked={visibleColumns[column]}
+                                    onChange={() => handleColumnVisibilityChange(column)}
+                                />
+                                {columnDefinitions[column].displayName}
+                            </label>
+                        )
+                    ))}
+                </div>
             </div>
             <table className="data-table">
                 <thead>
                 <tr>
-                    {Object.keys(visibleColumns).filter(key => visibleColumns[key].visible).map(column => (
+                    {Object.keys(visibleColumns).filter(key => visibleColumns[key]).map(column => (
                         <th key={column} onClick={() => handleSort(column)}>
-                            {column.replace('_', ' ').toUpperCase()}
+                            {columnDefinitions[column].displayName}
                         </th>
                     ))}
                 </tr>
@@ -89,7 +144,7 @@ function TableWithSearch({ initialData, type }) {
                 <tbody>
                 {filteredData.map((item, index) => (
                     <tr key={index}>
-                        {Object.keys(visibleColumns).filter(key => visibleColumns[key].visible).map(column => (
+                        {Object.keys(visibleColumns).filter(key => visibleColumns[key]).map(column => (
                             <td key={column} onClick={() => (column === 'cust_code' && type === 'agent') || (column === 'agent_code' && type === 'customer') ? handleRowClick(item) : null}>
                                 {(column === 'cust_code' && type === 'agent') || (column === 'agent_code' && type === 'customer') ?
                                     <a href="#!" style={{ color: 'blue' }}>{item[column]}</a> : item[column]}
@@ -100,10 +155,10 @@ function TableWithSearch({ initialData, type }) {
                 </tbody>
             </table>
             {selectedDetails && (
-                <div className="details">
+                <div className="agent-details">
                     <h3>{type === 'agent' ? 'Customer Details' : 'Agent Details'}</h3>
                     {Object.keys(selectedDetails).map(key => (
-                        <p key={key}><strong>{key.replace('_', ' ').toUpperCase()}:</strong> {selectedDetails[key]}</p>
+                        <p key={key}><strong>{key}:</strong> {selectedDetails[key]}</p>
                     ))}
                     <button onClick={() => setSelectedDetails(null)} className="button">Close</button>
                 </div>
