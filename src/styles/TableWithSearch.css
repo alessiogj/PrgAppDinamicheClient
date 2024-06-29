@@ -73,15 +73,16 @@
     align-items: center;
     gap: 5px;
 }
-
 .data-table {
     width: 100%;
+    max-width: 100%;
     border-collapse: collapse;
     background-color: #fff;
     border-radius: 8px;
     overflow: hidden;
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
     margin-bottom: 20px;
+    table-layout: fixed; /* Imposta la larghezza delle colonne in modo uniforme */
 }
 
 .data-table th,
@@ -91,6 +92,9 @@
     text-align: center;
     cursor: pointer;
     transition: background-color 0.3s ease;
+    white-space: nowrap; /* Evita il wrap del testo nelle celle */
+    overflow: hidden; /* Gestisce il contenuto in overflow */
+    text-overflow: ellipsis; /* Aggiunge ellissi per il testo in overflow */
 }
 
 .data-table th {
