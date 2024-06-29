@@ -1,8 +1,12 @@
+@import url('https://fonts.googleapis.com/css?family=Josefin+Sans');
+
 .table-container {
     padding: 20px;
     font-family: 'Josefin Sans', sans-serif;
     background-color: #f9f9f9;
     border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    margin-bottom: 20px;
 }
 
 .controls {
@@ -16,9 +20,15 @@
     width: 100%;
     box-sizing: border-box;
     border: 1px solid #ddd;
-    border-radius: 4px;
+    border-radius: 20px;
     background-color: #fff;
     margin-bottom: 10px;
+    transition: all 0.3s ease;
+}
+
+.search-input:focus {
+    border-color: #007bff;
+    box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
 }
 
 .buttons {
@@ -29,10 +39,11 @@
 }
 
 .button {
-    padding: 10px;
+    padding: 10px 20px;
     border: 1px solid #ddd;
-    border-radius: 4px;
-    background-color: #fff;
+    border-radius: 50px;
+    background-color: #007bff;
+    color: #fff;
     cursor: pointer;
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
     transition: background-color 0.3s ease;
@@ -42,13 +53,18 @@
     background-color: #f0f0f0;
 }
 
+.button:hover {
+    background-color: #0056b3;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
 .filter-checkboxes {
     display: flex;
     flex-wrap: wrap;
     gap: 10px;
     padding: 10px;
     background-color: #fff;
-    border-radius: 8px;
+    border-radius: 20px;
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
 }
 
@@ -65,19 +81,33 @@
     border-radius: 8px;
     overflow: hidden;
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    margin-bottom: 20px;
 }
 
 .data-table th,
 .data-table td {
     border-bottom: 1px solid #ddd;
     padding: 10px;
-    text-align: left;
+    text-align: center;
     cursor: pointer;
+    transition: background-color 0.3s ease;
 }
 
 .data-table th {
-    background-color: #f5f5f5;
+    background-color: #f5e2e2;
     font-weight: bold;
+}
+
+.data-table th:hover {
+    background-color: #eaeaea;
+}
+
+.data-table tr:nth-child(even) {
+    background-color: #f9f9f9;
+}
+
+.data-table tr:hover {
+    background-color: #f1f1f1;
 }
 
 .data-table td a {
@@ -91,54 +121,86 @@
 
 .info-details {
     margin-top: 20px;
+    margin-bottom: 20px;
     padding: 20px;
     background-color: #fff;
     border: 1px solid #ddd;
-    border-radius: 8px;
+    border-radius: 20px;
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
 }
 
 .info-details h3 {
     margin-top: 0;
+    color: #333;
+    font-weight: bold; /* Aggiunge testo in grassetto */
+    font-size: 1.5em; /* Ingrandisce leggermente il testo */
+    text-transform: uppercase; /* Tutto in maiuscolo */
 }
 
 .info-details p {
     margin: 5px 0;
+    color: #666;
+    line-height: 1.1; /* Aggiunge interlinea */
 }
 
-.info-details .button {
+.agent-details .button {
     margin-top: 10px;
-    display: block;
-    padding: 10px;
-    border: 1px solid #ddd;
+    display: inline-block;
+    padding: 10px 20px;
+    background-color: #007bff;
+    color: #fff;
+    border: none;
     border-radius: 4px;
-    background-color: #fff;
     cursor: pointer;
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-    transition: background-color 0.3s ease;
+    transition: background-color 0.3s ease, box-shadow 0.3s ease;
 }
 
-.info-details .button:hover {
-    background-color: #f0f0f0;
+.agent-details .button:hover {
+    background-color: #0056b3;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
 }
 
-.details-panel {
+.order-edit {
+    margin-top: 20px;
+    margin-bottom: 20px;
     padding: 20px;
-    margin-top: 20px;
-    border-radius: 8px;
     background-color: #fff;
+    border: 1px solid #ddd;
+    border-radius: 20px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
 }
 
-.details-panel .MuiTypography-root {
-    margin-bottom: 10px;
+.order-edit h3 {
+    margin-top: 0;
+    color: #333;
+    font-weight: bold; /* Aggiunge testo in grassetto */
+    font-size: 1.5em; /* Ingrandisce leggermente il testo */
+    text-transform: uppercase; /* Tutto in maiuscolo */
 }
 
-.details-panel .MuiButton-root {
-    margin-top: 20px;
-    background-color: #4285f4;
+.order-edit p {
+    margin: 5px 0;
+    color: #666;
+    line-height: 1.1; /* Aggiunge interlinea */
+}
+
+.order-edit .button {
+    margin-top: 10px;
+    margin-right: 5px; /* Aggiunge spazio a destra tra i bottoni */
+    margin-left: 20px;
+    display: inline-block;
+    padding: 10px 20px;
+    background-color: #007bff;
     color: #fff;
+    border: none;
+    border-radius: 20px;
+    cursor: pointer;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    transition: background-color 0.3s ease, box-shadow 0.3s ease;
 }
 
-.details-panel .MuiButton-root:hover {
-    background-color: #357ae8;
+.order-edit .button:hover {
+    background-color: #0056b3;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
 }
