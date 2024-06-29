@@ -86,7 +86,7 @@
     text-decoration: underline;
 }
 
-.agent-details {
+.info-details {
     margin-top: 20px;
     padding: 20px;
     background-color: #fff;
@@ -95,15 +95,15 @@
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
 }
 
-.agent-details h3 {
+.info-details h3 {
     margin-top: 0;
 }
 
-.agent-details p {
+.info-details p {
     margin: 5px 0;
 }
 
-.agent-details .button {
+.info-details .button {
     margin-top: 10px;
     display: block;
 }

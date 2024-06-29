@@ -1,17 +1,18 @@
 import React, { useState, useCallback, useMemo } from 'react';
 import PropTypes from 'prop-types';
 import '../../styles/TableWithSearch.css';
+import {deleteOrder, getOrders, putOrder} from '../Services/OrderService';
 
 function TableWithSearch({ initialData, type }) {
     const [search, setSearch] = useState('');
     const [sortConfig, setSortConfig] = useState({ key: null, direction: 'ascending' });
     const [selectedDetails, setSelectedDetails] = useState(null);
+    const token = localStorage.getItem('jwtToken');
     const [visibleColumns, setVisibleColumns] = useState({
         ord_num: true,
         ord_amount: true,
         advance_amount: true,
         order_date: true,
-        order_time: true,
         cust_name: type === 'agent',
         agent_name: type === 'customer',
         commission: type === 'customer'
@@ -23,7 +24,6 @@ function TableWithSearch({ initialData, type }) {
         ord_amount: { displayName: 'Order Amount', type: 'number' },
         advance_amount: { displayName: 'Advance Amount', type: 'number' },
         order_date: { displayName: 'Order Date', type: 'string' },
-        order_time: { displayName: 'Order Time', type: 'string' },
         cust_name: { displayName: 'Customer Name', type: 'string' },
         agent_name: { displayName: 'Agent Name', type: 'string' },
         commission: { displayName: 'Commission', type: 'number' }
@@ -34,8 +34,7 @@ function TableWithSearch({ initialData, type }) {
             const [date, time] = item.ord_date.split('T');
             return {
                 ...item,
-                order_date: date,
-                order_time: time.split('.')[0]
+                order_date: date
             };
         });
     }, [initialData]);
@@ -111,10 +110,33 @@ function TableWithSearch({ initialData, type }) {
         }
     }, [type]);
 
-    const handleConfirmEdit = useCallback(() => {
-        // TODO: gestire la modifica dell'elemento chiamando l'API in OrderService
-        console.log('Modified Element:', editElement);
+    const handleConfirmEdit = useCallback(async () => {
+        const element =
+        {
+            modifiedOrder : {
+                ord_num: Number(editElement.ord_num),
+                ord_amount: Number(editElement.ord_amount),
+                advance_amount: Number(editElement.advance_amount),
+                ord_date: editElement.ord_date,
+                cust_code: editElement.cust_code,
+                agent_code: editElement.agent_code,
+                ord_description: editElement.ord_description
+            }
+        }
+        await putOrder(token, element);
         setEditElement(null);
+        window.location.reload();
+    }, [editElement]);
+
+    const handleConfirmDelete = useCallback(async () => {
+        const element =
+            {
+                ord_num: Number(editElement.ord_num)
+            }
+        await deleteOrder(token, element);
+        setEditElement(null);
+        //force refresh
+        window.location.reload();
     }, [editElement]);
 
     const handleInputChange = (key, value) => {
@@ -125,10 +147,7 @@ function TableWithSearch({ initialData, type }) {
         ord_amount: 'Order Amount',
         advance_amount: 'Advance Amount',
         order_date: 'Order Date',
-        order_time: 'Order Time',
-        cust_name: 'Customer Name',
-        agent_name: 'Agent Name',
-        commission: 'Commission'
+        ord_description: 'Order description'
     };
 
     return (
@@ -187,7 +206,7 @@ function TableWithSearch({ initialData, type }) {
                 </tbody>
             </table>
             {selectedDetails && (
-                <div className="agent-details">
+                <div className="info-details">
                     <h3>{type === 'agent' ? 'Customer Details' : 'Agent Details'}</h3>
                     {Object.keys(selectedDetails).map(key => (
                         <p key={key}><strong>{key}:</strong> {selectedDetails[key]}</p>
@@ -196,10 +215,11 @@ function TableWithSearch({ initialData, type }) {
                 </div>
             )}
             {editElement && (
-                <div className="edit-modal">
+                <div className="info-details">
                     <h3>Edit Element</h3>
+                    {}
                     {Object.keys(editElement).map(key => (
-                        ['ord_amount', 'advance_amount', 'order_date', 'order_time', 'cust_name', 'agent_name', 'commission'].includes(key) && (
+                        ['ord_amount', 'advance_amount', 'order_date', 'ord_description'].includes(key) && (
                             <p key={key}>
                                 <strong>{displayNames[key]}:</strong>
                                 <input
@@ -210,10 +230,12 @@ function TableWithSearch({ initialData, type }) {
                             </p>
                         )
                     ))}
+                    <button onClick={handleConfirmDelete} className="button">Delete</button>
                     <button onClick={handleConfirmEdit} className="button">Confirm</button>
                     <button onClick={() => setEditElement(null)} className="button">Cancel</button>
                 </div>
             )}
+
         </div>
     );
 }

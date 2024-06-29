@@ -77,11 +77,7 @@ function Dashboard() {
                     </div>
                     <div className="widget">
                         <h2>Manage Orders</h2>
-                        {Array.isArray(tableData) && tableData.length > 0 ? (
-                            <TableWithSearch initialData={tableData} type={userRole} />
-                        ) : (
-                            <p>No data available</p>
-                        )}
+                        <TableWithSearch initialData={tableData} type={userRole} />
                     </div>
                 </div>
             </header>
