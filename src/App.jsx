@@ -1,5 +1,6 @@
 import React from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
+import { SnackbarProvider } from 'notistack';
 import Login from './components/Auth/Login';
 import Dashboard from './components/Dashboard';
 import ProtectedRoute from './components/Auth/ProtectedRoute';
@@ -8,16 +9,16 @@ import './styles/Global.css';
 
 function App() {
     return (
-        <Router>
-            <div>
-                <Navbar /> {}
-                <Routes>
-                    <Route path="/login" element={<Login />} />
-                    <Route path="/dashboard" element={<ProtectedRoute><Dashboard /></ProtectedRoute>} />
-                    <Route path="*" element={<Navigate to="/login" replace />} />
-                </Routes>
-            </div>
-        </Router>
+            <Router>
+                <div>
+                    <Navbar />
+                    <Routes>
+                        <Route path="/login" element={<Login />} />
+                        <Route path="/dashboard" element={<ProtectedRoute><Dashboard /></ProtectedRoute>} />
+                        <Route path="*" element={<Navigate to="/login" replace />} />
+                    </Routes>
+                </div>
+            </Router>
     );
 }
 

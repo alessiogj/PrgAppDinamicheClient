@@ -1,8 +1,8 @@
+import React, { useEffect, useState } from 'react';
 import {jwtDecode} from 'jwt-decode';
-import { getOrders } from "./Services/OrderService";
-import { useEffect, useState } from "react";
-import Navbar from "./Common/Navbar";
-import TableWithSearch from "./Common/TableWithSearch";
+import { getOrders } from './Services/OrderService';
+import Navbar from './Common/Navbar';
+import TableWithSearch from './Common/TableWithSearch';
 import '../styles/Dashboard.css';
 
 function Dashboard() {
@@ -35,9 +35,7 @@ function Dashboard() {
         if (!role) return;
 
         try {
-            console.log("User role:", role);
             const data = await getOrders(token, role);
-            console.log("Fetched data:", data);
             if (data && Array.isArray(data.orders)) {
                 setTableData(data.orders);
             } else {
@@ -79,7 +77,11 @@ function Dashboard() {
                     </div>
                     <div className="widget">
                         <h2>Manage Orders</h2>
-                        <TableWithSearch initialData={tableData} type={userRole} userCode={userCode} />
+                        <TableWithSearch
+                            initialData={tableData}
+                            type={userRole}
+                            userCode={userCode}
+                        />
                     </div>
                 </div>
             </header>

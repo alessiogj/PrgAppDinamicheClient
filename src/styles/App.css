@@ -94,4 +94,8 @@ body {
     transition: background 0.3s ease;
 }
 
+.MuiSnackbarContent-root {
+    background-color: #333;
+}
+
 .wrapper .form .btn

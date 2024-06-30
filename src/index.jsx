@@ -6,6 +6,7 @@ import Login from './components/Auth/Login';
 import HomePage from './components/HomePage';
 import ProtectedRoute from './components/Auth/ProtectedRoute';
 import {createRoot} from "react-dom/client";
+import {SnackbarProvider} from "notistack";
 
 
 const root = createRoot(
@@ -13,7 +14,8 @@ const root = createRoot(
 );
 
 root.render(
-    <Router>
+    <SnackbarProvider maxSnack={3}>  {}
+        <Router>
         <Routes>
             <Route path="/login" element={<Login />} />
             <Route path="/" element={<HomePage />} />
@@ -25,5 +27,6 @@ root.render(
             {}
             <Route path="*" element={<Navigate to="/" />} />
         </Routes>
-    </Router>,
+    </Router>
+    </SnackbarProvider>
 );

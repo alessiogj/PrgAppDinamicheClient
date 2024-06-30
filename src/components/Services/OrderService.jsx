@@ -94,11 +94,15 @@ export const postOrder = async (token, order) => {
             const data = await orderResponse.json();
             throw new Error(data.message || 'Invalid request.');
         }
-    }  catch (error) {
+
+        const responseData = await orderResponse.json();
+        return responseData.newOrder;
+    } catch (error) {
         console.error('Error on adding order:', error);
         throw error;
     }
-}
+};
+
 
 export const getAvailableCustomers = async (token) => {
     try {

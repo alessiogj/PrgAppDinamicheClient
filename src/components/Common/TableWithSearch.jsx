@@ -1,17 +1,17 @@
-import React, { useState, useCallback, useMemo } from 'react';
+import React, { useState, useCallback, useMemo, useEffect } from 'react';
 import PropTypes from 'prop-types';
+import { useSnackbar } from 'notistack';  // Importa useSnackbar
 import '../../styles/TableWithSearch.css';
-import { deleteOrder, putOrder, postOrder } from '../Services/OrderService';
+import { deleteOrder, putOrder, postOrder, getOrders } from '../Services/OrderService';
 import SearchBar from './SearchBar';
 import FilterCheckboxes from './FilterCheckboxes';
 import DataTable from './DataTable';
 import DetailsPanel from './DetailsPanel';
 import EditPanel from './EditPanel';
 import AddOrderPanel from './AddOrderPanel';
-import PopupMessage from './PopupMessage';
-import '../../styles/PopupMessage.css';
 
 function TableWithSearch({ initialData, type, userCode }) {
+    const { enqueueSnackbar } = useSnackbar();
     const [search, setSearch] = useState('');
     const [sortConfig, setSortConfig] = useState({ key: null, direction: 'ascending' });
     const [selectedDetails, setSelectedDetails] = useState(null);
@@ -27,7 +27,6 @@ function TableWithSearch({ initialData, type, userCode }) {
     });
     const [editElement, setEditElement] = useState(null);
     const [showAddOrderPanel, setShowAddOrderPanel] = useState(false);
-    const [popupMessage, setPopupMessage] = useState(null);
     const [addElement, setAddElement] = useState({
         ord_num: '',
         ord_amount: '',
@@ -36,6 +35,29 @@ function TableWithSearch({ initialData, type, userCode }) {
         cust_code: '',
         ord_description: ''
     });
+    const [orderData, setOrderData] = useState(initialData);
+
+    useEffect(() => {
+        setOrderData(initialData);
+    }, [initialData]);
+
+    const fetchOrders = useCallback(async () => {
+        try {
+            const data = await getOrders(token, type);
+            if (data && Array.isArray(data.orders)) {
+                setOrderData(data.orders);
+            } else {
+                enqueueSnackbar('Failed to fetch orders.', { variant: 'error' });
+            }
+        } catch (error) {
+            console.error('Error fetching orders:', error);
+            enqueueSnackbar('Failed to fetch orders.', { variant: 'error' });
+        }
+    }, [token, type, enqueueSnackbar]);
+
+    useEffect(() => {
+        fetchOrders();
+    }, [fetchOrders]);
 
     const columnDefinitions = useMemo(() => ({
         ord_num: { displayName: 'Order Number', type: 'number' },
@@ -48,14 +70,14 @@ function TableWithSearch({ initialData, type, userCode }) {
     }), []);
 
     const processedData = useMemo(() => {
-        return initialData.map(item => {
-            const [date] = item.ord_date.split('T');
+        return orderData.map(item => {
+            const date = item.ord_date ? item.ord_date.split('T')[0] : 'N/A';
             return {
                 ...item,
                 order_date: date
             };
         });
-    }, [initialData]);
+    }, [orderData]);
 
     const filteredData = useMemo(() => {
         let sortableItems = [...processedData];
@@ -142,38 +164,41 @@ function TableWithSearch({ initialData, type, userCode }) {
                     ord_date: editElement.order_date.trim(),
                     cust_code: editElement.cust_code.trim(),
                     agent_code: editElement.agent_code.trim(),
-                    ord_description: editElement.ord_description.trim()
+                    ord_description: editElement.ord_description
                 }
             };
+            console.log('element:', element);
             await putOrder(token, element);
-            setPopupMessage({ type: 'success', text: 'Order updated successfully!' });
+            enqueueSnackbar('Order updated successfully!', { variant: 'success' });
+
+            await fetchOrders();
         } catch (error) {
-            setPopupMessage({ type: 'error', text: 'Failed to update order. Please try again.' });
+            enqueueSnackbar('Failed to update order. Please try again.', { variant: 'error' });
         }
         setEditElement(null);
-        window.location.reload();
-    }, [editElement, token]);
+    }, [editElement, token, enqueueSnackbar, fetchOrders]);
 
     const handleConfirmDelete = useCallback(async () => {
         try {
             const element = {
-                ord_num: Number(editElement.ord_num.trim())
+                ord_num: Number(editElement.ord_num)
             };
             await deleteOrder(token, element);
-            setPopupMessage({ type: 'success', text: 'Order deleted successfully!' });
+            enqueueSnackbar('Order deleted successfully!', { variant: 'success' });
+
+            await fetchOrders();
         } catch (error) {
-            setPopupMessage({ type: 'error', text: 'Failed to delete order. Please try again.' });
+            enqueueSnackbar('Failed to delete order. Please try again.', { variant: 'error' });
         }
         setEditElement(null);
-        window.location.reload();
-    }, [editElement, token]);
+    }, [editElement, token, enqueueSnackbar, fetchOrders]);
 
     const handleInputChange = (key, value) => {
-        setEditElement(prev => ({ ...prev, [key]: value.trim() }));
+        setEditElement(prev => ({ ...prev, [key]: value }));
     };
 
     const handleAddOrderInputChange = (key, value) => {
-        setAddElement(prev => ({ ...prev, [key]: value.trim() }));
+        setAddElement(prev => ({ ...prev, [key]: value }));
     };
 
     const handleConfirmAdd = useCallback(async () => {
@@ -181,27 +206,27 @@ function TableWithSearch({ initialData, type, userCode }) {
             if (!userCode) {
                 throw new Error('User code is not available.');
             }
-            const order = {
-                newOrder: {
-                    ord_num: Number(addElement.ord_num.trim()),
-                    ord_amount: Number(addElement.ord_amount.trim()),
-                    advance_amount: Number(addElement.advance_amount.trim()),
-                    ord_date: addElement.order_date.trim(),
-                    cust_code: addElement.cust_code.trim(),
-                    agent_code: userCode.trim(),
-                    ord_description: addElement.ord_description.trim()
-                }
+            const newOrder = {
+                ord_num: Number(addElement.ord_num.trim()),
+                ord_amount: Number(addElement.ord_amount.trim()),
+                advance_amount: Number(addElement.advance_amount.trim()),
+                ord_date: addElement.order_date.trim(),
+                cust_code: addElement.cust_code.trim(),
+                agent_code: userCode.trim(),
+                ord_description: addElement.ord_description
             };
-            console.log(order);
-            await postOrder(token, order);
-            setPopupMessage({ type: 'success', text: 'Order added successfully!' });
+
+            await postOrder(token, { newOrder });
+
+            enqueueSnackbar('Order added successfully!', { variant: 'success' });
+
+            await fetchOrders();
         } catch (error) {
             console.error('Error adding order:', error);
-            setPopupMessage({ type: 'error', text: 'Failed to add order. Please try again.' });
+            enqueueSnackbar('Failed to add order. Please try again.', { variant: 'error' });
         }
         setShowAddOrderPanel(false);
-        window.location.reload();
-    }, [token, addElement, userCode]);
+    }, [token, addElement, userCode, enqueueSnackbar, fetchOrders]);
 
     const displayNames = {
         ord_num: 'Order Number',
@@ -265,12 +290,6 @@ function TableWithSearch({ initialData, type, userCode }) {
                     handleConfirmAdd={handleConfirmAdd}
                     onCancel={() => setShowAddOrderPanel(false)}
                     token={token}
-                />
-            )}
-            {popupMessage && (
-                <PopupMessage
-                    message={popupMessage}
-                    onClose={() => setPopupMessage(null)}
                 />
             )}
         </div>

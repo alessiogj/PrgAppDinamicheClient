@@ -2,6 +2,10 @@ import React, { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import { formatDate } from '../utils/formatDate';
 import { getAvailableCustomers } from "../Services/OrderService";
+import { TextField, Button, MenuItem, Grid, Paper, Typography, Container } from '@mui/material';
+import DatePicker from 'react-datepicker';
+import 'react-datepicker/dist/react-datepicker.css';
+import { NumericFormat } from 'react-number-format';
 
 function EditPanel({ editElement, displayNames, handleInputChange, handleConfirmEdit, handleConfirmDelete, onCancel, token }) {
     const [customerCodes, setCustomerCodes] = useState([]);
@@ -33,81 +37,119 @@ function EditPanel({ editElement, displayNames, handleInputChange, handleConfirm
     };
 
     const handleIntegerInputChange = (key, value) => {
-        const parsedValue = parseInt(value, 10);
-        if (!isNaN(parsedValue)) {
-            handleInputChange(key, parsedValue);
+        if (/^\d*$/.test(value)) {
+            handleInputChange(key, value);
+        }
+    };
+
+    const handleDateChange = (key, date) => {
+        if (date) {
+            handleInputChange(key, formatDate(date));
         } else {
             handleInputChange(key, '');
         }
     };
 
     return (
-        <div className="info-details">
-            <h3>Edit Element</h3>
-            {Object.keys(editElement).map(key => {
-                if (key === 'order_date') {
-                    return (
-                        <p key={key}>
-                            <strong>{displayNames[key]}:</strong>
-                            <input
-                                type="date"
-                                value={formatDate(editElement[key])}
-                                onChange={e => handleInputChange(key, e.target.value)}
-                            />
-                        </p>
-                    );
-                }
+        <Container component={Paper} elevation={3} sx={{ p: 4, mt: 4 }}>
+            <Typography variant="h4" gutterBottom>Edit Element</Typography>
+            <Grid container spacing={3}>
+                {Object.keys(editElement).map(key => {
+                    if (key === 'order_date') {
+                        return (
+                            <Grid item xs={12} sm={6} key={key}>
+                                <DatePicker
+                                    selected={editElement[key] ? new Date(editElement[key]) : null}
+                                    onChange={(date) => handleDateChange(key, date)}
+                                    customInput={<TextField fullWidth label={displayNames[key]} />}
+                                    dateFormat="yyyy-MM-dd"
+                                />
+                            </Grid>
+                        );
+                    }
 
-                if (key === 'ord_amount' || key === 'advance_amount') {
-                    return (
-                        <p key={key}>
-                            <strong>{displayNames[key]}:</strong>
-                            <input
-                                type="number"
-                                step="0.01"
-                                value={editElement[key]}
-                                onChange={e => handleNumberInputChange(key, e.target.value)}
-                            />
-                        </p>
-                    );
-                }
+                    if (key === 'ord_amount' || key === 'advance_amount') {
+                        return (
+                            <Grid item xs={12} sm={6} key={key}>
+                                <NumericFormat
+                                    fullWidth
+                                    label={displayNames[key]}
+                                    value={editElement[key]}
+                                    customInput={TextField}
+                                    thousandSeparator={true}
+                                    decimalScale={2}
+                                    fixedDecimalScale={true}
+                                    prefix={'€'}
+                                    onValueChange={(values) => handleNumberInputChange(key, values.value)}
+                                />
+                            </Grid>
+                        );
+                    }
 
-                if (key === 'cust_code') {
-                    return (
-                        <p key={key}>
-                            <strong>{displayNames[key]}:</strong>
-                            <select
-                                value={editElement[key]}
-                                onChange={e => handleInputChange(key, e.target.value)}
-                            >
-                                <option value="">Select Customer Code</option>
-                                {customerCodes.map(code => (
-                                    <option key={code} value={code}>{code}</option>
-                                ))}
-                            </select>
-                        </p>
-                    );
-                }
+                    if (key === 'cust_code') {
+                        return (
+                            <Grid item xs={12} sm={6} key={key}>
+                                <TextField
+                                    select
+                                    fullWidth
+                                    label={displayNames[key]}
+                                    value={editElement[key]}
+                                    onChange={e => handleInputChange(key, e.target.value)}
+                                    error={!customerCodes.includes(editElement[key])}
+                                    helperText={!customerCodes.includes(editElement[key]) ? 'Invalid customer code' : ''}
+                                >
+                                    <MenuItem value="">Select Customer Code</MenuItem>
+                                    {customerCodes.map(code => (
+                                        <MenuItem key={code} value={code}>{code}</MenuItem>
+                                    ))}
+                                </TextField>
+                            </Grid>
+                        );
+                    }
 
-                if (key === 'ord_description') {
-                    return (
-                        <p key={key}>
-                            <strong>{displayNames[key]}:</strong>
-                            <input
-                                type="text"
-                                value={editElement[key]}
-                                onChange={e => handleInputChange(key, e.target.value)}
-                            />
-                        </p>
-                    );
-                }
+                    if (key === 'ord_description') {
+                        return (
+                            <Grid item xs={12} key={key}>
+                                <TextField
+                                    fullWidth
+                                    label={displayNames[key]}
+                                    value={editElement[key]}
+                                    onChange={e => handleInputChange(key, e.target.value)}
+                                    multiline
+                                    rows={4}
+                                />
+                            </Grid>
+                        );
+                    }
 
-                return null;
-            })}
-            <button onClick={handleConfirmDelete} className="button">Delete</button>
-            <button onClick={handleConfirmEdit} className="button">Confirm</button>
-            <button onClick={onCancel} className="button">Cancel</button>
-        </div>
+                    if (key === 'ord_num') {
+                        return (
+                            <Grid item xs={12} sm={6} key={key}>
+                                <TextField
+                                    fullWidth
+                                    label={displayNames[key]}
+                                    value={editElement[key]}
+                                    onChange={e => handleIntegerInputChange(key, e.target.value)}
+                                />
+                            </Grid>
+                        );
+                    }
+
+                    return null;
+                })}
+            </Grid>
+            <Grid container spacing={2} justifyContent="flex-end" sx={{ mt: 2 }}>
+                <Grid item>
+                    <Button onClick={handleConfirmDelete} variant="contained" color="secondary">Delete</Button>
+                </Grid>
+                <Grid item>
+                    <Button onClick={handleConfirmEdit} variant="contained" color="primary">Confirm</Button>
+                </Grid>
+                <Grid item>
+                    <Button onClick={onCancel} variant="contained">Cancel</Button>
+                </Grid>
+            </Grid>
+        </Container>
     );
 }
 

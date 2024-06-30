@@ -1,7 +1,11 @@
 import React, { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
-import { formatDate } from '../utils/formatDate';
 import { getAvailableCustomers } from "../Services/OrderService";
+import { TextField, Button, MenuItem, Container, Typography, Grid, Paper } from '@mui/material';
+import DatePicker from 'react-datepicker';
+import 'react-datepicker/dist/react-datepicker.css';
+import { NumericFormat } from 'react-number-format';
+import { formatDate } from "../utils/formatDate";
 
 function AddOrderPanel({ addElement, displayNames, handleInputChange, handleConfirmAdd, onCancel, token }) {
     const [customerCodes, setCustomerCodes] = useState([]);
@@ -24,6 +28,12 @@ function AddOrderPanel({ addElement, displayNames, handleInputChange, handleConf
         fetchCustomerCodes();
     }, [token]);
 
+    const handleIntegerInputChange = (key, value) => {
+        if (/^\d*$/.test(value)) {
+            handleInputChange(key, value);
+        }
+    };
+
     const handleNumberInputChange = (key, value) => {
         const parsedValue = parseFloat(value);
         if (!isNaN(parsedValue)) {
@@ -33,94 +43,110 @@ function AddOrderPanel({ addElement, displayNames, handleInputChange, handleConf
         }
     };
 
-    const handleIntegerInputChange = (key, value) => {
-        const parsedValue = parseInt(value, 10);
-        if (!isNaN(parsedValue)) {
-            handleInputChange(key, parsedValue);
+    const handleDateChange = (key, date) => {
+        if (date) {
+            handleInputChange(key, formatDate(date));
         } else {
             handleInputChange(key, '');
         }
     };
 
     return (
-        <div className="info-details">
-            <h3>Add New Order</h3>
-            {Object.keys(addElement).map(key => {
-                if (key === 'order_date') {
-                    return (
-                        <p key={key}>
-                            <strong>{displayNames[key]}:</strong>
-                            <input
-                                type="date"
-                                value={formatDate(addElement[key])}
-                                onChange={e => handleInputChange(key, e.target.value)}
-                            />
-                        </p>
-                    );
-                }
+        <Container component={Paper} elevation={3} sx={{ p: 4, mt: 4 }}>
+            <Typography variant="h4" gutterBottom>Add New Order</Typography>
+            <Grid container spacing={3}>
+                {Object.keys(addElement).map(key => {
+                    if (key === 'order_date') {
+                        return (
+                            <Grid item xs={12} sm={6} key={key}>
+                                <DatePicker
+                                    selected={addElement[key] ? new Date(addElement[key]) : null}
+                                    onChange={(date) => handleDateChange(key, date)}
+                                    customInput={<TextField fullWidth label={displayNames[key]} />}
+                                    dateFormat="yyyy-MM-dd"
+                                />
+                            </Grid>
+                        );
+                    }
 
-                if (key === 'ord_num') {
-                    return (
-                        <p key={key}>
-                            <strong>{displayNames[key]}:</strong>
-                            <input
-                                type="number"
-                                value={addElement[key]}
-                                onChange={e => handleIntegerInputChange(key, e.target.value)}
-                            />
-                        </p>
-                    );
-                }
+                    if (key === 'ord_num') {
+                        return (
+                            <Grid item xs={12} sm={6} key={key}>
+                                <TextField
+                                    fullWidth
+                                    label={displayNames[key]}
+                                    value={addElement[key]}
+                                    onChange={e => handleIntegerInputChange(key, e.target.value)}
+                                    placeholder="Attualmente temporaneo"
+                                />
+                            </Grid>
+                        );
+                    }
 
-                if (key === 'ord_amount' || key === 'advance_amount') {
-                    return (
-                        <p key={key}>
-                            <strong>{displayNames[key]}:</strong>
-                            <input
-                                type="number"
-                                step="0.01"
-                                value={addElement[key]}
-                                onChange={e => handleNumberInputChange(key, e.target.value)}
-                            />
-                        </p>
-                    );
-                }
+                    if (key === 'ord_amount' || key === 'advance_amount') {
+                        return (
+                            <Grid item xs={12} sm={6} key={key}>
+                                <NumericFormat
+                                    fullWidth
+                                    label={displayNames[key]}
+                                    value={addElement[key]}
+                                    customInput={TextField}
+                                    thousandSeparator={true}
+                                    decimalScale={2}
+                                    fixedDecimalScale={true}
+                                    prefix={'€'}
+                                    onValueChange={(values) => handleInputChange(key, values.value)}
+                                />
+                            </Grid>
+                        );
+                    }
 
-                if (key === 'cust_code') {
-                    return (
-                        <p key={key}>
-                            <strong>{displayNames[key]}:</strong>
-                            <select
-                                value={addElement[key]}
-                                onChange={e => handleInputChange(key, e.target.value)}
-                            >
-                                <option value="">Select Customer Code</option>
-                                {customerCodes.map(code => (
-                                    <option key={code} value={code}>{code}</option>
-                                ))}
-                            </select>
-                        </p>
-                    );
-                }
+                    if (key === 'cust_code') {
+                        return (
+                            <Grid item xs={12} sm={6} key={key}>
+                                <TextField
+                                    select
+                                    fullWidth
+                                    label={displayNames[key]}
+                                    value={addElement[key]}
+                                    onChange={e => handleInputChange(key, e.target.value)}
+                                >
+                                    <MenuItem value="">Select Customer Code</MenuItem>
+                                    {customerCodes.map(code => (
+                                        <MenuItem key={code} value={code}>{code}</MenuItem>
+                                    ))}
+                                </TextField>
+                            </Grid>
+                        );
+                    }
 
-                if (key === 'ord_description') {
-                    return (
-                        <p key={key}>
-                            <strong>{displayNames[key]}:</strong>
-                            <input
-                                type="text"
-                                value={addElement[key]}
-                                onChange={e => handleInputChange(key, e.target.value)}
-                            />
-                        </p>
-                    );
-                }
+                    if (key === 'ord_description') {
+                        return (
+                            <Grid item xs={12} key={key}>
+                                <TextField
+                                    fullWidth
+                                    label={displayNames[key]}
+                                    value={addElement[key]}
+                                    onChange={e => handleInputChange(key, e.target.value)}
+                                    multiline
+                                    rows={4}
+                                />
+                            </Grid>
+                        );
+                    }
 
-                return null;
-            })}
-            <button onClick={handleConfirmAdd} className="button">Add Order</button>
-            <button onClick={onCancel} className="button">Cancel</button>
-        </div>
+                    return null;
+                })}
+            </Grid>
+            <Grid container spacing={2} justifyContent="flex-end" sx={{ mt: 2 }}>
+                <Grid item>
+                    <Button onClick={onCancel} variant="contained" color="secondary">Cancel</Button>
+                </Grid>
+                <Grid item>
+                    <Button onClick={handleConfirmAdd} variant="contained" color="primary">Add Order</Button>
+                </Grid>
+            </Grid>
+        </Container>
     );
 }
 
