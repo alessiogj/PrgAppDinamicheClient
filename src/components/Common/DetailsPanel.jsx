@@ -1,20 +1,36 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import { Paper, Typography, Button, Grid } from '@mui/material';
 
 function DetailsPanel({ selectedDetails, type, onClose }) {
     return (
-        <div className="info-details">
-            <h3>{type === 'agent' ? 'Customer Details' : 'Agent Details'}</h3>
-            {Object.keys(selectedDetails).map(key => (
-                <p key={key}><strong>{key}:</strong> {selectedDetails[key]}</p>
-            ))}
-            <button onClick={onClose} className="button">Close</button>
-        </div>
+        <Paper elevation={3} className="details-panel">
+            <Typography variant="h6" gutterBottom>
+                {type === 'agent' ? 'Customer Details' : 'Agent Details'}
+            </Typography>
+            <Grid container spacing={2}>
+                {Object.keys(selectedDetails).map(key => (
+                    <Grid item xs={12} key={key}>
+                        <Typography variant="body1">
+                            <strong>{key}:</strong> {selectedDetails[key]}
+                        </Typography>
+                    </Grid>
+                ))}
+            </Grid>
+            <Button
+                onClick={onClose}
+                variant="contained"
+                color="primary"
+                className="close-button"
+            >
+                Close
+            </Button>
+        </Paper>
     );
 }
 
 DetailsPanel.propTypes = {
-    selectedDetails: PropTypes.object,
+    selectedDetails: PropTypes.object.isRequired,
     type: PropTypes.oneOf(['agent', 'customer']).isRequired,
     onClose: PropTypes.func.isRequired,
 };

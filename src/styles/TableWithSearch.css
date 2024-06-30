@@ -1,5 +1,3 @@
-/* src/styles/TableWithSearch.css */
-
 .table-container {
     padding: 20px;
     font-family: 'Josefin Sans', sans-serif;
@@ -122,4 +120,25 @@
 
 .info-details .button:hover {
     background-color: #f0f0f0;
+}
+
+.details-panel {
+    padding: 20px;
+    margin-top: 20px;
+    border-radius: 8px;
+    background-color: #fff;
+}
+
+.details-panel .MuiTypography-root {
+    margin-bottom: 10px;
+}
+
+.details-panel .MuiButton-root {
+    margin-top: 20px;
+    background-color: #4285f4;
+    color: #fff;
+}
+
+.details-panel .MuiButton-root:hover {
+    background-color: #357ae8;
 }

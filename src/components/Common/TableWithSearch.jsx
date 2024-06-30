@@ -225,6 +225,14 @@ function TableWithSearch({ initialData, type, userCode }) {
             enqueueSnackbar('Failed to add order. Please try again.', { variant: 'error' });
         }
         setShowAddOrderPanel(false);
+        setAddElement({
+            ord_num: '',
+            ord_amount: '',
+            advance_amount: '',
+            order_date: '',
+            cust_code: '',
+            ord_description: ''
+        });
     }, [token, addElement, userCode, enqueueSnackbar, fetchOrders]);
 
     const displayNames = {
@@ -240,6 +248,22 @@ function TableWithSearch({ initialData, type, userCode }) {
         setShowAddOrderPanel(true);
         setSelectedDetails(null);
         setEditElement(null);
+    };
+
+    const handleCancelEdit = () => {
+        setEditElement(null);
+    };
+
+    const handleCancelAdd = () => {
+        setShowAddOrderPanel(false);
+        setAddElement({
+            ord_num: '',
+            ord_amount: '',
+            advance_amount: '',
+            order_date: '',
+            cust_code: '',
+            ord_description: ''
+        });
     };
 
     return (
@@ -277,7 +301,7 @@ function TableWithSearch({ initialData, type, userCode }) {
                     handleInputChange={handleInputChange}
                     handleConfirmEdit={handleConfirmEdit}
                     handleConfirmDelete={handleConfirmDelete}
-                    onCancel={() => setEditElement(null)}
+                    onCancel={handleCancelEdit}
                     token={token}
                 />
             )}
@@ -287,7 +311,7 @@ function TableWithSearch({ initialData, type, userCode }) {
                     displayNames={displayNames}
                     handleInputChange={handleAddOrderInputChange}
                     handleConfirmAdd={handleConfirmAdd}
-                    onCancel={() => setShowAddOrderPanel(false)}
+                    onCancel={handleCancelAdd}
                     token={token}
                 />
             )}

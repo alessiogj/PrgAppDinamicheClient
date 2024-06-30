@@ -6,6 +6,8 @@ import { TextField, Button, MenuItem, Grid, Paper, Typography, Container } from 
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
 import { NumericFormat } from 'react-number-format';
+import 'react-datepicker/dist/react-datepicker.css';
+
 
 function EditPanel({ editElement, displayNames, handleInputChange, handleConfirmEdit, handleConfirmDelete, onCancel, token }) {
     const [customerCodes, setCustomerCodes] = useState([]);
