@@ -21,6 +21,7 @@ function EditPanel({ editElement, displayNames, handleInputChange, handleConfirm
         }
     };
 
+
     return (
         <div className="info-details">
             <h3>Edit Element</h3>
@@ -37,7 +38,6 @@ function EditPanel({ editElement, displayNames, handleInputChange, handleConfirm
                         </p>
                     );
                 }
-
                 if (key === 'ord_num') {
                     return (
                         <p key={key}>

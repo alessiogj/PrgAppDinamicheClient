@@ -21,6 +21,7 @@ function AddOrderPanel({ addElement, displayNames, handleInputChange, handleConf
         }
     };
 
+
     return (
         <div className="info-details">
             <h3>Add New Order</h3>

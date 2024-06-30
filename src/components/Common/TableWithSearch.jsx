@@ -10,6 +10,7 @@ import EditPanel from './EditPanel';
 import AddOrderPanel from './AddOrderPanel';
 import PopupMessage from './PopupMessage';
 import '../../styles/PopupMessage.css';
+import {formatDate} from "../utils/formatDate";
 
 function TableWithSearch({ initialData, type }) {
     const [search, setSearch] = useState('');
@@ -139,7 +140,7 @@ function TableWithSearch({ initialData, type }) {
                     ord_num: Number(editElement.ord_num),
                     ord_amount: Number(editElement.ord_amount),
                     advance_amount: Number(editElement.advance_amount),
-                    ord_date: editElement.ord_date,
+                    ord_date: editElement.order_date,
                     cust_code: editElement.cust_code,
                     agent_code: editElement.agent_code,
                     ord_description: editElement.ord_description
