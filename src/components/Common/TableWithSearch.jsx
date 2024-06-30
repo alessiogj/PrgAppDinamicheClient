@@ -1,6 +1,6 @@
 import React, { useState, useCallback, useMemo, useEffect } from 'react';
 import PropTypes from 'prop-types';
-import { useSnackbar } from 'notistack';  // Importa useSnackbar
+import { useSnackbar } from 'notistack';
 import '../../styles/TableWithSearch.css';
 import { deleteOrder, putOrder, postOrder, getOrders } from '../Services/OrderService';
 import SearchBar from './SearchBar';
@@ -158,7 +158,7 @@ function TableWithSearch({ initialData, type, userCode }) {
         try {
             const element = {
                 modifiedOrder: {
-                    ord_num: Number(editElement.ord_num.trim()),
+                    ord_num: Number(editElement.ord_num),
                     ord_amount: Number(editElement.ord_amount.trim()),
                     advance_amount: Number(editElement.advance_amount.trim()),
                     ord_date: editElement.order_date.trim(),
@@ -167,7 +167,6 @@ function TableWithSearch({ initialData, type, userCode }) {
                     ord_description: editElement.ord_description
                 }
             };
-            console.log('element:', element);
             await putOrder(token, element);
             enqueueSnackbar('Order updated successfully!', { variant: 'success' });
 
