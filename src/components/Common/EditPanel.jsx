@@ -1,8 +1,28 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import { formatDate } from '../utils/formatDate';
+import { getAvailableCustomers } from "../Services/OrderService";
 
-function EditPanel({ editElement, displayNames, handleInputChange, handleConfirmEdit, handleConfirmDelete, onCancel }) {
+function EditPanel({ editElement, displayNames, handleInputChange, handleConfirmEdit, handleConfirmDelete, onCancel, token }) {
+    const [customerCodes, setCustomerCodes] = useState([]);
+
+    useEffect(() => {
+        const fetchCustomerCodes = async () => {
+            try {
+                const result = await getAvailableCustomers(token);
+                if (result && result.customers) {
+                    setCustomerCodes(result.customers.map(customer => customer.cust_code));
+                } else {
+                    console.error('Invalid response format:', result);
+                }
+            } catch (error) {
+                console.error('Error fetching customer codes:', error);
+            }
+        };
+
+        fetchCustomerCodes();
+    }, [token]);
+
     const handleNumberInputChange = (key, value) => {
         const parsedValue = parseFloat(value);
         if (!isNaN(parsedValue)) {
@@ -20,7 +40,6 @@ function EditPanel({ editElement, displayNames, handleInputChange, handleConfirm
             handleInputChange(key, '');
         }
     };
-
 
     return (
         <div className="info-details">
@@ -65,8 +84,25 @@ function EditPanel({ editElement, displayNames, handleInputChange, handleConfirm
                     );
                 }
 
-                return (
-                    ['cust_code', 'ord_description'].includes(key) && (
+                if (key === 'cust_code') {
+                    return (
+                        <p key={key}>
+                            <strong>{displayNames[key]}:</strong>
+                            <select
+                                value={editElement[key]}
+                                onChange={e => handleInputChange(key, e.target.value)}
+                            >
+                                <option value="">Select Customer Code</option>
+                                {customerCodes.map(code => (
+                                    <option key={code} value={code}>{code}</option>
+                                ))}
+                            </select>
+                        </p>
+                    );
+                }
+
+                if (key === 'ord_description') {
+                    return (
                         <p key={key}>
                             <strong>{displayNames[key]}:</strong>
                             <input
@@ -75,8 +111,10 @@ function EditPanel({ editElement, displayNames, handleInputChange, handleConfirm
                                 onChange={e => handleInputChange(key, e.target.value)}
                             />
                         </p>
-                    )
-                );
+                    );
+                }
+
+                return null;
             })}
             <button onClick={handleConfirmDelete} className="button">Delete</button>
             <button onClick={handleConfirmEdit} className="button">Confirm</button>
@@ -92,6 +130,7 @@ EditPanel.propTypes = {
     handleConfirmEdit: PropTypes.func.isRequired,
     handleConfirmDelete: PropTypes.func.isRequired,
     onCancel: PropTypes.func.isRequired,
+    token: PropTypes.string.isRequired,
 };
 
 export default EditPanel;

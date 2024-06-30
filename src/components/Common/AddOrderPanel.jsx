@@ -1,8 +1,29 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import { formatDate } from '../utils/formatDate';
+import { getAvailableCustomers } from "../Services/OrderService";
 
-function AddOrderPanel({ addElement, displayNames, handleInputChange, handleConfirmAdd, onCancel }) {
+function AddOrderPanel({ addElement, displayNames, handleInputChange, handleConfirmAdd, onCancel, token }) {
+    const [customerCodes, setCustomerCodes] = useState([]);
+
+    useEffect(() => {
+        const fetchCustomerCodes = async () => {
+            try {
+                console.log('Fetching customer codes'); // Debug log
+                const result = await getAvailableCustomers(token);
+                if (result && result.customers) {
+                    setCustomerCodes(result.customers.map(customer => customer.cust_code));
+                } else {
+                    console.error('Invalid response format:', result);
+                }
+            } catch (error) {
+                console.error('Error fetching customer codes:', error);
+            }
+        };
+
+        fetchCustomerCodes();
+    }, [token]);
+
     const handleNumberInputChange = (key, value) => {
         const parsedValue = parseFloat(value);
         if (!isNaN(parsedValue)) {
@@ -20,7 +41,6 @@ function AddOrderPanel({ addElement, displayNames, handleInputChange, handleConf
             handleInputChange(key, '');
         }
     };
-
 
     return (
         <div className="info-details">
@@ -66,7 +86,24 @@ function AddOrderPanel({ addElement, displayNames, handleInputChange, handleConf
                     );
                 }
 
-                if (['cust_code', 'ord_description'].includes(key)) {
+                if (key === 'cust_code') {
+                    return (
+                        <p key={key}>
+                            <strong>{displayNames[key]}:</strong>
+                            <select
+                                value={addElement[key]}
+                                onChange={e => handleInputChange(key, e.target.value)}
+                            >
+                                <option value="">Select Customer Code</option>
+                                {customerCodes.map(code => (
+                                    <option key={code} value={code}>{code}</option>
+                                ))}
+                            </select>
+                        </p>
+                    );
+                }
+
+                if (key === 'ord_description') {
                     return (
                         <p key={key}>
                             <strong>{displayNames[key]}:</strong>
@@ -93,6 +130,7 @@ AddOrderPanel.propTypes = {
     handleInputChange: PropTypes.func.isRequired,
     handleConfirmAdd: PropTypes.func.isRequired,
     onCancel: PropTypes.func.isRequired,
+    token: PropTypes.string.isRequired
 };
 
 export default AddOrderPanel;

@@ -99,3 +99,29 @@ export const postOrder = async (token, order) => {
         throw error;
     }
 }
+
+export const getAvailableCustomers = async (token) => {
+    try {
+        const requestOptions = {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${token}`
+            }
+        };
+
+        const response = await fetch(`${endpoint}/getAvailableCustomers`, requestOptions);
+
+        if (!response.ok) {
+            const data = await response.json();
+            throw new Error(data.error || 'Invalid request.');
+        }
+
+        return await response.json();
+    } catch (error) {
+        console.error('Error on getting customer info:', error);
+        throw error;
+    }
+};
+
+

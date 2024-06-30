@@ -10,7 +10,6 @@ import EditPanel from './EditPanel';
 import AddOrderPanel from './AddOrderPanel';
 import PopupMessage from './PopupMessage';
 import '../../styles/PopupMessage.css';
-import {formatDate} from "../utils/formatDate";
 
 function TableWithSearch({ initialData, type }) {
     const [search, setSearch] = useState('');
@@ -50,7 +49,7 @@ function TableWithSearch({ initialData, type }) {
 
     const processedData = useMemo(() => {
         return initialData.map(item => {
-            const [date, time] = item.ord_date.split('T');
+            const [date] = item.ord_date.split('T');
             return {
                 ...item,
                 order_date: date
@@ -250,6 +249,7 @@ function TableWithSearch({ initialData, type }) {
                     handleConfirmEdit={handleConfirmEdit}
                     handleConfirmDelete={handleConfirmDelete}
                     onCancel={() => setEditElement(null)}
+                    token={token}
                 />
             )}
             {showAddOrderPanel && !editElement && (
@@ -259,6 +259,7 @@ function TableWithSearch({ initialData, type }) {
                     handleInputChange={handleAddOrderInputChange}
                     handleConfirmAdd={handleConfirmAdd}
                     onCancel={() => setShowAddOrderPanel(false)}
+                    token={token}
                 />
             )}
             {popupMessage && (
