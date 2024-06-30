@@ -1,4 +1,4 @@
-import { jwtDecode } from 'jwt-decode';
+import {jwtDecode} from 'jwt-decode';
 import { getOrders } from "./Services/OrderService";
 import { useEffect, useState } from "react";
 import Navbar from "./Common/Navbar";
@@ -10,14 +10,16 @@ function Dashboard() {
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
     const [userRole, setUserRole] = useState(null);
+    const [userCode, setUserCode] = useState(null);
     const token = localStorage.getItem('jwtToken');
 
     useEffect(() => {
         if (token) {
             try {
                 const decodedToken = jwtDecode(token);
-                setUserRole(decodedToken.userRole);
-                fetchData(decodedToken.userRole);
+                setUserRole(decodedToken.userRole.trim());
+                setUserCode(decodedToken.userCode.trim());
+                fetchData(decodedToken.userRole.trim());
             } catch (error) {
                 console.error("JWT decode error:", error);
                 setError('Error decoding token');
@@ -77,7 +79,7 @@ function Dashboard() {
                     </div>
                     <div className="widget">
                         <h2>Manage Orders</h2>
-                        <TableWithSearch initialData={tableData} type={userRole} />
+                        <TableWithSearch initialData={tableData} type={userRole} userCode={userCode} />
                     </div>
                 </div>
             </header>

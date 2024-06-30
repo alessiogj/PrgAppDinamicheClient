@@ -11,7 +11,7 @@ import AddOrderPanel from './AddOrderPanel';
 import PopupMessage from './PopupMessage';
 import '../../styles/PopupMessage.css';
 
-function TableWithSearch({ initialData, type }) {
+function TableWithSearch({ initialData, type, userCode }) {
     const [search, setSearch] = useState('');
     const [sortConfig, setSortConfig] = useState({ key: null, direction: 'ascending' });
     const [selectedDetails, setSelectedDetails] = useState(null);
@@ -136,13 +136,13 @@ function TableWithSearch({ initialData, type }) {
         try {
             const element = {
                 modifiedOrder: {
-                    ord_num: Number(editElement.ord_num),
-                    ord_amount: Number(editElement.ord_amount),
-                    advance_amount: Number(editElement.advance_amount),
-                    ord_date: editElement.order_date,
-                    cust_code: editElement.cust_code,
-                    agent_code: editElement.agent_code,
-                    ord_description: editElement.ord_description
+                    ord_num: Number(editElement.ord_num.trim()),
+                    ord_amount: Number(editElement.ord_amount.trim()),
+                    advance_amount: Number(editElement.advance_amount.trim()),
+                    ord_date: editElement.order_date.trim(),
+                    cust_code: editElement.cust_code.trim(),
+                    agent_code: editElement.agent_code.trim(),
+                    ord_description: editElement.ord_description.trim()
                 }
             };
             await putOrder(token, element);
@@ -157,7 +157,7 @@ function TableWithSearch({ initialData, type }) {
     const handleConfirmDelete = useCallback(async () => {
         try {
             const element = {
-                ord_num: Number(editElement.ord_num)
+                ord_num: Number(editElement.ord_num.trim())
             };
             await deleteOrder(token, element);
             setPopupMessage({ type: 'success', text: 'Order deleted successfully!' });
@@ -169,34 +169,39 @@ function TableWithSearch({ initialData, type }) {
     }, [editElement, token]);
 
     const handleInputChange = (key, value) => {
-        setEditElement(prev => ({ ...prev, [key]: value }));
+        setEditElement(prev => ({ ...prev, [key]: value.trim() }));
     };
 
     const handleAddOrderInputChange = (key, value) => {
-        setAddElement(prev => ({ ...prev, [key]: value }));
+        setAddElement(prev => ({ ...prev, [key]: value.trim() }));
     };
 
     const handleConfirmAdd = useCallback(async () => {
         try {
+            if (!userCode) {
+                throw new Error('User code is not available.');
+            }
             const order = {
                 newOrder: {
-                    ord_num: Number(addElement.ord_num),
-                    ord_amount: Number(addElement.ord_amount),
-                    advance_amount: Number(addElement.advance_amount),
-                    ord_date: addElement.order_date,
-                    cust_code: addElement.cust_code,
-                    agent_code: initialData[0]?.agent_code,  // preleviamo agent_code da initialData
-                    ord_description: addElement.ord_description
+                    ord_num: Number(addElement.ord_num.trim()),
+                    ord_amount: Number(addElement.ord_amount.trim()),
+                    advance_amount: Number(addElement.advance_amount.trim()),
+                    ord_date: addElement.order_date.trim(),
+                    cust_code: addElement.cust_code.trim(),
+                    agent_code: userCode.trim(),
+                    ord_description: addElement.ord_description.trim()
                 }
             };
+            console.log(order);
             await postOrder(token, order);
             setPopupMessage({ type: 'success', text: 'Order added successfully!' });
         } catch (error) {
+            console.error('Error adding order:', error);
             setPopupMessage({ type: 'error', text: 'Failed to add order. Please try again.' });
         }
         setShowAddOrderPanel(false);
         window.location.reload();
-    }, [token, addElement, initialData]);
+    }, [token, addElement, userCode]);
 
     const displayNames = {
         ord_num: 'Order Number',
@@ -274,7 +279,8 @@ function TableWithSearch({ initialData, type }) {
 
 TableWithSearch.propTypes = {
     initialData: PropTypes.array.isRequired,
-    type: PropTypes.oneOf(['agent', 'customer']).isRequired
+    type: PropTypes.oneOf(['agent', 'customer']).isRequired,
+    userCode: PropTypes.string
 };
 
 export default TableWithSearch;

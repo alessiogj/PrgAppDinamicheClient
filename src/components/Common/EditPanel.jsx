@@ -57,18 +57,6 @@ function EditPanel({ editElement, displayNames, handleInputChange, handleConfirm
                         </p>
                     );
                 }
-                if (key === 'ord_num') {
-                    return (
-                        <p key={key}>
-                            <strong>{displayNames[key]}:</strong>
-                            <input
-                                type="number"
-                                value={editElement[key]}
-                                onChange={e => handleIntegerInputChange(key, e.target.value)}
-                            />
-                        </p>
-                    );
-                }
 
                 if (key === 'ord_amount' || key === 'advance_amount') {
                     return (
