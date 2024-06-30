@@ -37,6 +37,11 @@
     background-color: #fff;
     cursor: pointer;
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    transition: background-color 0.3s ease;
+}
+
+.button:hover {
+    background-color: #f0f0f0;
 }
 
 .filter-checkboxes {
@@ -106,4 +111,15 @@
 .info-details .button {
     margin-top: 10px;
     display: block;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    background-color: #fff;
+    cursor: pointer;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    transition: background-color 0.3s ease;
+}
+
+.info-details .button:hover {
+    background-color: #f0f0f0;
 }

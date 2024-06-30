@@ -76,3 +76,26 @@ export const deleteOrder = async (token, order) => {
         throw error;
     }
 }
+
+export const postOrder = async (token, order) => {
+    try {
+        const requestOptions = {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${token}`
+            },
+            body: JSON.stringify(order)
+        };
+
+        const orderResponse = await fetch(`${endpoint}/addAgentOrder`, requestOptions);
+
+        if (!orderResponse.ok) {
+            const data = await orderResponse.json();
+            throw new Error(data.message || 'Invalid request.');
+        }
+    }  catch (error) {
+        console.error('Error on adding order:', error);
+        throw error;
+    }
+}

@@ -1,7 +1,15 @@
 import React, { useState, useCallback, useMemo } from 'react';
 import PropTypes from 'prop-types';
 import '../../styles/TableWithSearch.css';
-import {deleteOrder, getOrders, putOrder} from '../Services/OrderService';
+import { deleteOrder, putOrder, postOrder } from '../Services/OrderService';
+import SearchBar from './SearchBar';
+import FilterCheckboxes from './FilterCheckboxes';
+import DataTable from './DataTable';
+import DetailsPanel from './DetailsPanel';
+import EditPanel from './EditPanel';
+import AddOrderPanel from './AddOrderPanel';
+import PopupMessage from './PopupMessage';
+import '../../styles/PopupMessage.css';
 
 function TableWithSearch({ initialData, type }) {
     const [search, setSearch] = useState('');
@@ -18,6 +26,16 @@ function TableWithSearch({ initialData, type }) {
         commission: type === 'customer'
     });
     const [editElement, setEditElement] = useState(null);
+    const [showAddOrderPanel, setShowAddOrderPanel] = useState(false);
+    const [popupMessage, setPopupMessage] = useState(null);
+    const [addElement, setAddElement] = useState({
+        ord_num: '',
+        ord_amount: '',
+        advance_amount: '',
+        order_date: '',
+        cust_code: '',
+        ord_description: ''
+    });
 
     const columnDefinitions = useMemo(() => ({
         ord_num: { displayName: 'Order Number', type: 'number' },
@@ -75,6 +93,8 @@ function TableWithSearch({ initialData, type }) {
     }, []);
 
     const handleRowClick = useCallback((item) => {
+        setShowAddOrderPanel(false);
+        setEditElement(null);
         const details = type === 'agent' ? {
             'Order Description': item.ord_description || 'N/A',
             'Customer Code': item.cust_code || 'Unknown',
@@ -106,136 +126,146 @@ function TableWithSearch({ initialData, type }) {
 
     const handleEdit = useCallback((item) => {
         if (type === 'agent') {
+            setShowAddOrderPanel(false);
+            setSelectedDetails(null);
             setEditElement(item);
         }
     }, [type]);
 
     const handleConfirmEdit = useCallback(async () => {
-        const element =
-        {
-            modifiedOrder : {
-                ord_num: Number(editElement.ord_num),
-                ord_amount: Number(editElement.ord_amount),
-                advance_amount: Number(editElement.advance_amount),
-                ord_date: editElement.ord_date,
-                cust_code: editElement.cust_code,
-                agent_code: editElement.agent_code,
-                ord_description: editElement.ord_description
-            }
+        try {
+            const element = {
+                modifiedOrder: {
+                    ord_num: Number(editElement.ord_num),
+                    ord_amount: Number(editElement.ord_amount),
+                    advance_amount: Number(editElement.advance_amount),
+                    ord_date: editElement.ord_date,
+                    cust_code: editElement.cust_code,
+                    agent_code: editElement.agent_code,
+                    ord_description: editElement.ord_description
+                }
+            };
+            await putOrder(token, element);
+            setPopupMessage({ type: 'success', text: 'Order updated successfully!' });
+        } catch (error) {
+            setPopupMessage({ type: 'error', text: 'Failed to update order. Please try again.' });
         }
-        await putOrder(token, element);
         setEditElement(null);
         window.location.reload();
-    }, [editElement]);
+    }, [editElement, token]);
 
     const handleConfirmDelete = useCallback(async () => {
-        const element =
-            {
+        try {
+            const element = {
                 ord_num: Number(editElement.ord_num)
-            }
-        await deleteOrder(token, element);
+            };
+            await deleteOrder(token, element);
+            setPopupMessage({ type: 'success', text: 'Order deleted successfully!' });
+        } catch (error) {
+            setPopupMessage({ type: 'error', text: 'Failed to delete order. Please try again.' });
+        }
         setEditElement(null);
-        //force refresh
         window.location.reload();
-    }, [editElement]);
+    }, [editElement, token]);
 
     const handleInputChange = (key, value) => {
         setEditElement(prev => ({ ...prev, [key]: value }));
     };
 
+    const handleAddOrderInputChange = (key, value) => {
+        setAddElement(prev => ({ ...prev, [key]: value }));
+    };
+
+    const handleConfirmAdd = useCallback(async () => {
+        try {
+            const order = {
+                newOrder: {
+                    ord_num: Number(addElement.ord_num),
+                    ord_amount: Number(addElement.ord_amount),
+                    advance_amount: Number(addElement.advance_amount),
+                    ord_date: addElement.order_date,
+                    cust_code: addElement.cust_code,
+                    agent_code: initialData[0]?.agent_code,  // preleviamo agent_code da initialData
+                    ord_description: addElement.ord_description
+                }
+            };
+            await postOrder(token, order);
+            setPopupMessage({ type: 'success', text: 'Order added successfully!' });
+        } catch (error) {
+            setPopupMessage({ type: 'error', text: 'Failed to add order. Please try again.' });
+        }
+        setShowAddOrderPanel(false);
+        window.location.reload();
+    }, [token, addElement, initialData]);
+
     const displayNames = {
+        ord_num: 'Order Number',
         ord_amount: 'Order Amount',
         advance_amount: 'Advance Amount',
         order_date: 'Order Date',
-        ord_description: 'Order description'
+        cust_code: 'Customer Code',
+        ord_description: 'Order Description'
+    };
+
+    const handleAddOrder = () => {
+        setShowAddOrderPanel(true);
+        setSelectedDetails(null);
+        setEditElement(null);
     };
 
     return (
         <div className="table-container">
             <div className="controls">
-                <input
-                    type="text"
-                    placeholder={"Search..."}
-                    value={search}
-                    onChange={e => setSearch(e.target.value)}
-                    className="search-input"
+                <SearchBar search={search} onSearchChange={setSearch} />
+                <FilterCheckboxes
+                    columnDefinitions={columnDefinitions}
+                    visibleColumns={visibleColumns}
+                    handleColumnVisibilityChange={handleColumnVisibilityChange}
+                    type={type}
                 />
-                <div className="filter-checkboxes">
-                    {Object.keys(columnDefinitions).map(column => (
-                        ((column !== 'cust_name' || type === 'agent') &&
-                            (column !== 'agent_name' && column !== 'commission' || type === 'customer')) && (
-                            <label key={column}>
-                                <input
-                                    type="checkbox"
-                                    checked={visibleColumns[column]}
-                                    onChange={() => handleColumnVisibilityChange(column)}
-                                />
-                                {columnDefinitions[column].displayName}
-                            </label>
-                        )
-                    ))}
-                </div>
+                {type === 'agent' && <button onClick={handleAddOrder} className="button">Add Order</button>}
             </div>
-            <table className="data-table">
-                <thead>
-                <tr>
-                    {Object.keys(visibleColumns).filter(key => visibleColumns[key]).map(column => (
-                        <th key={column} onClick={() => handleSort(column)}>
-                            {columnDefinitions[column].displayName}
-                        </th>
-                    ))}
-                    {type === 'agent' && <th>Actions</th>}
-                </tr>
-                </thead>
-                <tbody>
-                {filteredData.map((item, index) => (
-                    <tr key={index}>
-                        {Object.keys(visibleColumns).filter(key => visibleColumns[key]).map(column => (
-                            <td key={column} onClick={() => (column === 'cust_name' && type === 'agent') || (column === 'agent_name' && type === 'customer') ? handleRowClick(item) : null}>
-                                {(column === 'cust_name' && type === 'agent') || (column === 'agent_name' && type === 'customer') ?
-                                    <a href="#!" style={{ color: 'blue' }}>{item[column]}</a> : item[column]}
-                            </td>
-                        ))}
-                        {type === 'agent' && (
-                            <td>
-                                <button className="button" onClick={(e) => { e.stopPropagation(); handleEdit(item); }}>Edit</button>
-                            </td>
-                        )}
-                    </tr>
-                ))}
-                </tbody>
-            </table>
-            {selectedDetails && (
-                <div className="info-details">
-                    <h3>{type === 'agent' ? 'Customer Details' : 'Agent Details'}</h3>
-                    {Object.keys(selectedDetails).map(key => (
-                        <p key={key}><strong>{key}:</strong> {selectedDetails[key]}</p>
-                    ))}
-                    <button onClick={() => setSelectedDetails(null)} className="button">Close</button>
-                </div>
+            <DataTable
+                filteredData={filteredData}
+                visibleColumns={visibleColumns}
+                columnDefinitions={columnDefinitions}
+                handleSort={handleSort}
+                handleRowClick={handleRowClick}
+                handleEdit={handleEdit}
+                type={type}
+            />
+            {selectedDetails && !showAddOrderPanel && !editElement && (
+                <DetailsPanel
+                    selectedDetails={selectedDetails}
+                    type={type}
+                    onClose={() => setSelectedDetails(null)}
+                />
             )}
-            {editElement && (
-                <div className="info-details">
-                    <h3>Edit Element</h3>
-                    {}
-                    {Object.keys(editElement).map(key => (
-                        ['ord_amount', 'advance_amount', 'order_date', 'ord_description'].includes(key) && (
-                            <p key={key}>
-                                <strong>{displayNames[key]}:</strong>
-                                <input
-                                    type="text"
-                                    value={editElement[key]}
-                                    onChange={e => handleInputChange(key, e.target.value)}
-                                />
-                            </p>
-                        )
-                    ))}
-                    <button onClick={handleConfirmDelete} className="button">Delete</button>
-                    <button onClick={handleConfirmEdit} className="button">Confirm</button>
-                    <button onClick={() => setEditElement(null)} className="button">Cancel</button>
-                </div>
+            {editElement && !showAddOrderPanel && (
+                <EditPanel
+                    editElement={editElement}
+                    displayNames={displayNames}
+                    handleInputChange={handleInputChange}
+                    handleConfirmEdit={handleConfirmEdit}
+                    handleConfirmDelete={handleConfirmDelete}
+                    onCancel={() => setEditElement(null)}
+                />
             )}
-
+            {showAddOrderPanel && !editElement && (
+                <AddOrderPanel
+                    addElement={addElement}
+                    displayNames={displayNames}
+                    handleInputChange={handleAddOrderInputChange}
+                    handleConfirmAdd={handleConfirmAdd}
+                    onCancel={() => setShowAddOrderPanel(false)}
+                />
+            )}
+            {popupMessage && (
+                <PopupMessage
+                    message={popupMessage}
+                    onClose={() => setPopupMessage(null)}
+                />
+            )}
         </div>
     );
 }
