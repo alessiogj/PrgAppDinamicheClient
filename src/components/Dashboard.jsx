@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import {jwtDecode} from 'jwt-decode';
+import { jwtDecode } from 'jwt-decode';
 import { getOrders } from './Services/OrderService';
 import Navbar from './Common/Navbar';
 import TableWithSearch from './Common/TableWithSearch';

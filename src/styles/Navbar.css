@@ -1,3 +1,5 @@
+/* src/styles/Navbar.css */
+
 @import url('https://fonts.googleapis.com/css?family=Josefin+Sans');
 
 #navbar {
@@ -35,8 +37,8 @@
     color: #fff;
     font-family: 'Josefin Sans', sans-serif;
     transition: color 0.3s ease;
-    background-color: transparent; /* Sfondo trasparente */
-    border: none; /* Rimuove il bordo */
+    background-color: transparent; /* Transparent background */
+    border: none; /* No border */
 }
 
 .navbar-item-inner-icon-wrapper {
@@ -62,10 +64,10 @@
 /* Specific styles for the logout item */
 .logout-item .navbar-item-inner {
     font-weight: bold;
-    border: 1px solid transparent; /* Trasparente per default */
+    border: 1px solid transparent; /* Transparent by default */
 }
 
 .logout-item .navbar-item-inner:hover {
     color: #ffd700; /* Color on hover */
-    border-color: transparent; /* Rimuove il colore del bordo al passaggio del mouse */
+    border-color: transparent; /* Remove border color on hover */
 }

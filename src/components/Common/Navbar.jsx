@@ -6,7 +6,7 @@ function Navbar() {
     const navigate = useNavigate();
 
     const handleLogout = () => {
-        localStorage.removeItem('accessToken');
+        localStorage.removeItem('jwtToken');
         navigate('/login');
     };
 
@@ -45,7 +45,7 @@ function Navbar() {
                         <span className="link-text">Manage Orders</span>
                     </Link>
                 </li>
-                <li className="navbar-item">
+                <li className="navbar-item logout-item">
                     <button className="navbar-item-inner" onClick={handleLogout}>
                         <div className="navbar-item-inner-icon-wrapper">
                             <i className="fas fa-sign-out-alt"></i>
