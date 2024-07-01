@@ -10,7 +10,7 @@ import 'react-datepicker/dist/react-datepicker.css';
 
 
 function EditPanel({ editElement, displayNames, handleInputChange, handleConfirmEdit, handleConfirmDelete, onCancel, token }) {
-    const [customerCodes, setCustomerCodes] = useState([]);
+    const [setCustomerCodes] = useState([]);
 
     useEffect(() => {
         const fetchCustomerCodes = async () => {

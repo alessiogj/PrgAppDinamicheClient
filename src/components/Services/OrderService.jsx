@@ -32,7 +32,7 @@ export const getOrders = async (token, type) => {
     }
 };
 
-export const putOrder = async (token, order) => {
+export const putOrder = async (token, order, type) => {
     try {
         const requestOptions = {
             method: 'PUT',
@@ -42,8 +42,9 @@ export const putOrder = async (token, order) => {
             },
             body: JSON.stringify(order)
         };
-
-        const orderResponse = await fetch(`${endpoint}/modifyAgentOrder`, requestOptions);
+        const orderResponse = (type === 'agent') ?
+             await fetch(`${endpoint}/modifyAgentOrder`, requestOptions) :
+             await fetch(`${endpoint}/modifyDirigentOrder`, requestOptions);
 
         if (!orderResponse.ok) {
             const data = await orderResponse.json();

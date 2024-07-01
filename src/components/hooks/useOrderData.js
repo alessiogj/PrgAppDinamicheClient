@@ -41,19 +41,30 @@ export const useOrderData = (initialData, type, userCode) => {
 
     const handleConfirmEdit = useCallback(async () => {
         try {
-            const element = {
-                modifiedOrder: {
-                    ord_num: Number(editElement.ord_num),
-                    ord_amount: Number(editElement.ord_amount.trim()),
-                    advance_amount: Number(editElement.advance_amount.trim()),
-                    ord_date: editElement.order_date.trim(),
-                    cust_code: editElement.cust_code.trim(),
-                    agent_code: editElement.agent_code.trim(),
-                    ord_description: editElement.ord_description
-                }
-            };
-            console.log('Updating order:', element);
-            await putOrder(token, element);
+            const element = type === 'agent' ?
+                {
+                    modifiedOrder: {
+                        ord_num: Number(editElement.ord_num),
+                        ord_amount: Number(editElement.ord_amount.trim()),
+                        advance_amount: Number(editElement.advance_amount.trim()),
+                        ord_date: editElement.order_date.trim(),
+                        cust_code: editElement.cust_code.trim(),
+                        agent_code: editElement.agent_code.trim(),
+                        ord_description: editElement.ord_description
+                    }
+                } :
+                {
+                    modifiedOrder: {
+                        ord_num: Number(editElement.ord_num),
+                        ord_amount: Number(editElement.ord_amount.trim()),
+                        advance_amount: Number(editElement.advance_amount.trim()),
+                        ord_date: editElement.order_date.trim(),
+                        cust_code: editElement.cust_code.trim(),
+                        agent_code: editElement.agent_code.trim(),
+                        ord_description: editElement.ord_description
+                    }
+            }
+            await putOrder(token, element, type);
             enqueueSnackbar('Order updated successfully!', { variant: 'success' });
 
             await fetchOrders();
