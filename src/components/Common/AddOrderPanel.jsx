@@ -28,21 +28,6 @@ function AddOrderPanel({ addElement, displayNames, handleInputChange, handleConf
         fetchCustomerCodes();
     }, [token]);
 
-    const handleIntegerInputChange = (key, value) => {
-        if (/^\d*$/.test(value)) {
-            handleInputChange(key, value);
-        }
-    };
-
-    const handleNumberInputChange = (key, value) => {
-        const parsedValue = parseFloat(value);
-        if (!isNaN(parsedValue)) {
-            handleInputChange(key, parsedValue.toFixed(2));
-        } else {
-            handleInputChange(key, '');
-        }
-    };
-
     const handleDateChange = (key, date) => {
         if (date) {
             handleInputChange(key, formatDate(date));
@@ -64,20 +49,6 @@ function AddOrderPanel({ addElement, displayNames, handleInputChange, handleConf
                                     onChange={(date) => handleDateChange(key, date)}
                                     customInput={<TextField fullWidth label={displayNames[key]} />}
                                     dateFormat="yyyy-MM-dd"
-                                />
-                            </Grid>
-                        );
-                    }
-
-                    if (key === 'ord_num') {
-                        return (
-                            <Grid item xs={12} sm={6} key={key}>
-                                <TextField
-                                    fullWidth
-                                    label={displayNames[key]}
-                                    value={addElement[key]}
-                                    onChange={e => handleIntegerInputChange(key, e.target.value)}
-                                    placeholder="Attualmente temporaneo"
                                 />
                             </Grid>
                         );

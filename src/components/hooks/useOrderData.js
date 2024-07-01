@@ -52,6 +52,7 @@ export const useOrderData = (initialData, type, userCode) => {
                     ord_description: editElement.ord_description
                 }
             };
+            console.log('Updating order:', element);
             await putOrder(token, element);
             enqueueSnackbar('Order updated successfully!', { variant: 'success' });
 
@@ -83,7 +84,6 @@ export const useOrderData = (initialData, type, userCode) => {
                 throw new Error('User code is not available.');
             }
             const newOrder = {
-                ord_num: Number(addElement.ord_num.trim()),
                 ord_amount: Number(addElement.ord_amount.trim()),
                 advance_amount: Number(addElement.advance_amount.trim()),
                 ord_date: addElement.order_date.trim(),

@@ -19,6 +19,7 @@ const Login = () => {
         }
 
         try {
+            localStorage.removeItem('jwtToken');
             const { token } = await login(username, password);
             console.log('Token:', token);
             localStorage.setItem('jwtToken', token);

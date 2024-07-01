@@ -88,27 +88,6 @@ function EditPanel({ editElement, displayNames, handleInputChange, handleConfirm
                         );
                     }
 
-                    if (key === 'cust_code') {
-                        return (
-                            <Grid item xs={12} sm={6} key={key}>
-                                <TextField
-                                    select
-                                    fullWidth
-                                    label={displayNames[key]}
-                                    value={editElement[key]}
-                                    onChange={e => handleInputChange(key, e.target.value)}
-                                    error={!customerCodes.includes(editElement[key])}
-                                    helperText={!customerCodes.includes(editElement[key]) ? 'Invalid customer code' : ''}
-                                >
-                                    <MenuItem value="">Select Customer Code</MenuItem>
-                                    {customerCodes.map(code => (
-                                        <MenuItem key={code} value={code}>{code}</MenuItem>
-                                    ))}
-                                </TextField>
-                            </Grid>
-                        );
-                    }
-
                     if (key === 'ord_description') {
                         return (
                             <Grid item xs={12} key={key}>
@@ -119,19 +98,6 @@ function EditPanel({ editElement, displayNames, handleInputChange, handleConfirm
                                     onChange={e => handleInputChange(key, e.target.value)}
                                     multiline
                                     rows={4}
-                                />
-                            </Grid>
-                        );
-                    }
-
-                    if (key === 'ord_num') {
-                        return (
-                            <Grid item xs={12} sm={6} key={key}>
-                                <TextField
-                                    fullWidth
-                                    label={displayNames[key]}
-                                    value={editElement[key]}
-                                    onChange={e => handleIntegerInputChange(key, e.target.value)}
                                 />
                             </Grid>
                         );
