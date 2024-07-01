@@ -15,6 +15,29 @@
     margin-bottom: 20px;
 }
 
+.scrollable-table {
+    max-height: 500px; /* Set the maximum height as needed */
+    overflow-y: auto;  /* Enable vertical scrolling */
+}
+
+.scrollable-table table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.scrollable-table th,
+.scrollable-table td {
+    border: 1px solid #ddd;
+    padding: 8px;
+}
+
+.scrollable-table th {
+    background-color: #f2f2f2;
+    position: sticky;
+    top: 0;
+    z-index: 1;
+}
+
 .search-input {
     padding: 10px;
     width: 100%;
@@ -50,10 +73,6 @@
 }
 
 .button:hover {
-    background-color: #f0f0f0;
-}
-
-.button:hover {
     background-color: #0056b3;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
 }
@@ -73,6 +92,7 @@
     align-items: center;
     gap: 5px;
 }
+
 .data-table {
     width: 100%;
     max-width: 100%;
@@ -123,31 +143,31 @@
     text-decoration: underline;
 }
 
-.info-details {
+.info-card {
     margin-top: 20px;
     margin-bottom: 20px;
     padding: 20px;
     background-color: #fff;
     border: 1px solid #ddd;
-    border-radius: 20px;
+    border-radius: 8px;
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
 }
 
-.info-details h3 {
+.info-card h3 {
     margin-top: 0;
     color: #333;
-    font-weight: bold; /* Aggiunge testo in grassetto */
-    font-size: 1.5em; /* Ingrandisce leggermente il testo */
-    text-transform: uppercase; /* Tutto in maiuscolo */
+    font-weight: bold;
+    font-size: 1.5em;
+    text-transform: uppercase;
 }
 
-.info-details p {
+.info-card p {
     margin: 5px 0;
     color: #666;
-    line-height: 1.1; /* Aggiunge interlinea */
+    line-height: 1.4;
 }
 
-.agent-details .button {
+.info-card .button {
     margin-top: 10px;
     display: inline-block;
     padding: 10px 20px;
@@ -160,7 +180,7 @@
     transition: background-color 0.3s ease, box-shadow 0.3s ease;
 }
 
-.agent-details .button:hover {
+.info-card .button:hover {
     background-color: #0056b3;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
 }

@@ -6,9 +6,9 @@ export const useTableFilters = (orderData, columnDefinitions, type) => {
         ord_amount: true,
         advance_amount: true,
         order_date: true,
-        cust_name: type === 'agent',
-        agent_name: type === 'customer',
-        commission: type === 'customer',
+        cust_name: type === 'agent' || type === 'dirigent',
+        agent_name: type === 'customer' || type === 'dirigent',
+        commission: type === 'customer' || type === 'dirigent'
     };
 
     const [sortConfig, setSortConfig] = useState({ key: null, direction: 'ascending' });

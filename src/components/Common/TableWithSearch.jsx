@@ -22,7 +22,7 @@ function TableWithSearch({ initialData, type, userCode }) {
         setShowAddOrderPanel,
         handleConfirmEdit,
         handleConfirmDelete,
-        handleConfirmAdd
+        handleConfirmAdd,
     } = useOrderData(initialData, type, userCode);
 
     const columnDefinitions = useMemo(() => ({
@@ -46,33 +46,62 @@ function TableWithSearch({ initialData, type, userCode }) {
 
     const [selectedDetails, setSelectedDetails] = useState(null);
 
-    const handleRowClick = useCallback((item) => {
+    const handleRowClick = useCallback((item, column) => {
         setShowAddOrderPanel(false);
         setEditElement(null);
-        const details = type === 'agent' ? {
-            'Order Description': item.ord_description || 'N/A',
-            'Customer Code': item.cust_code || 'Unknown',
-            'Customer City': item.cust_city || 'N/A',
-            'Working Area': item.working_area || 'N/A',
-            'Customer Country': item.cust_country || 'N/A',
-            'Grade': item.grade || 'N/A',
-            'Opening Amount': item.opening_amt || '0.00',
-            'Receive Amount': item.receive_amt || '0.00',
-            'Payment Amount': item.payment_amt || '0.00',
-            'Outstanding Amount': item.outstanding_amt || '0.00',
-            'Phone Number': item.phone_no || 'N/A'
-        } : {
-            'Order Description': item.ord_description || 'N/A',
-            'Country': item.country || 'N/A',
-            'Agent Code': item.agent_code || 'N/A',
-            'Working Area': item.working_area || 'N/A',
-            'Phone Number': item.phone_no || 'N/A'
-        };
-        setSelectedDetails(details);
+
+        if (type === 'dirigent') {
+            if (column === 'cust_name') {
+                const details = {
+                    'Order Description': item.ord_description || 'N/A',
+                    'Customer Code': item.cust_code || 'Unknown',
+                    'Customer City': item.cust_city || 'N/A',
+                    'Working Area': item.working_area || 'N/A',
+                    'Customer Country': item.cust_country || 'N/A',
+                    'Grade': item.grade || 'N/A',
+                    'Opening Amount': item.opening_amt || '0.00',
+                    'Receive Amount': item.receive_amt || '0.00',
+                    'Payment Amount': item.payment_amt || '0.00',
+                    'Outstanding Amount': item.outstanding_amt || '0.00',
+                    'Phone Number': item.phone_no || 'N/A'
+                };
+                setSelectedDetails({ details, description: 'Customer Details' });
+            } else if (column === 'agent_name') {
+                const details = {
+                    'Order Description': item.ord_description || 'N/A',
+                    'Country': item.country || 'N/A',
+                    'Agent Code': item.agent_code || 'N/A',
+                    'Working Area': item.working_area || 'N/A',
+                    'Phone Number': item.phone_no || 'N/A'
+                };
+                setSelectedDetails({ details, description: 'Agent Details' });
+            }
+        } else {
+            const details = type === 'agent' ? {
+                'Order Description': item.ord_description || 'N/A',
+                'Customer Code': item.cust_code || 'Unknown',
+                'Customer City': item.cust_city || 'N/A',
+                'Working Area': item.working_area || 'N/A',
+                'Customer Country': item.cust_country || 'N/A',
+                'Grade': item.grade || 'N/A',
+                'Opening Amount': item.opening_amt || '0.00',
+                'Receive Amount': item.receive_amt || '0.00',
+                'Payment Amount': item.payment_amt || '0.00',
+                'Outstanding Amount': item.outstanding_amt || '0.00',
+                'Phone Number': item.phone_no || 'N/A'
+            } : {
+                'Order Description': item.ord_description || 'N/A',
+                'Country': item.country || 'N/A',
+                'Agent Code': item.agent_code || 'N/A',
+                'Working Area': item.working_area || 'N/A',
+                'Phone Number': item.phone_no || 'N/A'
+            };
+            setSelectedDetails({ details, description: type === 'agent' ? 'Customer Details' : 'Agent Details' });
+        }
     }, [setEditElement, setShowAddOrderPanel, type]);
 
     const handleEdit = useCallback((item) => {
-        if (type === 'agent') {
+        if (type === 'agent' || type === 'dirigent') {
             setShowAddOrderPanel(false);
             setSelectedDetails(null);
             setEditElement(item);
@@ -130,43 +159,51 @@ function TableWithSearch({ initialData, type, userCode }) {
                 />
                 {type === 'agent' && <button onClick={handleAddOrder} className="button">Add Order</button>}
             </div>
-            <DataTable
-                filteredData={filteredData}
-                visibleColumns={visibleColumns}
-                columnDefinitions={columnDefinitions}
-                handleSort={handleSort}
-                handleRowClick={handleRowClick}
-                handleEdit={handleEdit}
-                type={type}
-            />
             {selectedDetails && !showAddOrderPanel && !editElement && (
-                <DetailsPanel
-                    selectedDetails={selectedDetails}
-                    type={type}
-                    onClose={() => setSelectedDetails(null)}
-                />
+                <div className="info-card">
+                    <DetailsPanel
+                        selectedDetails={selectedDetails}
+                        type={type}
+                        onClose={() => setSelectedDetails(null)}
+                    />
+                </div>
             )}
             {editElement && !showAddOrderPanel && (
-                <EditPanel
-                    editElement={editElement}
-                    displayNames={displayNames}
-                    handleInputChange={handleInputChange}
-                    handleConfirmEdit={handleConfirmEdit}
-                    handleConfirmDelete={handleConfirmDelete}
-                    onCancel={handleCancelEdit}
-                    token={token}
-                />
+                <div className="info-card">
+                    <EditPanel
+                        editElement={editElement}
+                        displayNames={displayNames}
+                        handleInputChange={handleInputChange}
+                        handleConfirmEdit={handleConfirmEdit}
+                        handleConfirmDelete={handleConfirmDelete}
+                        onCancel={handleCancelEdit}
+                        token={token}
+                    />
+                </div>
             )}
             {showAddOrderPanel && !editElement && (
-                <AddOrderPanel
-                    addElement={addElement}
-                    displayNames={displayNames}
-                    handleInputChange={handleAddOrderInputChange}
-                    handleConfirmAdd={handleConfirmAdd}
-                    onCancel={handleCancelAdd}
-                    token={token}
-                />
+                <div className="info-card">
+                    <AddOrderPanel
+                        addElement={addElement}
+                        displayNames={displayNames}
+                        handleInputChange={handleAddOrderInputChange}
+                        handleConfirmAdd={handleConfirmAdd}
+                        onCancel={handleCancelAdd}
+                        token={token}
+                    />
+                </div>
             )}
+            <div className="scrollable-table">
+                <DataTable
+                    filteredData={filteredData}
+                    visibleColumns={visibleColumns}
+                    columnDefinitions={columnDefinitions}
+                    handleSort={handleSort}
+                    handleRowClick={handleRowClick}
+                    handleEdit={handleEdit}
+                    type={type}
+                />
+            </div>
         </div>
     );
 }
