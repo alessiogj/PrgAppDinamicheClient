@@ -10,7 +10,7 @@ import AddOrderPanel from './AddOrderPanel';
 import { useOrderData } from '../hooks/useOrderData';
 import { useTableFilters } from '../hooks/useTableFilters';
 
-function TableWithSearch({ initialData, type, userCode }) {
+function TableWithSearch({ initialData, type, userCode, onUpdate }) {
     const token = localStorage.getItem('jwtToken');
     const {
         orderData,
@@ -23,6 +23,7 @@ function TableWithSearch({ initialData, type, userCode }) {
         handleConfirmEdit,
         handleConfirmDelete,
         handleConfirmAdd,
+        fetchOrders
     } = useOrderData(initialData, type, userCode);
 
     const columnDefinitions = useMemo(() => ({
@@ -138,6 +139,21 @@ function TableWithSearch({ initialData, type, userCode }) {
         });
     };
 
+    const handleConfirmEditWithUpdate = async () => {
+        await handleConfirmEdit();
+        onUpdate();
+    };
+
+    const handleConfirmDeleteWithUpdate = async () => {
+        await handleConfirmDelete();
+        onUpdate()
+    };
+
+    const handleConfirmAddWithUpdate = async () => {
+        await handleConfirmAdd();
+        onUpdate();
+    };
+
     const displayNames = {
         ord_num: 'Order Number',
         ord_amount: 'Order Amount',
@@ -174,8 +190,8 @@ function TableWithSearch({ initialData, type, userCode }) {
                         editElement={editElement}
                         displayNames={displayNames}
                         handleInputChange={handleInputChange}
-                        handleConfirmEdit={handleConfirmEdit}
-                        handleConfirmDelete={handleConfirmDelete}
+                        handleConfirmEdit={handleConfirmEditWithUpdate}
+                        handleConfirmDelete={handleConfirmDeleteWithUpdate}
                         onCancel={handleCancelEdit}
                         token={token}
                     />
@@ -187,7 +203,7 @@ function TableWithSearch({ initialData, type, userCode }) {
                         addElement={addElement}
                         displayNames={displayNames}
                         handleInputChange={handleAddOrderInputChange}
-                        handleConfirmAdd={handleConfirmAdd}
+                        handleConfirmAdd={handleConfirmAddWithUpdate}
                         onCancel={handleCancelAdd}
                         token={token}
                     />
@@ -211,7 +227,8 @@ function TableWithSearch({ initialData, type, userCode }) {
 TableWithSearch.propTypes = {
     initialData: PropTypes.array.isRequired,
     type: PropTypes.oneOf(['agent', 'customer', 'dirigent']).isRequired,
-    userCode: PropTypes.string
+    userCode: PropTypes.string,
+    onUpdate: PropTypes.func.isRequired
 };
 
 export default TableWithSearch;

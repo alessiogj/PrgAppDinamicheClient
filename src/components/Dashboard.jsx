@@ -1,9 +1,12 @@
+// src/Dashboard.js
 import React, { useEffect, useState } from 'react';
-import { jwtDecode } from 'jwt-decode';
+import {jwtDecode} from 'jwt-decode';
 import { getOrders } from './Services/OrderService';
 import Navbar from './Common/Navbar';
-import TableWithSearch from './Common/TableWithSearch';
+import ManageOrders from './ManageOrders';
+import Statistics from './Statistics';
 import '../styles/Dashboard.css';
+import { parseISO, format } from 'date-fns';
 
 function Dashboard() {
     const [tableData, setTableData] = useState([]);
@@ -38,6 +41,7 @@ function Dashboard() {
             const data = await getOrders(token, role);
             if (data && Array.isArray(data.orders)) {
                 setTableData(data.orders);
+                console.log('Data fetched:', data);
             } else {
                 console.error("Unexpected data structure:", data);
                 setError('Data structure error');
@@ -50,6 +54,20 @@ function Dashboard() {
         }
     };
 
+    const transformDataForChart = (orders) => {
+        return orders.map(order => {
+            const parsedDate = parseISO(order.ord_date);
+            return {
+                ord_date: isNaN(parsedDate) ? 'Invalid Date' : format(parsedDate, 'MM/dd/yyyy'),
+                ord_amount: parseFloat(order.ord_amount),
+                advance_amount: parseFloat(order.advance_amount),
+                outstanding_amt: parseFloat(order.outstanding_amt),
+            };
+        });
+    };
+
+    const chartData = transformDataForChart(tableData);
+
     if (loading) {
         return <p>Loading...</p>;
     }
@@ -58,31 +76,29 @@ function Dashboard() {
         return <p>{error}</p>;
     }
 
+    const handleUpdate = async () => {
+        setLoading(true);
+        await fetchData(userRole);
+    };
+
     return (
         <div className="App">
             <Navbar />
             <header className="App-header">
                 <h1>Welcome to Your Dashboard</h1>
                 <p>
-                    This is the homepage of your application where you can manage your activities and check your stats.
+                    Welcome to your dashboard. Here you can manage your orders.
                 </p>
                 <div className="dashboard-content">
-                    <div className="widget">
-                        <h2>Recent Activities</h2>
-                        <p>Display recent activities or notifications here.</p>
-                    </div>
-                    <div className="widget">
-                        <h2>Quick Links</h2>
-                        <p>Provide links to frequently used features or pages.</p>
-                    </div>
-                    <div className="widget">
-                        <h2>Manage Orders</h2>
-                        <TableWithSearch
-                            initialData={tableData}
-                            type={userRole}
-                            userCode={userCode}
-                        />
-                    </div>
+                    <Statistics chartData={chartData} />
+                </div>
+                <div className="dashboard-content">
+                    <ManageOrders
+                        tableData={tableData}
+                        userRole={userRole}
+                        userCode={userCode}
+                        onUpdate={handleUpdate}
+                    />
                 </div>
             </header>
         </div>

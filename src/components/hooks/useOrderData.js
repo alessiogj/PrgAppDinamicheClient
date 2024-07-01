@@ -22,6 +22,10 @@ export const useOrderData = (initialData, type, userCode) => {
     }, [initialData]);
 
     const fetchOrders = useCallback(async () => {
+        if (!token) {
+            enqueueSnackbar('Token not available. Please log in again.', { variant: 'error' });
+            return;
+        }
         try {
             const data = await getOrders(token, type);
             if (data && Array.isArray(data.orders)) {
@@ -41,38 +45,25 @@ export const useOrderData = (initialData, type, userCode) => {
 
     const handleConfirmEdit = useCallback(async () => {
         try {
-            const element = type === 'agent' ?
-                {
-                    modifiedOrder: {
-                        ord_num: Number(editElement.ord_num),
-                        ord_amount: Number(editElement.ord_amount.trim()),
-                        advance_amount: Number(editElement.advance_amount.trim()),
-                        ord_date: editElement.order_date.trim(),
-                        cust_code: editElement.cust_code.trim(),
-                        agent_code: editElement.agent_code.trim(),
-                        ord_description: editElement.ord_description
-                    }
-                } :
-                {
-                    modifiedOrder: {
-                        ord_num: Number(editElement.ord_num),
-                        ord_amount: Number(editElement.ord_amount.trim()),
-                        advance_amount: Number(editElement.advance_amount.trim()),
-                        ord_date: editElement.order_date.trim(),
-                        cust_code: editElement.cust_code.trim(),
-                        agent_code: editElement.agent_code.trim(),
-                        ord_description: editElement.ord_description
-                    }
-            }
+            const element = {
+                modifiedOrder: {
+                    ord_num: Number(editElement.ord_num),
+                    ord_amount: Number(editElement.ord_amount.trim()),
+                    advance_amount: Number(editElement.advance_amount.trim()),
+                    ord_date: editElement.order_date.trim(),
+                    cust_code: editElement.cust_code.trim(),
+                    agent_code: editElement.agent_code.trim(),
+                    ord_description: editElement.ord_description
+                }
+            };
             await putOrder(token, element, type);
             enqueueSnackbar('Order updated successfully!', { variant: 'success' });
-
             await fetchOrders();
         } catch (error) {
             enqueueSnackbar('Failed to update order. Please try again.', { variant: 'error' });
         }
         setEditElement(null);
-    }, [editElement, token, enqueueSnackbar, fetchOrders]);
+    }, [editElement, token, enqueueSnackbar, fetchOrders, type]);
 
     const handleConfirmDelete = useCallback(async () => {
         try {
@@ -81,7 +72,6 @@ export const useOrderData = (initialData, type, userCode) => {
             };
             await deleteOrder(token, element);
             enqueueSnackbar('Order deleted successfully!', { variant: 'success' });
-
             await fetchOrders();
         } catch (error) {
             enqueueSnackbar('Failed to delete order. Please try again.', { variant: 'error' });
@@ -102,11 +92,8 @@ export const useOrderData = (initialData, type, userCode) => {
                 agent_code: userCode.trim(),
                 ord_description: addElement.ord_description
             };
-
             await postOrder(token, { newOrder });
-
             enqueueSnackbar('Order added successfully!', { variant: 'success' });
-
             await fetchOrders();
         } catch (error) {
             console.error('Error adding order:', error);
@@ -134,6 +121,7 @@ export const useOrderData = (initialData, type, userCode) => {
         handleConfirmEdit,
         handleConfirmDelete,
         handleConfirmAdd,
-        fetchOrders
+        fetchOrders,
+        setOrderData
     };
 };

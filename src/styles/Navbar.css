@@ -1,73 +1,38 @@
-/* src/styles/Navbar.css */
-
 @import url('https://fonts.googleapis.com/css?family=Josefin+Sans');
 
 #navbar {
     position: fixed;
     top: 0;
-    left: 0;
-    width: 100%;
+    right: 0;
+    padding: 10px 20px;
     background-color: #007bff;
-    color: #fff;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    padding: 10px 0;
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
     z-index: 100;
 }
 
-.navbar-items {
-    list-style: none;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    margin: 0;
-    padding: 0;
-}
-
-.navbar-item {
-    margin: 0 15px;
-}
-
-.navbar-item-inner {
+.logout-button {
     display: flex;
     align-items: center;
-    text-decoration: none;
+    background-color: transparent;
+    border: none;
     color: #fff;
     font-family: 'Josefin Sans', sans-serif;
+    font-size: 18px;
+    cursor: pointer;
     transition: color 0.3s ease;
-    background-color: transparent; /* Transparent background */
-    border: none; /* No border */
 }
 
-.navbar-item-inner-icon-wrapper {
+.logout-button .fa-sign-out-alt {
     margin-right: 8px;
     font-size: 24px;
 }
 
-.link-text {
-    font-size: 18px;
-    font-weight: bold;
+.logout-button:hover,
+.logout-button:focus {
+    color: #ffd700;
 }
 
-.navbar-item-inner:hover .link-text,
-.navbar-item-inner:focus .link-text {
-    color: #ffd700; /* Color on hover and focus */
-}
-
-.navbar-item-inner:hover .navbar-item-inner-icon-wrapper,
-.navbar-item-inner:focus .navbar-item-inner-icon-wrapper {
-    color: #ffd700; /* Icon color on hover and focus */
-}
-
-/* Specific styles for the logout item */
-.logout-item .navbar-item-inner {
-    font-weight: bold;
-    border: 1px solid transparent; /* Transparent by default */
-}
-
-.logout-item .navbar-item-inner:hover {
-    color: #ffd700; /* Color on hover */
-    border-color: transparent; /* Remove border color on hover */
+.logout-button:hover .fa-sign-out-alt,
+.logout-button:focus .fa-sign-out-alt {
+    color: #ffd700;
 }
