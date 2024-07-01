@@ -31,7 +31,7 @@ function DetailsPanel({ selectedDetails, type, onClose }) {
 
 DetailsPanel.propTypes = {
     selectedDetails: PropTypes.object.isRequired,
-    type: PropTypes.oneOf(['agent', 'customer']).isRequired,
+    type: PropTypes.oneOf(['agent', 'customer', 'dirigent']).isRequired,
     onClose: PropTypes.func.isRequired,
 };
 

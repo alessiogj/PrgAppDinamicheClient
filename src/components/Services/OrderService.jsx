@@ -16,6 +16,8 @@ export const getOrders = async (token, type) => {
             orderResponse = await fetch(`${endpoint}/getAgentOrders`, requestOptions);
         }else if (type === 'customer') {
             orderResponse = await fetch(`${endpoint}/getCustomerOrders`, requestOptions);
+        } else if (type === 'dirigent') {
+            orderResponse = await fetch(`${endpoint}/getDirigentOrders`, requestOptions);
         }
 
         if (!orderResponse.ok) {

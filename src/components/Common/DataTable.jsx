@@ -19,7 +19,7 @@ function DataTable({ filteredData, visibleColumns, columnDefinitions, handleSort
                 <tr key={index}>
                     {Object.keys(visibleColumns).filter(key => visibleColumns[key]).map(column => (
                         <td key={column} onClick={() => (column === 'cust_name' && type === 'agent') || (column === 'agent_name' && type === 'customer') ? handleRowClick(item) : null}>
-                            {(column === 'cust_name' && type === 'agent') || (column === 'agent_name' && type === 'customer') ?
+                            {(column === 'cust_name' && (type === 'agent' || type === 'dirigent')) || (column === 'agent_name' && type === 'customer') ?
                                 <a href="#!" style={{ color: 'blue' }}>{item[column]}</a> : item[column]}
                         </td>
                     ))}

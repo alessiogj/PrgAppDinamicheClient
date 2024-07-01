@@ -173,7 +173,7 @@ function TableWithSearch({ initialData, type, userCode }) {
 
 TableWithSearch.propTypes = {
     initialData: PropTypes.array.isRequired,
-    type: PropTypes.oneOf(['agent', 'customer']).isRequired,
+    type: PropTypes.oneOf(['agent', 'customer', 'dirigent']).isRequired,
     userCode: PropTypes.string
 };
 

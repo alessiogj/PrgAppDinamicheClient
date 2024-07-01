@@ -5,8 +5,8 @@ function FilterCheckboxes({ columnDefinitions, visibleColumns, handleColumnVisib
     return (
         <div className="filter-checkboxes">
             {Object.keys(columnDefinitions).map(column => (
-                ((column !== 'cust_name' || type === 'agent') &&
-                    (column !== 'agent_name' && column !== 'commission' || type === 'customer')) && (
+                ((column !== 'cust_name' || (type === 'agent' || type === 'dirigent')) &&
+                    (column !== 'agent_name' && column !== 'commission' || type === 'customer' || type ==='dirigent')) && (
                     <label key={column}>
                         <input
                             type="checkbox"
@@ -25,7 +25,7 @@ FilterCheckboxes.propTypes = {
     columnDefinitions: PropTypes.object.isRequired,
     visibleColumns: PropTypes.object.isRequired,
     handleColumnVisibilityChange: PropTypes.func.isRequired,
-    type: PropTypes.oneOf(['agent', 'customer']).isRequired,
+    type: PropTypes.oneOf(['agent', 'customer', 'agent']).isRequired,
 };
 
 export default FilterCheckboxes;
