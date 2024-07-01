@@ -2,14 +2,13 @@ import React, { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import { formatDate } from '../utils/formatDate';
 import { getAvailableCustomers } from "../Services/OrderService";
-import { TextField, Button, MenuItem, Grid, Paper, Typography, Container } from '@mui/material';
+import { TextField, Button, Grid, Paper, Typography, Container } from '@mui/material';
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
 import { NumericFormat } from 'react-number-format';
 import 'react-datepicker/dist/react-datepicker.css';
 
-
-function EditPanel({ editElement, displayNames, handleInputChange, handleConfirmEdit, handleConfirmDelete, onCancel, token }) {
+function EditPanel({ editElement, displayNames, handleInputChange, handleConfirmEdit, handleConfirmDelete, onCancel, token, type }) {
     const [setCustomerCodes] = useState([]);
 
     useEffect(() => {
@@ -27,7 +26,7 @@ function EditPanel({ editElement, displayNames, handleInputChange, handleConfirm
         };
 
         fetchCustomerCodes();
-    }, [token]);
+    }, [setCustomerCodes, token]);
 
     const handleNumberInputChange = (key, value) => {
         const parsedValue = parseFloat(value);
@@ -35,12 +34,6 @@ function EditPanel({ editElement, displayNames, handleInputChange, handleConfirm
             handleInputChange(key, parsedValue.toFixed(2));
         } else {
             handleInputChange(key, '');
-        }
-    };
-
-    const handleIntegerInputChange = (key, value) => {
-        if (/^\d*$/.test(value)) {
-            handleInputChange(key, value);
         }
     };
 
@@ -107,9 +100,11 @@ function EditPanel({ editElement, displayNames, handleInputChange, handleConfirm
                 })}
             </Grid>
             <Grid container spacing={2} justifyContent="flex-end" sx={{ mt: 2 }}>
-                <Grid item>
-                    <Button onClick={handleConfirmDelete} variant="contained" color="secondary">Delete</Button>
-                </Grid>
+                {type === 'agent' && (
+                    <Grid item>
+                        <Button onClick={handleConfirmDelete} variant="contained" color="secondary">Delete</Button>
+                    </Grid>
+                )}
                 <Grid item>
                     <Button onClick={handleConfirmEdit} variant="contained" color="primary">Confirm</Button>
                 </Grid>
@@ -129,6 +124,7 @@ EditPanel.propTypes = {
     handleConfirmDelete: PropTypes.func.isRequired,
     onCancel: PropTypes.func.isRequired,
     token: PropTypes.string.isRequired,
+    type: PropTypes.string.isRequired,
 };
 
 export default EditPanel;

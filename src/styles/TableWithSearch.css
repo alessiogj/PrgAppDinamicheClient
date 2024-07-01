@@ -1,230 +1,89 @@
-@import url('https://fonts.googleapis.com/css?family=Josefin+Sans|Roboto:300,400,500,700&display=swap');
-
 .table-container {
+    display: flex;
+    flex-direction: column;
     padding: 20px;
-    font-family: 'Josefin Sans', sans-serif;
-    background-color: #f9f9f9;
-    border-radius: 8px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    margin-bottom: 20px;
+    box-sizing: border-box;
+    font-family: 'Roboto', sans-serif;
+    height: 100vh;
 }
 
 .controls {
     display: flex;
-    flex-direction: column;
+    align-items: center;
+    justify-content: space-between;
     margin-bottom: 20px;
 }
 
-.scrollable-table {
-    max-height: 500px; /* Set the maximum height as needed */
-    overflow-y: auto;  /* Enable vertical scrolling */
+.controls > * {
+    margin-right: 10px;
 }
 
-.scrollable-table table {
-    width: 100%;
-    border-collapse: collapse;
-}
-
-.scrollable-table th,
-.scrollable-table td {
-    border: 1px solid #ddd;
-    padding: 8px;
-}
-
-.scrollable-table th {
-    background-color: #f2f2f2;
-    position: sticky;
-    top: 0;
-    z-index: 1;
-}
-
-.search-input {
-    padding: 10px;
-    width: 100%;
-    box-sizing: border-box;
-    border: 1px solid #ddd;
-    border-radius: 20px;
-    background-color: #fff;
-    margin-bottom: 10px;
-    transition: all 0.3s ease;
-}
-
-.search-input:focus {
-    border-color: #007bff;
-    box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
-}
-
-.buttons {
-    display: flex;
-    justify-content: flex-start;
-    gap: 10px;
-    margin-bottom: 10px;
-}
-
-.button {
-    padding: 10px 20px;
-    border: 1px solid #ddd;
-    border-radius: 50px;
-    background-color: #007bff;
-    color: #fff;
-    cursor: pointer;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-    transition: background-color 0.3s ease;
-}
-
-.button:hover {
-    background-color: #0056b3;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-}
-
-.filter-checkboxes {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 10px;
-    padding: 10px;
-    background-color: #fff;
-    border-radius: 20px;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-}
-
-.filter-checkboxes label {
+.search-bar {
     display: flex;
     align-items: center;
-    gap: 5px;
-}
-
-.data-table {
+    background-color: #f1f3f4;
+    border-radius: 25px;
+    padding: 5px 10px;
     width: 100%;
-    max-width: 100%;
-    border-collapse: collapse;
-    background-color: #fff;
-    border-radius: 8px;
-    overflow: hidden;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-    margin-bottom: 20px;
-    table-layout: fixed; /* Imposta la larghezza delle colonne in modo uniforme */
+    max-width: 300px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
-.data-table th,
-.data-table td {
-    border-bottom: 1px solid #ddd;
-    padding: 10px;
-    text-align: center;
+.search-bar input {
+    border: none;
+    outline: none;
+    background: none;
+    padding: 8px;
+    font-size: 14px;
+    width: 100%;
+}
+
+.search-bar button {
+    background: none;
+    border: none;
     cursor: pointer;
-    transition: background-color 0.3s ease;
-    white-space: nowrap; /* Evita il wrap del testo nelle celle */
-    overflow: hidden; /* Gestisce il contenuto in overflow */
-    text-overflow: ellipsis; /* Aggiunge ellissi per il testo in overflow */
-}
-
-.data-table th {
-    background-color: #f5e2e2;
-    font-weight: bold;
-}
-
-.data-table th:hover {
-    background-color: #eaeaea;
-}
-
-.data-table tr:nth-child(even) {
-    background-color: #f9f9f9;
-}
-
-.data-table tr:hover {
-    background-color: #f1f1f1;
-}
-
-.data-table td a {
-    color: #007bff;
-    text-decoration: none;
-}
-
-.data-table td a:hover {
-    text-decoration: underline;
+    color: #333;
+    font-size: 18px;
 }
 
 .info-card {
     margin-top: 20px;
-    margin-bottom: 20px;
     padding: 20px;
     background-color: #fff;
-    border: 1px solid #ddd;
     border-radius: 8px;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
 }
 
-.info-card h3 {
-    margin-top: 0;
-    color: #333;
-    font-weight: bold;
-    font-size: 1.5em;
-    text-transform: uppercase;
+.scrollable-table {
+    flex: 1;
+    overflow: auto;
+    max-height: 70vh; /* Limita l'altezza massima della tabella */
+    border: 1px solid #ddd; /* Aggiunge un bordo per delimitare la tabella */
+    border-radius: 8px; /* Aggiunge bordi arrotondati */
 }
 
-.info-card p {
-    margin: 5px 0;
-    color: #666;
-    line-height: 1.4;
+.filter-checkboxes {
+    display: flex;
+    flex-direction: column;
 }
 
-.info-card .button {
-    margin-top: 10px;
-    display: inline-block;
-    padding: 10px 20px;
-    background-color: #007bff;
-    color: #fff;
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-    transition: background-color 0.3s ease, box-shadow 0.3s ease;
+.filter-checkboxes label {
+    margin-bottom: 5px;
 }
 
-.info-card .button:hover {
-    background-color: #0056b3;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-}
+@media (max-width: 768px) {
+    .controls {
+        flex-direction: column;
+        align-items: flex-start;
+    }
 
-.order-edit {
-    margin-top: 20px;
-    margin-bottom: 20px;
-    padding: 20px;
-    background-color: #fff;
-    border: 1px solid #ddd;
-    border-radius: 20px;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-}
+    .controls > * {
+        margin-right: 0;
+        margin-bottom: 10px;
+    }
 
-.order-edit h3 {
-    margin-top: 0;
-    color: #333;
-    font-weight: bold; /* Aggiunge testo in grassetto */
-    font-size: 1.5em; /* Ingrandisce leggermente il testo */
-    text-transform: uppercase; /* Tutto in maiuscolo */
-}
-
-.order-edit p {
-    margin: 5px 0;
-    color: #666;
-    line-height: 1.1; /* Aggiunge interlinea */
-}
-
-.order-edit .button {
-    margin-top: 10px;
-    margin-right: 5px; /* Aggiunge spazio a destra tra i bottoni */
-    margin-left: 20px;
-    display: inline-block;
-    padding: 10px 20px;
-    background-color: #007bff;
-    color: #fff;
-    border: none;
-    border-radius: 20px;
-    cursor: pointer;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-    transition: background-color 0.3s ease, box-shadow 0.3s ease;
-}
-
-.order-edit .button:hover {
-    background-color: #0056b3;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    .search-bar {
+        width: 100%;
+        max-width: none;
+    }
 }

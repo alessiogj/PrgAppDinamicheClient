@@ -1,6 +1,5 @@
-// src/Dashboard.js
 import React, { useEffect, useState } from 'react';
-import {jwtDecode} from 'jwt-decode';
+import { jwtDecode } from 'jwt-decode';
 import { getOrders } from './Services/OrderService';
 import Navbar from './Common/Navbar';
 import ManageOrders from './ManageOrders';
@@ -15,6 +14,13 @@ function Dashboard() {
     const [userRole, setUserRole] = useState(null);
     const [userCode, setUserCode] = useState(null);
     const token = localStorage.getItem('jwtToken');
+
+    useEffect(() => {
+        document.body.classList.add('dashboard-body');
+        return () => {
+            document.body.classList.remove('dashboard-body');
+        };
+    }, []);
 
     useEffect(() => {
         if (token) {
@@ -82,23 +88,23 @@ function Dashboard() {
     };
 
     return (
-        <div className="App">
+        <div className="dashboard-app">
             <Navbar />
-            <header className="App-header">
+            <header className="dashboard-header">
                 <h1>Welcome to Your Dashboard</h1>
-                <p>
-                    Welcome to your dashboard. Here you can manage your orders.
-                </p>
+                <p>Welcome to your dashboard. Here you can manage your orders.</p>
                 <div className="dashboard-content">
-                    <Statistics chartData={chartData} />
-                </div>
-                <div className="dashboard-content">
-                    <ManageOrders
-                        tableData={tableData}
-                        userRole={userRole}
-                        userCode={userCode}
-                        onUpdate={handleUpdate}
-                    />
+                    <div className="dashboard-card">
+                        <Statistics chartData={chartData} />
+                    </div>
+                    <div className="dashboard-card">
+                        <ManageOrders
+                            tableData={tableData}
+                            userRole={userRole}
+                            userCode={userCode}
+                            onUpdate={handleUpdate}
+                        />
+                    </div>
                 </div>
             </header>
         </div>

@@ -4,11 +4,12 @@ import '../../styles/TableWithSearch.css';
 import SearchBar from './SearchBar';
 import FilterCheckboxes from './FilterCheckboxes';
 import DataTable from './DataTable';
-import DetailsPanel from './DetailsPanel';
 import EditPanel from './EditPanel';
+import VisualizePanel from './VisualizePanel';
 import AddOrderPanel from './AddOrderPanel';
 import { useOrderData } from '../hooks/useOrderData';
 import { useTableFilters } from '../hooks/useTableFilters';
+import { Button } from '@mui/material';
 
 function TableWithSearch({ initialData, type, userCode, onUpdate }) {
     const token = localStorage.getItem('jwtToken');
@@ -23,7 +24,6 @@ function TableWithSearch({ initialData, type, userCode, onUpdate }) {
         handleConfirmEdit,
         handleConfirmDelete,
         handleConfirmAdd,
-        fetchOrders
     } = useOrderData(initialData, type, userCode);
 
     const columnDefinitions = useMemo(() => ({
@@ -46,10 +46,12 @@ function TableWithSearch({ initialData, type, userCode, onUpdate }) {
     } = useTableFilters(orderData, columnDefinitions, type);
 
     const [selectedDetails, setSelectedDetails] = useState(null);
+    const [showTable, setShowTable] = useState(true);
 
     const handleRowClick = useCallback((item, column) => {
         setShowAddOrderPanel(false);
         setEditElement(null);
+        setShowTable(false);
 
         if (type === 'dirigent') {
             if (column === 'cust_name') {
@@ -106,6 +108,7 @@ function TableWithSearch({ initialData, type, userCode, onUpdate }) {
             setShowAddOrderPanel(false);
             setSelectedDetails(null);
             setEditElement(item);
+            setShowTable(false);
         }
     }, [setEditElement, setShowAddOrderPanel, type]);
 
@@ -121,10 +124,12 @@ function TableWithSearch({ initialData, type, userCode, onUpdate }) {
         setShowAddOrderPanel(true);
         setSelectedDetails(null);
         setEditElement(null);
+        setShowTable(false);
     };
 
     const handleCancelEdit = () => {
         setEditElement(null);
+        setShowTable(true);
     };
 
     const handleCancelAdd = () => {
@@ -137,21 +142,25 @@ function TableWithSearch({ initialData, type, userCode, onUpdate }) {
             cust_code: '',
             ord_description: ''
         });
+        setShowTable(true);
     };
 
     const handleConfirmEditWithUpdate = async () => {
         await handleConfirmEdit();
         onUpdate();
+        setShowTable(true);
     };
 
     const handleConfirmDeleteWithUpdate = async () => {
         await handleConfirmDelete();
-        onUpdate()
+        onUpdate();
+        setShowTable(true);
     };
 
     const handleConfirmAddWithUpdate = async () => {
         await handleConfirmAdd();
         onUpdate();
+        setShowTable(true);
     };
 
     const displayNames = {
@@ -173,14 +182,17 @@ function TableWithSearch({ initialData, type, userCode, onUpdate }) {
                     handleColumnVisibilityChange={handleColumnVisibilityChange}
                     type={type}
                 />
-                {type === 'agent' && <button onClick={handleAddOrder} className="button">Add Order</button>}
+                {type === 'agent' && <Button onClick={handleAddOrder} variant="contained" color="primary">Add Order</Button>}
             </div>
             {selectedDetails && !showAddOrderPanel && !editElement && (
                 <div className="info-card">
-                    <DetailsPanel
-                        selectedDetails={selectedDetails}
-                        type={type}
-                        onClose={() => setSelectedDetails(null)}
+                    <VisualizePanel
+                        element={selectedDetails.details}
+                        displayNames={displayNames}
+                        onClose={() => {
+                            setSelectedDetails(null);
+                            setShowTable(true);
+                        }}
                     />
                 </div>
             )}
@@ -194,6 +206,7 @@ function TableWithSearch({ initialData, type, userCode, onUpdate }) {
                         handleConfirmDelete={handleConfirmDeleteWithUpdate}
                         onCancel={handleCancelEdit}
                         token={token}
+                        type={type}
                     />
                 </div>
             )}
@@ -209,17 +222,19 @@ function TableWithSearch({ initialData, type, userCode, onUpdate }) {
                     />
                 </div>
             )}
-            <div className="scrollable-table">
-                <DataTable
-                    filteredData={filteredData}
-                    visibleColumns={visibleColumns}
-                    columnDefinitions={columnDefinitions}
-                    handleSort={handleSort}
-                    handleRowClick={handleRowClick}
-                    handleEdit={handleEdit}
-                    type={type}
-                />
-            </div>
+            {showTable && (
+                <div className="scrollable-table">
+                    <DataTable
+                        filteredData={filteredData}
+                        visibleColumns={visibleColumns}
+                        columnDefinitions={columnDefinitions}
+                        handleSort={handleSort}
+                        handleRowClick={handleRowClick}
+                        handleEdit={handleEdit}
+                        type={type}
+                    />
+                </div>
+            )}
         </div>
     );
 }
