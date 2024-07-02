@@ -1,4 +1,4 @@
-import React, { useCallback, useMemo, useState } from 'react';
+import React, { useMemo, useState } from 'react';
 import PropTypes from 'prop-types';
 import '../../styles/TableWithSearch.css';
 import SearchBar from './SearchBar';
@@ -9,6 +9,7 @@ import VisualizePanel from './VisualizePanel';
 import AddOrderPanel from './AddOrderPanel';
 import { useOrderData } from '../hooks/useOrderData';
 import { useTableFilters } from '../hooks/useTableFilters';
+import { useTableActions } from '../hooks/useTableActions';
 import { Button } from '@mui/material';
 
 function TableWithSearch({ initialData, type, userCode, onUpdate }) {
@@ -33,7 +34,6 @@ function TableWithSearch({ initialData, type, userCode, onUpdate }) {
         order_date: { displayName: 'Order Date', type: 'string' },
         cust_name: { displayName: 'Customer Name', type: 'string' },
         agent_name: { displayName: 'Agent Name', type: 'string' },
-        commission: { displayName: 'Commission', type: 'number' }
     }), []);
 
     const {
@@ -48,102 +48,13 @@ function TableWithSearch({ initialData, type, userCode, onUpdate }) {
     const [selectedDetails, setSelectedDetails] = useState(null);
     const [showTable, setShowTable] = useState(true);
 
-    const handleRowClick = useCallback((item, column) => {
-        setShowAddOrderPanel(false);
-        setEditElement(null);
-        setShowTable(false);
-
-        if (type === 'dirigent') {
-            if (column === 'cust_name') {
-                const details = {
-                    'Order Description': item.ord_description || 'N/A',
-                    'Customer Code': item.cust_code || 'Unknown',
-                    'Customer City': item.cust_city || 'N/A',
-                    'Working Area': item.working_area || 'N/A',
-                    'Customer Country': item.cust_country || 'N/A',
-                    'Grade': item.grade || 'N/A',
-                    'Opening Amount': item.opening_amt || '0.00',
-                    'Receive Amount': item.receive_amt || '0.00',
-                    'Payment Amount': item.payment_amt || '0.00',
-                    'Outstanding Amount': item.outstanding_amt || '0.00',
-                    'Phone Number': item.phone_no || 'N/A'
-                };
-                setSelectedDetails({ details, description: 'Customer Details' });
-            } else if (column === 'agent_name') {
-                const details = {
-                    'Order Description': item.ord_description || 'N/A',
-                    'Country': item.country || 'N/A',
-                    'Agent Code': item.agent_code || 'N/A',
-                    'Working Area': item.working_area || 'N/A',
-                    'Phone Number': item.phone_no || 'N/A'
-                };
-                setSelectedDetails({ details, description: 'Agent Details' });
-            }
-        } else {
-            const details = type === 'agent' ? {
-                'Order Description': item.ord_description || 'N/A',
-                'Customer Code': item.cust_code || 'Unknown',
-                'Customer City': item.cust_city || 'N/A',
-                'Working Area': item.working_area || 'N/A',
-                'Customer Country': item.cust_country || 'N/A',
-                'Grade': item.grade || 'N/A',
-                'Opening Amount': item.opening_amt || '0.00',
-                'Receive Amount': item.receive_amt || '0.00',
-                'Payment Amount': item.payment_amt || '0.00',
-                'Outstanding Amount': item.outstanding_amt || '0.00',
-                'Phone Number': item.phone_no || 'N/A'
-            } : {
-                'Order Description': item.ord_description || 'N/A',
-                'Country': item.country || 'N/A',
-                'Agent Code': item.agent_code || 'N/A',
-                'Working Area': item.working_area || 'N/A',
-                'Phone Number': item.phone_no || 'N/A'
-            };
-            setSelectedDetails({ details, description: type === 'agent' ? 'Customer Details' : 'Agent Details' });
-        }
-    }, [setEditElement, setShowAddOrderPanel, type]);
-
-    const handleEdit = useCallback((item) => {
-        if (type === 'agent' || type === 'dirigent') {
-            setShowAddOrderPanel(false);
-            setSelectedDetails(null);
-            setEditElement(item);
-            setShowTable(false);
-        }
-    }, [setEditElement, setShowAddOrderPanel, type]);
-
-    const handleInputChange = (key, value) => {
-        setEditElement(prev => ({ ...prev, [key]: value }));
-    };
-
-    const handleAddOrderInputChange = (key, value) => {
-        setAddElement(prev => ({ ...prev, [key]: value }));
-    };
-
-    const handleAddOrder = () => {
-        setShowAddOrderPanel(true);
-        setSelectedDetails(null);
-        setEditElement(null);
-        setShowTable(false);
-    };
-
-    const handleCancelEdit = () => {
-        setEditElement(null);
-        setShowTable(true);
-    };
-
-    const handleCancelAdd = () => {
-        setShowAddOrderPanel(false);
-        setAddElement({
-            ord_num: '',
-            ord_amount: '',
-            advance_amount: '',
-            order_date: '',
-            cust_code: '',
-            ord_description: ''
-        });
-        setShowTable(true);
-    };
+    const {
+        handleRowClick,
+        handleEdit,
+        handleInputChange,
+        handleAddOrder,
+        handleCancel,
+    } = useTableActions(type, setEditElement, setShowAddOrderPanel, setShowTable, setSelectedDetails);
 
     const handleConfirmEditWithUpdate = async () => {
         await handleConfirmEdit();
@@ -169,6 +80,7 @@ function TableWithSearch({ initialData, type, userCode, onUpdate }) {
         advance_amount: 'Advance Amount',
         order_date: 'Order Date',
         cust_code: 'Customer Code',
+        agent_code: 'Agent Code',
         ord_description: 'Order Description'
     };
 
@@ -187,7 +99,7 @@ function TableWithSearch({ initialData, type, userCode, onUpdate }) {
             {selectedDetails && !showAddOrderPanel && !editElement && (
                 <div className="info-card">
                     <VisualizePanel
-                        element={selectedDetails.details}
+                        element={selectedDetails}
                         displayNames={displayNames}
                         onClose={() => {
                             setSelectedDetails(null);
@@ -201,10 +113,10 @@ function TableWithSearch({ initialData, type, userCode, onUpdate }) {
                     <EditPanel
                         editElement={editElement}
                         displayNames={displayNames}
-                        handleInputChange={handleInputChange}
+                        handleInputChange={handleInputChange(setEditElement)}
                         handleConfirmEdit={handleConfirmEditWithUpdate}
                         handleConfirmDelete={handleConfirmDeleteWithUpdate}
-                        onCancel={handleCancelEdit}
+                        onCancel={handleCancel(setEditElement, setShowAddOrderPanel)}
                         token={token}
                         type={type}
                     />
@@ -215,9 +127,9 @@ function TableWithSearch({ initialData, type, userCode, onUpdate }) {
                     <AddOrderPanel
                         addElement={addElement}
                         displayNames={displayNames}
-                        handleInputChange={handleAddOrderInputChange}
+                        handleInputChange={handleInputChange(setAddElement)}
                         handleConfirmAdd={handleConfirmAddWithUpdate}
-                        onCancel={handleCancelAdd}
+                        onCancel={handleCancel(userCode, setAddElement, setShowAddOrderPanel)}
                         token={token}
                     />
                 </div>

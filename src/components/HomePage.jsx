@@ -1,15 +1,15 @@
-import React, { useState, useEffect } from 'react';
-import { Container, Typography, Box, TextField, Button, InputAdornment } from '@mui/material';
-import { Person as PersonIcon, Lock as LockIcon } from '@mui/icons-material';
+import React, { useState, useEffect, useCallback } from 'react';
+import { Container, Typography, Box } from '@mui/material';
 import { useSnackbar } from 'notistack';
 import { login } from './Services/AuthService';
+import { useNavigate } from 'react-router-dom';
+import LoginForm from './LoginForm';
 import '../styles/HomePage.css';
-import { useNavigate } from "react-router-dom";
 
 const HomePage = () => {
     const navigate = useNavigate();
-    const [isFlipped, setIsFlipped] = useState(false);
     const { enqueueSnackbar } = useSnackbar();
+    const [isFlipped, setIsFlipped] = useState(false);
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
 
@@ -20,11 +20,11 @@ const HomePage = () => {
         };
     }, []);
 
-    const handleFlip = (event) => {
-        if (event.target.closest('.flip-card') && !event.target.closest('input, button')) {
-            setIsFlipped(!isFlipped);
+    const handleFlip = useCallback((event) => {
+        if (event.type === 'click' && event.target.closest('.flip-card') && !event.target.closest('input, button')){
+            setIsFlipped((prev) => !prev);
         }
-    };
+    }, []);
 
     const handleSubmit = async (event) => {
         event.preventDefault();
@@ -42,65 +42,35 @@ const HomePage = () => {
         } catch (error) {
             enqueueSnackbar(error.message || 'Failed to fetch', { variant: 'error' });
             localStorage.removeItem('jwtToken');
+        } finally {
+            setIsFlipped(false);
         }
     };
 
     return (
-        <Container maxWidth="sm" className="home-container">
+        <Container maxWidth="sm" className="home-container" onKeyDown={handleFlip}>
             <Box className={`flip-card ${isFlipped ? 'flipped' : ''}`} onClick={handleFlip}>
                 <Box className="flip-card-inner">
                     <Box className="flip-card-front">
                         <Typography variant="h3" component="h1" gutterBottom>
                             Welcome!
                         </Typography>
-                        <Typography variant="body1" className="home-text">
-                            Click anywhere to login
+                        <Typography variant="body1" className="home-text" onClick={() => setIsFlipped(true)}>
+                            Click here to login.
                         </Typography>
                     </Box>
                     <Box className="flip-card-back">
                         <Typography variant="h4" component="h1" gutterBottom>
                             Login
                         </Typography>
-                        <form className="form" onSubmit={handleSubmit}>
-                            <Box className="input_field" sx={{ mb: 2 }}>
-                                <TextField
-                                    fullWidth
-                                    variant="outlined"
-                                    placeholder="Username"
-                                    value={username}
-                                    onChange={(e) => setUsername(e.target.value)}
-                                    InputProps={{
-                                        startAdornment: (
-                                            <InputAdornment position="start">
-                                                <PersonIcon />
-                                            </InputAdornment>
-                                        ),
-                                    }}
-                                />
-                            </Box>
-                            <Box className="input_field" sx={{ mb: 2 }}>
-                                <TextField
-                                    fullWidth
-                                    type="password"
-                                    variant="outlined"
-                                    placeholder="Password"
-                                    value={password}
-                                    onChange={(e) => setPassword(e.target.value)}
-                                    InputProps={{
-                                        startAdornment: (
-                                            <InputAdornment position="start">
-                                                <LockIcon />
-                                            </InputAdornment>
-                                        ),
-                                    }}
-                                />
-                            </Box>
-                            <Box className="button-container">
-                                <Button type="submit" variant="contained" color="primary" fullWidth>
-                                    Submit
-                                </Button>
-                            </Box>
-                        </form>
+                        <LoginForm
+                            username={username}
+                            setUsername={setUsername}
+                            password={password}
+                            setPassword={setPassword}
+                            handleSubmit={handleSubmit}
+                            isFlipped={isFlipped}
+                        />
                     </Box>
                 </Box>
             </Box>

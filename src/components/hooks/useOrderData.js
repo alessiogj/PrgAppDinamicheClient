@@ -8,7 +8,7 @@ export const useOrderData = (initialData, type, userCode) => {
     const [orderData, setOrderData] = useState(initialData);
     const [editElement, setEditElement] = useState(null);
     const [addElement, setAddElement] = useState({
-        ord_num: '',
+        agent_code: userCode,
         ord_amount: '',
         advance_amount: '',
         order_date: '',
@@ -89,7 +89,7 @@ export const useOrderData = (initialData, type, userCode) => {
                 advance_amount: Number(addElement.advance_amount.trim()),
                 ord_date: addElement.order_date.trim(),
                 cust_code: addElement.cust_code.trim(),
-                agent_code: userCode.trim(),
+                agent_code: addElement.agent_code.trim(),
                 ord_description: addElement.ord_description
             };
             await postOrder(token, { newOrder });
@@ -101,7 +101,7 @@ export const useOrderData = (initialData, type, userCode) => {
         }
         setShowAddOrderPanel(false);
         setAddElement({
-            ord_num: '',
+            agent_code: userCode,
             ord_amount: '',
             advance_amount: '',
             order_date: '',

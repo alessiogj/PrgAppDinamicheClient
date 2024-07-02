@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import { getAvailableCustomers } from "../Services/OrderService";
-import { TextField, Button, MenuItem, Container, Typography, Grid, Paper } from '@mui/material';
+import { TextField, Button, Grid, Paper, Typography, Container, MenuItem } from '@mui/material';
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
 import { NumericFormat } from 'react-number-format';
@@ -13,7 +13,6 @@ function AddOrderPanel({ addElement, displayNames, handleInputChange, handleConf
     useEffect(() => {
         const fetchCustomerCodes = async () => {
             try {
-                console.log('Fetching customer codes'); // Debug log
                 const result = await getAvailableCustomers(token);
                 if (result && result.customers) {
                     setCustomerCodes(result.customers.map(customer => customer.cust_code));
@@ -28,6 +27,15 @@ function AddOrderPanel({ addElement, displayNames, handleInputChange, handleConf
         fetchCustomerCodes();
     }, [token]);
 
+    const handleNumberInputChange = (key, value) => {
+        const parsedValue = parseFloat(value);
+        if (!isNaN(parsedValue)) {
+            handleInputChange(key, parsedValue.toFixed(2));
+        } else {
+            handleInputChange(key, '');
+        }
+    };
+
     const handleDateChange = (key, date) => {
         if (date) {
             handleInputChange(key, formatDate(date));
@@ -40,19 +48,41 @@ function AddOrderPanel({ addElement, displayNames, handleInputChange, handleConf
         <Container component={Paper} elevation={3} sx={{ p: 4, mt: 4 }}>
             <Typography variant="h4" gutterBottom>Add New Order</Typography>
             <Grid container spacing={3}>
+                {/* Read-only field for agent_code */}
+                {['agent_code'].map(key => (
+                    <Grid item xs={12} sm={6} key={key}>
+                        <TextField
+                            fullWidth
+                            label={displayNames[key]}
+                            value={addElement[key] || 'N/A'}
+                            InputProps={{
+                                readOnly: true,
+                                style: { color: 'gray' },
+                            }}
+                            variant="outlined"
+                        />
+                    </Grid>
+                ))}
+
                 {Object.keys(addElement).map(key => {
                     if (key === 'order_date') {
                         return (
                             <Grid item xs={12} sm={6} key={key}>
                                 <DatePicker
+                                    fullWidth
                                     selected={addElement[key] ? new Date(addElement[key]) : null}
                                     onChange={(date) => handleDateChange(key, date)}
+                                    label={displayNames[key]}
                                     customInput={<TextField fullWidth label={displayNames[key]} />}
                                     dateFormat="yyyy-MM-dd"
+                                    variant="outlined"
+                                    thousandSeparator={true}
                                 />
                             </Grid>
                         );
                     }
+
+
 
                     if (key === 'ord_amount' || key === 'advance_amount') {
                         return (
@@ -66,7 +96,7 @@ function AddOrderPanel({ addElement, displayNames, handleInputChange, handleConf
                                     decimalScale={2}
                                     fixedDecimalScale={true}
                                     prefix={'€'}
-                                    onValueChange={(values) => handleInputChange(key, values.value)}
+                                    onValueChange={(values) => handleNumberInputChange(key, values.value)}
                                 />
                             </Grid>
                         );
@@ -127,7 +157,7 @@ AddOrderPanel.propTypes = {
     handleInputChange: PropTypes.func.isRequired,
     handleConfirmAdd: PropTypes.func.isRequired,
     onCancel: PropTypes.func.isRequired,
-    token: PropTypes.string.isRequired
+    token: PropTypes.string.isRequired,
 };
 
 export default AddOrderPanel;

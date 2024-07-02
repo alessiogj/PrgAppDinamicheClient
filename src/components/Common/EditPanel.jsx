@@ -6,7 +6,6 @@ import { TextField, Button, Grid, Paper, Typography, Container } from '@mui/mate
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
 import { NumericFormat } from 'react-number-format';
-import 'react-datepicker/dist/react-datepicker.css';
 
 function EditPanel({ editElement, displayNames, handleInputChange, handleConfirmEdit, handleConfirmDelete, onCancel, token, type }) {
     const [setCustomerCodes] = useState([]);
@@ -49,6 +48,22 @@ function EditPanel({ editElement, displayNames, handleInputChange, handleConfirm
         <Container component={Paper} elevation={3} sx={{ p: 4, mt: 4 }}>
             <Typography variant="h4" gutterBottom>Edit Element</Typography>
             <Grid container spacing={3}>
+                {/* Field di sola lettura */}
+                {['ord_num', 'agent_code', 'cust_code'].map(key => (
+                    <Grid item xs={12} sm={6} key={key}>
+                        <TextField
+                            fullWidth
+                            label={displayNames[key]}
+                            value={editElement[key] || 'N/A'}
+                            InputProps={{
+                                readOnly: true,
+                                style: { color: 'gray' },
+                            }}
+                            variant="outlined"
+                        />
+                    </Grid>
+                ))}
+
                 {Object.keys(editElement).map(key => {
                     if (key === 'order_date') {
                         return (

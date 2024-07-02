@@ -5,20 +5,24 @@ import { Paper, Typography, Grid, TextField, Container, Button, Box } from '@mui
 function VisualizePanel({ element, displayNames, onClose }) {
     return (
         <Container component={Paper} elevation={3} sx={{ p: 2, mt: 4 }}>
-            <Typography variant="h5" gutterBottom>View Element</Typography>
+            <Typography variant="h5" gutterBottom>{element.description}</Typography>
             <Grid container spacing={2}>
-                {Object.keys(element).map(key => {
-                    if (key === 'ord_description') {
+                {Object.keys(element.details).map(key => {
+                    const label = displayNames[key] || key;
+                    const value = element.details[key] || 'N/A';
+
+                    if (key === 'Order Description') {
                         return (
                             <Grid item xs={12} key={key}>
                                 <TextField
                                     fullWidth
-                                    label={displayNames[key]}
-                                    value={element[key]}
+                                    label={label}
+                                    value={value}
                                     multiline
                                     rows={3}
                                     InputProps={{
                                         readOnly: true,
+                                        style: { color: 'gray' },
                                     }}
                                     variant="outlined"
                                     size="small"
@@ -29,12 +33,13 @@ function VisualizePanel({ element, displayNames, onClose }) {
                     return (
                         <Grid item xs={12} sm={6} key={key}>
                             <Box sx={{ mb: 1 }}>
-                                <Typography variant="body2" color="textSecondary">{displayNames[key]}</Typography>
+                                <Typography variant="body2" color="textSecondary">{label}</Typography>
                                 <TextField
                                     fullWidth
-                                    value={element[key]}
+                                    value={value}
                                     InputProps={{
                                         readOnly: true,
+                                        style: { color: 'gray' },
                                     }}
                                     variant="outlined"
                                     size="small"
