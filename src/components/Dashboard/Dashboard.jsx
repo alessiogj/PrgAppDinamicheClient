@@ -1,10 +1,10 @@
 import React, { useEffect, useState } from 'react';
 import { jwtDecode } from 'jwt-decode';
-import { getOrders } from './Services/OrderService';
-import Navbar from './Common/Navbar';
-import ManageOrders from './ManageOrders';
-import Statistics from './Statistics';
-import '../styles/Dashboard.css';
+import { getOrders } from '../../Services/OrderService';
+import Navbar from '../Common/Navbar';
+import ManageOrders from './Table/ManageOrders';
+import Statistics from './Graph/Statistics';
+import '../../styles/Dashboard.css';
 import { parseISO, format } from 'date-fns';
 
 function Dashboard() {

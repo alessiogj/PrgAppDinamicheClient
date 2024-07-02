@@ -1,9 +1,9 @@
 // src/App.js
 import React from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
-import Login from './components/Auth/Login';
-import Dashboard from './components/Dashboard';
-import ProtectedRoute from './components/Auth/ProtectedRoute';
+import Login from './Auth/Login';
+import Dashboard from './components/Dashboard/Dashboard';
+import ProtectedRoute from './Auth/ProtectedRoute';
 import Navbar from './components/Common/Navbar';
 import './styles/Global.css';
 

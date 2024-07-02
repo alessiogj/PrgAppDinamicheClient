@@ -1,10 +1,10 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { Container, Typography, Box } from '@mui/material';
 import { useSnackbar } from 'notistack';
-import { login } from './Services/AuthService';
+import { login } from '../../Services/AuthService';
 import { useNavigate } from 'react-router-dom';
 import LoginForm from './LoginForm';
-import '../styles/HomePage.css';
+import '../../styles/HomePage.css';
 
 const HomePage = () => {
     const navigate = useNavigate();
@@ -38,12 +38,11 @@ const HomePage = () => {
             localStorage.removeItem('jwtToken');
             const { token } = await login(username, password);
             localStorage.setItem('jwtToken', token);
+            setIsFlipped(false);
             navigate('/dashboard');
         } catch (error) {
             enqueueSnackbar(error.message || 'Failed to fetch', { variant: 'error' });
             localStorage.removeItem('jwtToken');
-        } finally {
-            setIsFlipped(false);
         }
     };
 

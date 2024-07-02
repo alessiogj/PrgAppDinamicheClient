@@ -1,11 +1,11 @@
 // src/Common/Statistics.js
 import React from 'react';
-import OrderChart from './Common/OrderChart';
+import OrderChart from './OrderChart';
 
 const Statistics = ({ chartData }) => {
     return (
         <div className="widget">
-            <h2>Stats</h2>
+            <h2>Statistics</h2>
             <OrderChart data={chartData} />
         </div>
     );

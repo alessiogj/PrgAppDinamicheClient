@@ -1,9 +1,9 @@
 // src/index.jsx
 import React from 'react';
 import {BrowserRouter as Router, Routes, Route, Navigate} from 'react-router-dom';
-import Dashboard from './components/Dashboard';
-import HomePage from './components/HomePage';
-import ProtectedRoute from './components/Auth/ProtectedRoute';
+import Dashboard from './components/Dashboard/Dashboard';
+import HomePage from './components/HomePage/HomePage';
+import ProtectedRoute from './Auth/ProtectedRoute';
 import {createRoot} from "react-dom/client";
 import {SnackbarProvider} from "notistack";
 

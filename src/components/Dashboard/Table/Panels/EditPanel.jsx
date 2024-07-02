@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
-import { formatDate } from '../utils/formatDate';
-import { getAvailableCustomers } from "../Services/OrderService";
+import { formatDate } from '../../../utils/formatDate';
+import { getAvailableCustomers } from "../../../../Services/OrderService";
 import { TextField, Button, Grid, Paper, Typography, Container } from '@mui/material';
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';

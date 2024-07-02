@@ -1,11 +1,11 @@
 import React, { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
-import { getAvailableCustomers } from "../Services/OrderService";
+import { getAvailableCustomers } from "../../../../Services/OrderService";
 import { TextField, Button, Grid, Paper, Typography, Container, MenuItem } from '@mui/material';
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
 import { NumericFormat } from 'react-number-format';
-import { formatDate } from "../utils/formatDate";
+import { formatDate } from "../../../utils/formatDate";
 
 function AddOrderPanel({ addElement, displayNames, handleInputChange, handleConfirmAdd, onCancel, token }) {
     const [customerCodes, setCustomerCodes] = useState([]);

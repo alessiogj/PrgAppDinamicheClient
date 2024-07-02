@@ -1,15 +1,15 @@
 import React, { useMemo, useState } from 'react';
 import PropTypes from 'prop-types';
-import '../../styles/TableWithSearch.css';
+import '../../../styles/TableWithSearch.css';
 import SearchBar from './SearchBar';
 import FilterCheckboxes from './FilterCheckboxes';
 import DataTable from './DataTable';
-import EditPanel from './EditPanel';
-import VisualizePanel from './VisualizePanel';
-import AddOrderPanel from './AddOrderPanel';
-import { useOrderData } from '../hooks/useOrderData';
-import { useTableFilters } from '../hooks/useTableFilters';
-import { useTableActions } from '../hooks/useTableActions';
+import EditPanel from './Panels/EditPanel';
+import VisualizePanel from './Panels/VisualizePanel';
+import AddOrderPanel from './Panels/AddOrderPanel';
+import { useOrderData } from '../../../hooks/useOrderData';
+import { useTableFilters } from '../../../hooks/useTableFilters';
+import { useTableActions } from '../../../hooks/useTableActions';
 import { Button } from '@mui/material';
 
 function TableWithSearch({ initialData, type, userCode, onUpdate }) {

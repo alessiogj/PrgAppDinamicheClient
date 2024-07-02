@@ -1,6 +1,6 @@
 // src/Common/ManageOrders.jsx
 import React from 'react';
-import TableWithSearch from './Common/TableWithSearch';
+import TableWithSearch from './TableWithSearch';
 
 const ManageOrders = ({ tableData, userRole, userCode, onUpdate }) => {
     return (
