@@ -84,18 +84,11 @@ export const useTableActions = (type, setEditElement, setShowAddOrderPanel, setS
         setShowTable(false);
     }, [setEditElement, setSelectedDetails, setShowAddOrderPanel, setShowTable]);
 
-    const handleCancel = useCallback((userCode, setElement, setPanelState) => () => {
-        setElement({
-            agent_code: userCode,
-            ord_amount: '',
-            advance_amount: '',
-            order_date: '',
-            cust_code: '',
-            ord_description: ''
-        });
+    const handleCancel = (initialState, setElement, setShowTable, setPanelState) => () => {
+        setElement(initialState);
         setPanelState(false);
         setShowTable(true);
-    }, [setShowTable]);
+    };
 
     return {
         handleRowClick,

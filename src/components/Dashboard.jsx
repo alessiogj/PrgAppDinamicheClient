@@ -47,7 +47,6 @@ function Dashboard() {
             const data = await getOrders(token, role);
             if (data && Array.isArray(data.orders)) {
                 setTableData(data.orders);
-                console.log('Data fetched:', data);
             } else {
                 console.error("Unexpected data structure:", data);
                 setError('Data structure error');

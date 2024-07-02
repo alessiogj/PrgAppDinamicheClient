@@ -116,9 +116,9 @@ function TableWithSearch({ initialData, type, userCode, onUpdate }) {
                         handleInputChange={handleInputChange(setEditElement)}
                         handleConfirmEdit={handleConfirmEditWithUpdate}
                         handleConfirmDelete={handleConfirmDeleteWithUpdate}
-                        onCancel={handleCancel(setEditElement, setShowAddOrderPanel)}
-                        token={token}
+                        onCancel={handleCancel(editElement, setEditElement, setShowTable, setEditElement)}
                         type={type}
+                        token={token}
                     />
                 </div>
             )}
@@ -129,7 +129,7 @@ function TableWithSearch({ initialData, type, userCode, onUpdate }) {
                         displayNames={displayNames}
                         handleInputChange={handleInputChange(setAddElement)}
                         handleConfirmAdd={handleConfirmAddWithUpdate}
-                        onCancel={handleCancel(userCode, setAddElement, setShowAddOrderPanel)}
+                        onCancel={handleCancel(addElement, setAddElement, setShowTable, setShowAddOrderPanel)}
                         token={token}
                     />
                 </div>

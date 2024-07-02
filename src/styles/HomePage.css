@@ -1,3 +1,4 @@
+/* CSS per desktop */
 body.home-body {
     margin: 0;
     padding: 0;
@@ -7,6 +8,7 @@ body.home-body {
     display: flex;
     justify-content: center;
     align-items: center;
+    text-align: center;
 }
 
 .home-container {
@@ -75,4 +77,68 @@ h1, h4 {
 
 .button-container {
     margin-top: 1rem;
+}
+
+/* CSS per dispositivi mobile */
+@media (max-width: 480px) {
+    .home-container {
+        width: 100%;
+        padding: 10px;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+    }
+
+    .flip-card {
+        width: 100%;
+        height: auto;
+    }
+
+    .flip-card-front, .flip-card-back {
+        padding: 1rem;
+        box-shadow: none;
+    }
+
+    h1 {
+        font-size: 1.5rem;
+    }
+
+    h4 {
+        font-size: 1rem;
+    }
+
+    .home-text, .input_field {
+        margin-top: 0.5rem;
+        font-size: 0.875rem;
+    }
+
+    .button-container {
+        margin-top: 0.5rem;
+    }
+}
+
+/* CSS per dispositivi molto piccoli (max-width: 360px) */
+@media (max-width: 360px) {
+    h1 {
+        font-size: 1.25rem;
+    }
+
+    h4 {
+        font-size: 0.875rem;
+    }
+
+    .home-text, .input_field {
+        font-size: 0.75rem;
+    }
+
+    .flip-card {
+        width: 100%;
+        height: auto;
+        padding: 0.5rem;
+    }
+
+    .flip-card-front, .flip-card-back {
+        padding: 0.5rem;
+    }
 }
