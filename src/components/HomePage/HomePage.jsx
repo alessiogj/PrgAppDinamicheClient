@@ -47,7 +47,7 @@ const HomePage = () => {
     };
 
     return (
-        <Container maxWidth="sm" className="home-container" onKeyDown={handleFlip}>
+        <Container maxWidth="sm" onKeyDown={handleFlip}>
             <Box className={`flip-card ${isFlipped ? 'flipped' : ''}`} onClick={handleFlip}>
                 <Box className="flip-card-inner">
                     <Box className="flip-card-front">

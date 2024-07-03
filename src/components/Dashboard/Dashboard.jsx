@@ -94,15 +94,15 @@ function Dashboard() {
                 <p>Welcome to your dashboard. Here you can manage your orders.</p>
                 <div className="dashboard-content">
                     <div className="dashboard-card">
-                        <Statistics chartData={chartData} />
-                    </div>
-                    <div className="dashboard-card">
                         <ManageOrders
                             tableData={tableData}
                             userRole={userRole}
                             userCode={userCode}
                             onUpdate={handleUpdate}
                         />
+                    </div>
+                    <div className="dashboard-card">
+                        <Statistics chartData={chartData}/>
                     </div>
                 </div>
             </header>

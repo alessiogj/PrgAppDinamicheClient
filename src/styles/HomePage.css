@@ -9,20 +9,12 @@ body.home-body {
     justify-content: center;
     align-items: center;
     text-align: center;
-}
-
-.home-container {
-    width: 480px;
-    padding: 20px;
-    box-sizing: border-box;
-    display: flex;
-    justify-content: center;
-    align-items: center;
+    overflow: hidden;
 }
 
 .flip-card {
-    width: 480px;
-    height: 400px;
+    width: 350px;
+    height: 300px;
     position: relative;
     transform-style: preserve-3d;
     transition: transform 0.6s;
@@ -81,18 +73,10 @@ h1, h4 {
 
 /* CSS per dispositivi mobile */
 @media (max-width: 480px) {
-    .home-container {
-        width: 100%;
+    body.home-body {
+        background: linear-gradient(135deg, #2575fc, #6a11cb);
         padding: 10px;
-        display: flex;
-        flex-direction: column;
-        justify-content: center;
-        align-items: center;
-    }
-
-    .flip-card {
-        width: 100%;
-        height: auto;
+        overflow: hidden;
     }
 
     .flip-card-front, .flip-card-back {
@@ -120,6 +104,11 @@ h1, h4 {
 
 /* CSS per dispositivi molto piccoli (max-width: 360px) */
 @media (max-width: 360px) {
+    body.home-body {
+        background: linear-gradient(135deg, #2575fc, #6a11cb);
+        overflow: hidden;
+    }
+
     h1 {
         font-size: 1.25rem;
     }
@@ -134,7 +123,6 @@ h1, h4 {
 
     .flip-card {
         width: 100%;
-        height: auto;
         padding: 0.5rem;
     }
 
