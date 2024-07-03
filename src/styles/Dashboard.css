@@ -9,17 +9,21 @@ body.dashboard-body {
 
 .dashboard-app {
     width: 100%;
-    max-width: 1400px;
+    max-width: 1200px;
     margin: 0 auto;
     padding: 2rem;
     background-color: #ffffff;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
     border-radius: 8px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
 }
 
 .dashboard-header {
     text-align: center;
     margin-bottom: 2rem;
+    width: 100%;
 }
 
 h1 {
@@ -34,6 +38,7 @@ p {
 }
 
 .dashboard-content {
+    width: 100%;
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -42,7 +47,6 @@ p {
 
 .dashboard-card {
     width: 100%;
-    max-width: 900px;
     background: #ffffff;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
     border-radius: 8px;
@@ -77,6 +81,7 @@ button:hover {
     background-color: #3700b3;
 }
 
+/* Responsive styles */
 @media (max-width: 1200px) {
     .dashboard-app {
         padding: 1rem;
@@ -90,10 +95,6 @@ button:hover {
         font-size: 1rem;
     }
 
-    .dashboard-card {
-        max-width: 95%;
-    }
-
     .statistics h2, .manage-orders h2 {
         font-size: 1.5rem;
     }
@@ -105,7 +106,7 @@ button:hover {
     }
 
     h1 {
-        font-size: 2rem;
+        font-size: 1.8rem;
     }
 
     p {
@@ -113,11 +114,11 @@ button:hover {
     }
 
     .dashboard-card {
-        max-width: 95%;
+        padding: 1.5rem;
     }
 
     .statistics h2, .manage-orders h2 {
-        font-size: 1.5rem;
+        font-size: 1.3rem;
     }
 }
 
@@ -135,7 +136,6 @@ button:hover {
     }
 
     .dashboard-card {
-        max-width: 100%;
         padding: 1rem;
     }
 
@@ -146,5 +146,70 @@ button:hover {
     button {
         padding: 0.5rem 1rem;
         font-size: 0.9rem;
+    }
+}
+
+/* CSS for table and panels */
+
+.scrollable-table {
+    overflow-x: auto;
+    display: block;
+    width: 100%;
+}
+
+.table-container {
+    width: 100%;
+    overflow-x: auto;
+}
+
+.controls {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1rem;
+    gap: 1rem;
+    flex-wrap: wrap;
+}
+
+.info-card {
+    width: 100%;
+    background: #ffffff;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    border-radius: 8px;
+    padding: 1.5rem;
+    margin-bottom: 2rem;
+}
+
+.data-table {
+    width: 100%;
+    min-width: 600px; /* Minimum width to avoid too much compression */
+    border-collapse: collapse;
+}
+
+.data-table th, .data-table td {
+    padding: 0.75rem;
+    border: 1px solid #dddddd;
+    text-align: left;
+    font-size: 0.875rem;
+    white-space: nowrap; /* Avoids text breaking */
+}
+
+.data-table th {
+    background-color: #f5f7fa;
+}
+
+.data-table tr:hover {
+    background-color: #f1f1f1;
+}
+
+/* Additional Media Queries for finer control */
+@media (max-width: 1024px) {
+    .data-table th, .data-table td {
+        padding: 0.4rem;
+        font-size: 0.7rem;
+    }
+
+    .chart-container {
+        padding: 5px;
     }
 }

@@ -1,4 +1,4 @@
-const endpoint = 'http://localhost:3100/users';
+const endpoint = 'http://localhost:3100/auth';
 
 export const login = async (username, password) => {
     try {

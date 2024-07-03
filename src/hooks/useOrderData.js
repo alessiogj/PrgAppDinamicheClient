@@ -45,22 +45,60 @@ export const useOrderData = (initialData, type, userCode) => {
 
     const handleConfirmEdit = useCallback(async () => {
         try {
+            const ordNum = Number(editElement.ord_num);
+            const ordAmount = Number(editElement.ord_amount.trim());
+            const advanceAmount = Number(editElement.advance_amount.trim());
+            const ordDate = editElement.order_date.trim();
+            const custCode = editElement.cust_code.trim();
+            const agentCode = editElement.agent_code.trim();
+            const ordDescription = editElement.ord_description.trim();
+
+            if (isNaN(ordNum) || ordNum <= 0) {
+                throw new Error('Order number is required and must be a valid number.');
+            }
+
+            if (!ordAmount || isNaN(ordAmount)) {
+                throw new Error('Order amount is required and must be a valid number.');
+            }
+
+            if (!advanceAmount || isNaN(advanceAmount)) {
+                throw new Error('Advance amount is required and must be a valid number.');
+            }
+
+            if (advanceAmount > ordAmount) {
+                throw new Error('Advance amount cannot be greater than order amount.');
+            }
+
+            if (!ordDate) {
+                throw new Error('Order date is required.');
+            }
+
+            if (!custCode) {
+                throw new Error('Customer code is required.');
+            }
+
+            if (!ordDescription) {
+                throw new Error('Order description is required.');
+            }
+
             const element = {
                 modifiedOrder: {
-                    ord_num: Number(editElement.ord_num),
-                    ord_amount: Number(editElement.ord_amount.trim()),
-                    advance_amount: Number(editElement.advance_amount.trim()),
-                    ord_date: editElement.order_date.trim(),
-                    cust_code: editElement.cust_code.trim(),
-                    agent_code: editElement.agent_code.trim(),
-                    ord_description: editElement.ord_description
+                    ord_num: ordNum,
+                    ord_amount: ordAmount,
+                    advance_amount: advanceAmount,
+                    ord_date: ordDate,
+                    cust_code: custCode,
+                    agent_code: agentCode,
+                    ord_description: ordDescription
                 }
             };
+
             await putOrder(token, element, type);
             enqueueSnackbar('Order updated successfully!', { variant: 'success' });
             await fetchOrders();
         } catch (error) {
-            enqueueSnackbar('Failed to update order. Please try again.', { variant: 'error' });
+            console.error('Error updating order:', error);
+            enqueueSnackbar(error.message || 'Failed to update order. Please try again.', { variant: 'error' });
         }
         setEditElement(null);
     }, [editElement, token, enqueueSnackbar, fetchOrders, type]);
@@ -84,21 +122,55 @@ export const useOrderData = (initialData, type, userCode) => {
             if (!userCode) {
                 throw new Error('User code is not available.');
             }
+
+            const ordAmount = Number(addElement.ord_amount.trim());
+            const advanceAmount = Number(addElement.advance_amount.trim());
+            const ordDate = addElement.order_date.trim();
+            const custCode = addElement.cust_code.trim();
+            const agentCode = addElement.agent_code.trim();
+            const ordDescription = addElement.ord_description.trim();
+
+            if (!ordAmount || isNaN(ordAmount)) {
+                throw new Error('Order amount is required and must be a valid number.');
+            }
+
+            if (!advanceAmount || isNaN(advanceAmount)) {
+                throw new Error('Advance amount is required and must be a valid number.');
+            }
+
+            if (advanceAmount > ordAmount) {
+                throw new Error('Advance amount cannot be greater than order amount.');
+            }
+
+            if (!ordDate) {
+                throw new Error('Order date is required.');
+            }
+
+            if (!custCode) {
+                throw new Error('Customer code is required.');
+            }
+
+            if (!ordDescription) {
+                throw new Error('Order description is required.');
+            }
+
             const newOrder = {
-                ord_amount: Number(addElement.ord_amount.trim()),
-                advance_amount: Number(addElement.advance_amount.trim()),
-                ord_date: addElement.order_date.trim(),
-                cust_code: addElement.cust_code.trim(),
-                agent_code: addElement.agent_code.trim(),
-                ord_description: addElement.ord_description
+                ord_amount: ordAmount,
+                advance_amount: advanceAmount,
+                ord_date: ordDate,
+                cust_code: custCode,
+                agent_code: agentCode,
+                ord_description: ordDescription
             };
+
             await postOrder(token, { newOrder });
             enqueueSnackbar('Order added successfully!', { variant: 'success' });
             await fetchOrders();
         } catch (error) {
             console.error('Error adding order:', error);
-            enqueueSnackbar('Failed to add order. Please try again.', { variant: 'error' });
+            enqueueSnackbar(error.message || 'Failed to add order. Please try again.', { variant: 'error' });
         }
+
         setShowAddOrderPanel(false);
         setAddElement({
             agent_code: userCode,

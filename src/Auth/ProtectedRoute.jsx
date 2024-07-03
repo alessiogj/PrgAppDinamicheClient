@@ -3,7 +3,7 @@ import { Navigate } from 'react-router-dom';
 import {jwtDecode} from 'jwt-decode';
 import axios from 'axios';
 
-const endpoint = 'http://localhost:3100/users';
+const endpoint = 'http://localhost:3100/auth';
 
 const ProtectedRoute = ({ children }) => {
     const [isAuthenticated, setIsAuthenticated] = useState(null);

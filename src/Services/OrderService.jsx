@@ -1,4 +1,6 @@
-const endpoint = 'http://localhost:3100/users';
+const endpointAgent = 'http://localhost:3100/agents';
+const endpointDirigent = 'http://localhost:3100/dirigents';
+const endpointCustomer = 'http://localhost:3100/customers';
 
 export const getOrders = async (token, type) => {
     try {
@@ -13,11 +15,11 @@ export const getOrders = async (token, type) => {
 
         let orderResponse;
         if (type === 'agent') {
-            orderResponse = await fetch(`${endpoint}/getAgentOrders`, requestOptions);
+            orderResponse = await fetch(`${endpointAgent}/getOrders`, requestOptions);
         }else if (type === 'customer') {
-            orderResponse = await fetch(`${endpoint}/getCustomerOrders`, requestOptions);
+            orderResponse = await fetch(`${endpointCustomer}/getOrders`, requestOptions);
         } else if (type === 'dirigent') {
-            orderResponse = await fetch(`${endpoint}/getDirigentOrders`, requestOptions);
+            orderResponse = await fetch(`${endpointDirigent}/getOrders`, requestOptions);
         }
 
         if (!orderResponse.ok) {
@@ -43,8 +45,8 @@ export const putOrder = async (token, order, type) => {
             body: JSON.stringify(order)
         };
         const orderResponse = (type === 'agent') ?
-             await fetch(`${endpoint}/modifyAgentOrder`, requestOptions) :
-             await fetch(`${endpoint}/modifyDirigentOrder`, requestOptions);
+             await fetch(`${endpointAgent}/modifyOrder`, requestOptions) :
+             await fetch(`${endpointDirigent}/modifyOrder`, requestOptions);
 
         if (!orderResponse.ok) {
             const data = await orderResponse.json();
@@ -68,7 +70,7 @@ export const deleteOrder = async (token, order) => {
             body: JSON.stringify(order)
         };
 
-        const orderResponse = await fetch(`${endpoint}/deleteAgentOrder`, requestOptions);
+        const orderResponse = await fetch(`${endpointAgent}/deleteOrder`, requestOptions);
 
         if (!orderResponse.ok) {
             const data = await orderResponse.json();
@@ -91,7 +93,7 @@ export const postOrder = async (token, order) => {
             body: JSON.stringify(order)
         };
 
-        const orderResponse = await fetch(`${endpoint}/addAgentOrder`, requestOptions);
+        const orderResponse = await fetch(`${endpointAgent}/addOrder`, requestOptions);
 
         if (!orderResponse.ok) {
             const data = await orderResponse.json();
@@ -117,7 +119,7 @@ export const getAvailableCustomers = async (token) => {
             }
         };
 
-        const response = await fetch(`${endpoint}/getAvailableCustomers`, requestOptions);
+        const response = await fetch(`${endpointAgent}/getAvailableCustomers`, requestOptions);
 
         if (!response.ok) {
             const data = await response.json();

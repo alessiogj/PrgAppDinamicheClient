@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import {
     LineChart,
@@ -12,8 +12,21 @@ import {
 } from 'recharts';
 
 const OrderChart = ({ data }) => {
+    const [chartHeight, setChartHeight] = useState(400);
+
+    useEffect(() => {
+        const handleResize = () => {
+            setChartHeight(window.innerHeight / 3);
+        };
+
+        window.addEventListener('resize', handleResize);
+        handleResize();
+
+        return () => window.removeEventListener('resize', handleResize);
+    }, []);
+
     return (
-        <ResponsiveContainer width="100%" height={400}>
+        <ResponsiveContainer width="100%" height={chartHeight}>
             <LineChart data={data}>
                 <CartesianGrid strokeDasharray="3 3" />
                 <XAxis dataKey="ord_date" />
