@@ -10,18 +10,30 @@ const HomePage = () => {
     const navigate = useNavigate();
     const { enqueueSnackbar } = useSnackbar();
     const [isFlipped, setIsFlipped] = useState(false);
+    const [hasFlipped, setHasFlipped] = useState(false); // Stato per tracciare il primo ribaltamento
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
 
     useEffect(() => {
         document.body.classList.add('home-body');
+
+        const handleKeyDown = (event) => {
+            if (event.key === 'Enter' && !hasFlipped) {
+                setIsFlipped((prev) => !prev);
+                setHasFlipped(true); // Imposta su true dopo il primo ribaltamento
+            }
+        };
+
+        document.addEventListener('keydown', handleKeyDown);
+
         return () => {
             document.body.classList.remove('home-body');
+            document.removeEventListener('keydown', handleKeyDown);
         };
-    }, []);
+    }, [hasFlipped]); // Aggiungi hasFlipped alle dipendenze per evitare di ribaltare più volte
 
     const handleFlip = useCallback((event) => {
-        if (event.type === 'click' && event.target.closest('.flip-card') && !event.target.closest('input, button')){
+        if (event.type === 'click' && event.target.closest('.flip-card') && !event.target.closest('input, button')) {
             setIsFlipped((prev) => !prev);
         }
     }, []);
@@ -47,8 +59,8 @@ const HomePage = () => {
     };
 
     return (
-        <Container maxWidth="sm" onKeyDown={handleFlip}>
-            <Box className={`flip-card ${isFlipped ? 'flipped' : ''}`} onClick={handleFlip}>
+        <Container maxWidth="sm" className="home-container" onClick={handleFlip}>
+            <Box className={`flip-card ${isFlipped ? 'flipped' : ''}`}>
                 <Box className="flip-card-inner">
                     <Box className="flip-card-front">
                         <Typography variant="h3" component="h1" gutterBottom>
