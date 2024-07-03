@@ -57,11 +57,11 @@ export const useOrderData = (initialData, type, userCode) => {
                 throw new Error('Order number is required and must be a valid number.');
             }
 
-            if (!ordAmount || isNaN(ordAmount)) {
+            if (isNaN(ordAmount) || ordAmount <= 0) {
                 throw new Error('Order amount is required and must be a valid number.');
             }
 
-            if (!advanceAmount || isNaN(advanceAmount)) {
+            if (advanceAmount < 0) {
                 throw new Error('Advance amount is required and must be a valid number.');
             }
 
@@ -134,7 +134,7 @@ export const useOrderData = (initialData, type, userCode) => {
                 throw new Error('Order amount is required and must be a valid number.');
             }
 
-            if (!advanceAmount || isNaN(advanceAmount)) {
+            if (advanceAmount < 0) {
                 throw new Error('Advance amount is required and must be a valid number.');
             }
 
