@@ -11,7 +11,7 @@ body.dashboard-body {
     width: 100%;
     max-width: 1200px;
     margin: 0 auto;
-    padding: 2rem;
+    padding: 2rem; /* Padding originale per schermi più grandi */
     background-color: #ffffff;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
     border-radius: 8px;
@@ -84,7 +84,7 @@ button:hover {
 /* Responsive styles */
 @media (max-width: 1200px) {
     .dashboard-app {
-        padding: 1rem;
+        padding: 1rem; /* Ridotto per dispositivi tra 768px e 1200px */
     }
 
     h1 {
@@ -102,7 +102,7 @@ button:hover {
 
 @media (max-width: 768px) {
     .dashboard-app {
-        padding: 1rem;
+        padding: 1.5rem; /* Aumentato per dispositivi fino a 768px */
     }
 
     h1 {
@@ -124,7 +124,7 @@ button:hover {
 
 @media (max-width: 480px) {
     .dashboard-app {
-        padding: 0.5rem;
+        padding: 1rem; /* Aumentato ulteriormente per dispositivi fino a 480px */
     }
 
     h1 {
@@ -152,15 +152,18 @@ button:hover {
 /* CSS for table and panels */
 
 .scrollable-table {
-    overflow-x: auto;
+    overflow-x: auto; /* Abilita lo scrolling orizzontale */
     display: block;
-    width: 100%;
+    width: auto; /* Assicura che la tabella riempia la larghezza del contenitore */
+    height: auto; /* L'altezza si adatta automaticamente al contenuto */
 }
 
 .table-container {
     width: 100%;
-    overflow-x: auto;
+    overflow-x: auto; /* Abilita lo scrolling orizzontale */
+    height: auto; /* L'altezza si adatta automaticamente al contenuto */
 }
+
 
 .controls {
     display: flex;
