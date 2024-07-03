@@ -9,56 +9,56 @@ export const useTableActions = (type, setEditElement, setShowAddOrderPanel, setS
         if (type === 'dirigent') {
             if (column === 'cust_name') {
                 const details = {
-                    'Order Description': item.ord_description || 'N/A',
+                    'Order Description': item.ord_description || '',
                     'Code': item.cust_custcode || 'Unknown',
                     'Name': item.cust_name || 'Unknown',
-                    'City': item.cust_city || 'N/A',
-                    'Working Area': item.cust_workingarea || 'N/A',
-                    'Country': item.cust_country || 'N/A',
-                    'Grade': item.grade || 'N/A',
-                    'Opening Amount': item.opening_amt || '0.00',
-                    'Receive Amount': item.receive_amt || '0.00',
-                    'Payment Amount': item.payment_amt || '0.00',
-                    'Outstanding Amount': item.outstanding_amt || '0.00',
-                    'Phone Number': item.cust_phoneno || 'N/A',
-                    'Agent Code': item.cust_agentcode || 'N/A',
+                    'City': item.cust_city || 'Unknown',
+                    'Working Area': item.cust_workingarea || 'Unknown',
+                    'Country': item.cust_country || 'Unknown',
+                    'Grade': item.grade || 'Unknown',
+                    'Opening Amount': item.opening_amt || 'Unknown',
+                    'Receive Amount': item.receive_amt || 'Unknown',
+                    'Payment Amount': item.payment_amt || 'Unknown',
+                    'Outstanding Amount': item.outstanding_amt || 'Unknown',
+                    'Phone Number': item.cust_phoneno || 'Unknown',
+                    'Agent Code': item.cust_agentcode || 'Unknown',
                 };
                 setSelectedDetails({ details, description: 'Customer Details' });
             } else if (column === 'agent_name') {
                 const details = {
-                    'Order Description': item.ord_description || 'N/A',
-                    'Code': item.agent_agentcode || 'N/A',
+                    'Order Description': item.ord_description || '',
+                    'Code': item.agent_agentcode || 'Unknown',
                     'Name': item.agent_name || 'Unknown',
-                    'Working Area': item.agent_workingarea || 'N/A',
-                    'Commission': item.commission || '0.00',
-                    'Phone Number': item.agent_phoneno || 'N/A',
-                    'Country': item.agent_country || 'N/A'
+                    'Working Area': item.agent_workingarea || 'Unknown',
+                    'Commission': item.commission || 'Unknown',
+                    'Phone Number': item.agent_phoneno || 'Unknown',
+                    'Country': item.agent_country || 'Unknown'
                 };
                 setSelectedDetails({ details, description: 'Agent Details' });
             }
         } else {
             const details = type === 'agent' ? {
-                'Order Description': item.ord_description || 'N/A',
+                'Order Description': item.ord_description || '',
                 'Code': item.cust_code || 'Unknown',
                 'Name': item.cust_name || 'Unknown',
-                'City': item.cust_city || 'N/A',
-                'Working Area': item.working_area || 'N/A',
-                'Country': item.cust_country || 'N/A',
-                'Grade': item.grade || 'N/A',
-                'Opening Amount': item.opening_amt || '0.00',
-                'Receive Amount': item.receive_amt || '0.00',
-                'Payment Amount': item.payment_amt || '0.00',
-                'Outstanding Amount': item.outstanding_amt || '0.00',
-                'Phone Number': item.phone_no || 'N/A',
-                'Agent Code': item.cust_agentcode || 'N/A',
+                'City': item.cust_city || 'Unknown',
+                'Working Area': item.working_area || 'Unknown',
+                'Country': item.cust_country || 'Unknown',
+                'Grade': item.grade || 'Unknown',
+                'Opening Amount': item.opening_amt || 'Unknown',
+                'Receive Amount': item.receive_amt || 'Unknown',
+                'Payment Amount': item.payment_amt || 'Unknown',
+                'Outstanding Amount': item.outstanding_amt || 'Unknown',
+                'Phone Number': item.phone_no || 'Unknown',
+                'Agent Code': item.cust_agentcode || 'Unknown',
             } : {
-                'Order Description': item.ord_description || 'N/A',
-                'Code': item.agent_code || 'N/A',
+                'Order Description': item.ord_description || '',
+                'Code': item.agent_code || 'Unknown',
                 'Name': item.agent_name || 'Unknown',
-                'Working Area': item.working_area || 'N/A',
-                'Commission': item.commission || '0.00',
-                'Phone Number': item.phone_no || 'N/A',
-                'Country': item.country || 'N/A'
+                'Working Area': item.working_area || 'Unknown',
+                'Commission': item.commission || 'Unknown',
+                'Phone Number': item.phone_no || 'Unknown',
+                'Country': item.country || 'Unknown'
             };
             setSelectedDetails({ details, description: type === 'agent' ? 'Customer Details' : 'Agent Details' });
         }

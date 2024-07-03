@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { jwtDecode } from 'jwt-decode';
+import { jwtDecode } from "jwt-decode";
 import { getOrders } from '../../Services/OrderService';
 import Navbar from '../Common/Navbar';
 import ManageOrders from './Table/ManageOrders';
@@ -43,6 +43,7 @@ function Dashboard() {
     const fetchData = async (role) => {
         if (!role) return;
 
+        setLoading(true);
         try {
             const data = await getOrders(token, role);
             if (data && Array.isArray(data.orders)) {

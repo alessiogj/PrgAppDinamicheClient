@@ -12,8 +12,15 @@ import { useTableFilters } from '../../../hooks/useTableFilters';
 import { useTableActions } from '../../../hooks/useTableActions';
 import { Button } from '@mui/material';
 
+/**
+ * Componente principale che implementa una tabella con funzionalità di ricerca, visualizzazione,
+ * aggiunta e modifica degli ordini, utilizzando vari hooks personalizzati per gestire lo stato e le azioni.
+ * @param {Array} initialData - Dati iniziali per la tabella.
+ * @param {string} type - Tipo di utente (agent, customer, dirigent).
+ * @param {string} userCode - Codice identificativo dell'utente.
+ * @param {Function} onUpdate - Funzione da eseguire dopo un aggiornamento di dati riuscito.
+ */
 function TableWithSearch({ initialData, type, userCode, onUpdate }) {
-    const token = localStorage.getItem('jwtToken');
     const {
         orderData,
         editElement,
@@ -118,7 +125,7 @@ function TableWithSearch({ initialData, type, userCode, onUpdate }) {
                         handleConfirmDelete={handleConfirmDeleteWithUpdate}
                         onCancel={handleCancel(editElement, setEditElement, setShowTable, setEditElement)}
                         type={type}
-                        token={token}
+                        token={localStorage.getItem('jwtToken')}
                     />
                 </div>
             )}
@@ -130,7 +137,7 @@ function TableWithSearch({ initialData, type, userCode, onUpdate }) {
                         handleInputChange={handleInputChange(setAddElement)}
                         handleConfirmAdd={handleConfirmAddWithUpdate}
                         onCancel={handleCancel(addElement, setAddElement, setShowTable, setShowAddOrderPanel)}
-                        token={token}
+                        token={localStorage.getItem('jwtToken')}
                     />
                 </div>
             )}
