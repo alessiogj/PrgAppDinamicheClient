@@ -33,9 +33,9 @@ const OrderChart = ({ data }) => {
                 <YAxis />
                 <Tooltip />
                 <Legend />
-                <Line type="monotone" dataKey="ord_amount" stroke="#8884d8" name="Order Amount" />
-                <Line type="monotone" dataKey="advance_amount" stroke="#82ca9d" name="Advance Amount" />
-                <Line type="monotone" dataKey="outstanding_amt" stroke="#ff7300" name="Outstanding Amount" />
+                <Line type="monotone" dataKey="ord_amount" stroke="#1f77b4" name="Order Amount" />
+                <Line type="monotone" dataKey="advance_amount" stroke="#2ca02c" name="Advance Amount" />
+                <Line type="monotone" dataKey="outstanding_amt" stroke="#d62728" name="Outstanding Amount" />
             </LineChart>
         </ResponsiveContainer>
     );

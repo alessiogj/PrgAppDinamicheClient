@@ -16,6 +16,8 @@ const FilterCheckboxes = React.memo(({ columnDefinitions, visibleColumns, handle
 
     /**
      * Gestisce il click sul pulsante che apre il menu.
+     *
+     * @param {Object} event - L'evento di click.
      */
     const handleClick = useCallback((event) => {
         setAnchorEl(event.currentTarget);
@@ -30,6 +32,8 @@ const FilterCheckboxes = React.memo(({ columnDefinitions, visibleColumns, handle
 
     /**
      * Filtra le colonne disponibili per la selezione basandosi sul tipo di utente e le regole specifiche.
+     *
+     * @returns {Array} - Un array di nomi di colonne filtrate.
      */
     const filteredColumns = useMemo(() => {
         return Object.keys(columnDefinitions).filter(column => {

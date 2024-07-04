@@ -6,6 +6,9 @@ import { useNavigate } from 'react-router-dom';
 import LoginForm from './LoginForm';
 import '../../styles/HomePage.css';
 
+/**
+ * Componente HomePage che funge da pagina principale per il login dell'utente.
+ */
 const HomePage = () => {
     const navigate = useNavigate();
     const { enqueueSnackbar } = useSnackbar();
@@ -14,13 +17,16 @@ const HomePage = () => {
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
 
+    /**
+     * Aggiunge e rimuove una classe CSS al body e gestisce il keydown per il ribaltamento della card.
+     */
     useEffect(() => {
         document.body.classList.add('home-body');
 
         const handleKeyDown = (event) => {
             if (event.key === 'Enter' && !hasFlipped) {
                 setIsFlipped((prev) => !prev);
-                setHasFlipped(true); // Imposta su true dopo il primo ribaltamento
+                setHasFlipped(true);
             }
         };
 
@@ -30,14 +36,22 @@ const HomePage = () => {
             document.body.classList.remove('home-body');
             document.removeEventListener('keydown', handleKeyDown);
         };
-    }, [hasFlipped]); // Aggiungi hasFlipped alle dipendenze per evitare di ribaltare più volte
+    }, [hasFlipped]);
 
+    /**
+     * Gestisce il ribaltamento della card quando viene cliccato l'elemento giusto.
+     */
     const handleFlip = useCallback((event) => {
         if (event.type === 'click' && event.target.closest('.flip-card') && !event.target.closest('input, button')) {
             setIsFlipped((prev) => !prev);
         }
     }, []);
 
+    /**
+     * Gestisce la sottomissione del form di login.
+     *
+     * @param {Event} event - L'evento del submit del form.
+     */
     const handleSubmit = async (event) => {
         event.preventDefault();
 

@@ -21,7 +21,7 @@ function DataTable({ filteredData, visibleColumns, columnDefinitions, handleSort
      *
      * @param {Object} item - Oggetto dati della riga corrente.
      * @param {String} column - Chiave della colonna corrente.
-     * @returns {React.Node} - Nodo React che può essere un Button o un elemento di testo semplice.
+     * @returns {React.JSX.Element} - Nodo React che può essere un Button o un elemento di testo semplice.
      */
     const renderCellContent = (item, column) => {
         const isClickable = (column === 'cust_name' && (type === 'agent' || type === 'dirigent')) ||
