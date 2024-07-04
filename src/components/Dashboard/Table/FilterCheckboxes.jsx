@@ -48,7 +48,7 @@ const FilterCheckboxes = React.memo(({ columnDefinitions, visibleColumns, handle
     return (
         <div className="filter-checkboxes">
             <Button aria-controls="simple-menu" aria-haspopup="true" onClick={handleClick} variant="contained">
-                Select Columns
+                Selezione colonne
             </Button>
             <Menu
                 id="simple-menu"

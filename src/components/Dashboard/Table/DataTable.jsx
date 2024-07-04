@@ -57,7 +57,7 @@ function DataTable({ filteredData, visibleColumns, columnDefinitions, handleSort
                             {(type === 'agent' || type === 'dirigent') && (
                                 <TableCell>
                                     <Button variant="contained" color="primary" onClick={(e) => { e.stopPropagation(); handleEdit(item); }}>
-                                        Edit
+                                        Modifica
                                     </Button>
                                 </TableCell>
                             )}

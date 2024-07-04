@@ -56,7 +56,7 @@ const HomePage = () => {
         event.preventDefault();
 
         if (!username || !password) {
-            enqueueSnackbar('Please fill all fields.', { variant: 'error' });
+            enqueueSnackbar('Compila tutti i campi', { variant: 'warning' });
             return;
         }
 
@@ -67,7 +67,7 @@ const HomePage = () => {
             setIsFlipped(false);
             navigate('/dashboard');
         } catch (error) {
-            enqueueSnackbar(error.message || 'Failed to fetch', { variant: 'error' });
+            enqueueSnackbar('Errore durante il login', { variant: 'error' });
             localStorage.removeItem('jwtToken');
         }
     };
@@ -78,10 +78,10 @@ const HomePage = () => {
                 <Box className="flip-card-inner">
                     <Box className="flip-card-front">
                         <Typography variant="h3" component="h1" gutterBottom>
-                            Welcome!
+                            Benvenuto!
                         </Typography>
                         <Typography variant="body1" className="home-text" onClick={() => setIsFlipped(true)}>
-                            Click here to login.
+                            Clicca qui per accedere
                         </Typography>
                     </Box>
                     <Box className="flip-card-back">

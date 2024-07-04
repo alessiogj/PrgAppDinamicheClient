@@ -35,12 +35,12 @@ function TableWithSearch({ initialData, type, userCode, onUpdate }) {
     } = useOrderData(initialData, type, userCode);
 
     const columnDefinitions = useMemo(() => ({
-        ord_num: { displayName: 'Order Number', type: 'number' },
-        ord_amount: { displayName: 'Order Amount', type: 'number' },
-        advance_amount: { displayName: 'Advance Amount', type: 'number' },
-        order_date: { displayName: 'Order Date', type: 'string' },
-        cust_name: { displayName: 'Customer Name', type: 'string' },
-        agent_name: { displayName: 'Agent Name', type: 'string' },
+        ord_num: { displayName: 'Numero Ordine', type: 'number' },
+        ord_amount: { displayName: 'Importo Ordine', type: 'number' },
+        advance_amount: { displayName: 'Importo Anticipato', type: 'number' },
+        order_date: { displayName: 'Data Ordine', type: 'date' },
+        cust_name: { displayName: 'Cliente', type: 'string' },
+        agent_name: { displayName: 'Agente', type: 'string' },
     }), []);
 
     const {
@@ -82,13 +82,13 @@ function TableWithSearch({ initialData, type, userCode, onUpdate }) {
     };
 
     const displayNames = {
-        ord_num: 'Order Number',
-        ord_amount: 'Order Amount',
-        advance_amount: 'Advance Amount',
-        order_date: 'Order Date',
-        cust_code: 'Customer Code',
-        agent_code: 'Agent Code',
-        ord_description: 'Order Description'
+        ord_num: 'Numero Ordine',
+        ord_amount: 'Importo Ordine',
+        advance_amount: 'Importo Anticipato',
+        order_date: 'Data Ordine',
+        cust_code: 'Codice Cliente',
+        agent_code: 'Codice Agente',
+        ord_description: 'Descrizione Ordine',
     };
 
     return (
@@ -101,7 +101,11 @@ function TableWithSearch({ initialData, type, userCode, onUpdate }) {
                     handleColumnVisibilityChange={handleColumnVisibilityChange}
                     type={type}
                 />
-                {type === 'agent' && <Button onClick={handleAddOrder} variant="contained" color="primary">Add Order</Button>}
+                {type === 'agent' &&
+                    <Button onClick={handleAddOrder} variant="contained" color="primary">
+                        Aggiungi Ordine
+                    </Button>
+                }
             </div>
             {selectedDetails && !showAddOrderPanel && !editElement && (
                 <div className="info-card">

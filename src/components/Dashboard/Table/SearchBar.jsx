@@ -15,7 +15,7 @@ function SearchBar({ search, onSearchChange }) {
         <TextField
             value={search}
             onChange={(e) => onSearchChange(e.target.value)}
-            placeholder="Search..."
+            placeholder="Cerca..."
             variant="outlined"
             size="small"
             InputProps={{

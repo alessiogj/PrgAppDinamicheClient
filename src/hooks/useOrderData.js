@@ -23,7 +23,7 @@ export const useOrderData = (initialData, type, userCode) => {
 
     const fetchOrders = useCallback(async () => {
         if (!token) {
-            enqueueSnackbar('Token not available. Please log in again.', { variant: 'error' });
+            enqueueSnackbar('Token non disponibile. Prova a fare il login.', { variant: 'error' });
             return;
         }
         try {
@@ -31,11 +31,11 @@ export const useOrderData = (initialData, type, userCode) => {
             if (data && Array.isArray(data.orders)) {
                 setOrderData(data.orders);
             } else {
-                enqueueSnackbar('Failed to fetch orders.', { variant: 'error' });
+                enqueueSnackbar('Errore nel recupero degli ordini. Riprova', { variant: 'error' });
             }
         } catch (error) {
-            console.error('Error fetching orders:', error);
-            enqueueSnackbar('Failed to fetch orders.', { variant: 'error' });
+            console.error('Errore nel recupero degli ordini:', error);
+            enqueueSnackbar('Errore nel recupero degli ordini. Riprova.', { variant: 'error' });
         }
     }, [token, type, enqueueSnackbar]);
 
@@ -54,31 +54,34 @@ export const useOrderData = (initialData, type, userCode) => {
             const ordDescription = editElement.ord_description.trim();
 
             if (isNaN(ordNum) || ordNum <= 0) {
-                throw new Error('Order number is required and must be a valid number.');
+                throw new Error('Il numero di ordine è richiesto e deve essere un numero valido.');
             }
 
             if (isNaN(ordAmount) || ordAmount <= 0) {
-                throw new Error('Order amount is required and must be a valid number.');
+                throw new Error('L\'importo dell\'ordine è richiesto e deve essere un numero valido.');
             }
 
             if (advanceAmount < 0) {
-                throw new Error('Advance amount is required and must be a valid number.');
+                throw new Error('L\'importo anticipato è richiesto e deve essere un numero valido.');
             }
 
             if (advanceAmount > ordAmount) {
-                throw new Error('Advance amount cannot be greater than order amount.');
+                throw new Error('L\'importo anticipato non può essere maggiore dell\'importo dell\'ordine.');
             }
 
             if (!ordDate) {
-                throw new Error('Order date is required.');
+                throw new Error('La data dell\'ordine è richiesta.');
+            }
+            if (new Date(ordDate) > new Date()) {
+                throw new Error('La data dell\'ordine non può essere futura.');
             }
 
             if (!custCode) {
-                throw new Error('Customer code is required.');
+                throw new Error('Il codice cliente è richiesto.');
             }
 
             if (!ordDescription) {
-                throw new Error('Order description is required.');
+                throw new Error('La descrizione dell\'ordine è richiesta.');
             }
 
             const element = {
@@ -94,11 +97,11 @@ export const useOrderData = (initialData, type, userCode) => {
             };
 
             await putOrder(token, element, type);
-            enqueueSnackbar('Order updated successfully!', { variant: 'success' });
+            enqueueSnackbar('Ordine aggiornato con successo!', { variant: 'success' });
             await fetchOrders();
         } catch (error) {
             console.error('Error updating order:', error);
-            enqueueSnackbar(error.message || 'Failed to update order. Please try again.', { variant: 'error' });
+            enqueueSnackbar(error.message || 'Errore nell\'aggiornamento dell\'ordine. Riprova.', { variant: 'error' });
         }
         setEditElement(null);
     }, [editElement, token, enqueueSnackbar, fetchOrders, type]);
@@ -109,49 +112,49 @@ export const useOrderData = (initialData, type, userCode) => {
                 ord_num: Number(editElement.ord_num)
             };
             await deleteOrder(token, element);
-            enqueueSnackbar('Order deleted successfully!', { variant: 'success' });
+            enqueueSnackbar('Ordine eliminato con successo!', { variant: 'success' });
             await fetchOrders();
         } catch (error) {
-            enqueueSnackbar('Failed to delete order. Please try again.', { variant: 'error' });
+            enqueueSnackbar('Errore nell\'eliminazione dell\'ordine. Riprova.', { variant: 'error' });
         }
         setEditElement(null);
     }, [editElement, token, enqueueSnackbar, fetchOrders]);
 
     const handleConfirmAdd = useCallback(async () => {
         try {
-            if (!userCode) {
-                throw new Error('User code is not available.');
-            }
 
-            const ordAmount = Number(addElement.ord_amount.trim());
-            const advanceAmount = Number(addElement.advance_amount.trim());
-            const ordDate = addElement.order_date.trim();
-            const custCode = addElement.cust_code.trim();
+            const ordAmount = Number(addElement.ord_amount);
+            const advanceAmount = Number(addElement.advance_amount);
+            const ordDate = addElement.order_date;
+            const custCode = addElement.cust_code;
             const agentCode = addElement.agent_code.trim();
             const ordDescription = addElement.ord_description.trim();
 
             if (!ordAmount || isNaN(ordAmount)) {
-                throw new Error('Order amount is required and must be a valid number.');
+                throw new Error('L\'importo dell\'ordine è richiesto e deve essere un numero valido.');
             }
 
             if (advanceAmount < 0) {
-                throw new Error('Advance amount is required and must be a valid number.');
+                throw new Error('L\'importo anticipato è richiesto e deve essere un numero valido.');
             }
 
             if (advanceAmount > ordAmount) {
-                throw new Error('Advance amount cannot be greater than order amount.');
+                throw new Error('L\'importo anticipato non può essere maggiore dell\'importo dell\'ordine.');
             }
 
             if (!ordDate) {
-                throw new Error('Order date is required.');
+                throw new Error('La data dell\'ordine è richiesta.');
+            }
+            if (new Date(ordDate) > new Date()) {
+                throw new Error('La data dell\'ordine non può essere futura.');
             }
 
             if (!custCode) {
-                throw new Error('Customer code is required.');
+                throw new Error('Il codice cliente è richiesto.');
             }
 
             if (!ordDescription) {
-                throw new Error('Order description is required.');
+                throw new Error('La descrizione dell\'ordine è richiesta.');
             }
 
             const newOrder = {
@@ -164,11 +167,11 @@ export const useOrderData = (initialData, type, userCode) => {
             };
 
             await postOrder(token, { newOrder });
-            enqueueSnackbar('Order added successfully!', { variant: 'success' });
+            enqueueSnackbar('Ordine aggiunto con successo!', { variant: 'success' });
             await fetchOrders();
         } catch (error) {
             console.error('Error adding order:', error);
-            enqueueSnackbar(error.message || 'Failed to add order. Please try again.', { variant: 'error' });
+            enqueueSnackbar(error.message || 'Errore nell\'aggiunta dell\'ordine. Riprova.', { variant: 'error' });
         }
 
         setShowAddOrderPanel(false);

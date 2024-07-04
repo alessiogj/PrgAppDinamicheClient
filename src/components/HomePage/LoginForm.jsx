@@ -42,7 +42,7 @@ const LoginForm = ({ username, setUsername, password, setPassword, handleSubmit,
                                         <PersonIcon />
                                     </InputAdornment>
                                 ),
-                                inputRef: usernameRef, // Collegamento del ref all'input.
+                                inputRef: usernameRef,
                             }}
                         />
                     </Box>
@@ -60,7 +60,7 @@ const LoginForm = ({ username, setUsername, password, setPassword, handleSubmit,
                                         <LockIcon />
                                     </InputAdornment>
                                 ),
-                                inputRef: passwordRef, // Collegamento del ref all'input.
+                                inputRef: passwordRef,
                             }}
                         />
                     </Box>
@@ -71,7 +71,7 @@ const LoginForm = ({ username, setUsername, password, setPassword, handleSubmit,
                             color="primary"
                             fullWidth
                         >
-                            Submit
+                            Invia
                         </Button>
                     </Box>
                 </>
