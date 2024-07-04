@@ -51,7 +51,7 @@ function VisualizePanel({ element, displayNames, onClose }) {
             </Grid>
             <Grid container spacing={1} justifyContent="flex-end" sx={{ mt: 2 }}>
                 <Grid item>
-                    <Button onClick={onClose} variant="contained" color="primary" size="small">Close</Button>
+                    <Button onClick={onClose} variant="contained" color="primary" size="small">Chiudi</Button>
                 </Grid>
             </Grid>
         </Container>

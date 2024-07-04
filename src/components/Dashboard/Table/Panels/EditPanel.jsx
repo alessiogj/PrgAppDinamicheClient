@@ -17,10 +17,10 @@ function EditPanel({ editElement, displayNames, handleInputChange, handleConfirm
                 if (result && result.customers) {
                     setCustomerCodes(result.customers.map(customer => customer.cust_code));
                 } else {
-                    console.error('Invalid response format:', result);
+                    console.error('Formato di risposta non valido:', result);
                 }
             } catch (error) {
-                console.error('Error fetching customer codes:', error);
+                console.error('Errore nel recupero dei codici cliente:', error);
             }
         };
 
@@ -46,7 +46,7 @@ function EditPanel({ editElement, displayNames, handleInputChange, handleConfirm
 
     return (
         <Container component={Paper} elevation={3} sx={{ p: 4, mt: 4 }}>
-            <Typography variant="h4" gutterBottom>Edit Element</Typography>
+            <Typography variant="h4" gutterBottom>Modifica Ordine</Typography>
             <Grid container spacing={3}>
                 {/* Field di sola lettura */}
                 {['ord_num', 'agent_code', 'cust_code'].map(key => (

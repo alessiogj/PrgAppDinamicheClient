@@ -9,58 +9,58 @@ export const useTableActions = (type, setEditElement, setShowAddOrderPanel, setS
         if (type === 'dirigent') {
             if (column === 'cust_name') {
                 const details = {
-                    'Order Description': item.ord_description || '',
-                    'Code': item.cust_custcode || 'Unknown',
-                    'Name': item.cust_name || 'Unknown',
-                    'City': item.cust_city || 'Unknown',
-                    'Working Area': item.cust_workingarea || 'Unknown',
-                    'Country': item.cust_country || 'Unknown',
-                    'Grade': item.grade || 'Unknown',
-                    'Opening Amount': item.opening_amt || 'Unknown',
-                    'Receive Amount': item.receive_amt || 'Unknown',
-                    'Payment Amount': item.payment_amt || 'Unknown',
-                    'Outstanding Amount': item.outstanding_amt || 'Unknown',
-                    'Phone Number': item.cust_phoneno || 'Unknown',
-                    'Agent Code': item.cust_agentcode || 'Unknown',
+                    'Descrizione': item.ord_description || '',
+                    'Codice': item.cust_custcode || 'Unknown',
+                    'Nome': item.cust_name || 'Unknown',
+                    'Città': item.cust_city || 'Unknown',
+                    'Area di Lavoro': item.cust_workingarea || 'Unknown',
+                    'Stato': item.cust_country || 'Unknown',
+                    'Livello': item.grade || 'Unknown',
+                    'Initial Amount': item.opening_amt || 'Unknown',
+                    'Importo Ricevuto': item.receive_amt || 'Unknown',
+                    'Importo Pagato': item.payment_amt || 'Unknown',
+                    'Importo Residuo': item.outstanding_amt || 'Unknown',
+                    'Numero di Telefono': item.cust_phoneno || 'Unknown',
+                    'Codice Agente': item.cust_agentcode || 'Unknown',
                 };
-                setSelectedDetails({ details, description: 'Customer Details' });
+                setSelectedDetails({ details, description: 'Dettagli cliente' });
             } else if (column === 'agent_name') {
                 const details = {
-                    'Order Description': item.ord_description || '',
-                    'Code': item.agent_agentcode || 'Unknown',
-                    'Name': item.agent_name || 'Unknown',
-                    'Working Area': item.agent_workingarea || 'Unknown',
-                    'Commission': item.commission || 'Unknown',
-                    'Phone Number': item.agent_phoneno || 'Unknown',
-                    'Country': item.agent_country || 'Unknown'
+                    'Descrizione': item.ord_description || '',
+                    'Codice': item.agent_agentcode || 'Unknown',
+                    'Nome': item.agent_name || 'Unknown',
+                    'Area di lavoro': item.agent_workingarea || 'Unknown',
+                    'Commissione': item.commission || 'Unknown',
+                    'Numero di Telefono': item.agent_phoneno || 'Unknown',
+                    'Stato': item.agent_country || 'Unknown'
                 };
-                setSelectedDetails({ details, description: 'Agent Details' });
+                setSelectedDetails({ details, description: 'Dettagli agente' });
             }
         } else {
             const details = type === 'agent' ? {
-                'Order Description': item.ord_description || '',
-                'Code': item.cust_code || 'Unknown',
-                'Name': item.cust_name || 'Unknown',
-                'City': item.cust_city || 'Unknown',
-                'Working Area': item.working_area || 'Unknown',
-                'Country': item.cust_country || 'Unknown',
-                'Grade': item.grade || 'Unknown',
-                'Opening Amount': item.opening_amt || 'Unknown',
-                'Receive Amount': item.receive_amt || 'Unknown',
-                'Payment Amount': item.payment_amt || 'Unknown',
-                'Outstanding Amount': item.outstanding_amt || 'Unknown',
-                'Phone Number': item.phone_no || 'Unknown',
-                'Agent Code': item.cust_agentcode || 'Unknown',
+                'Descrizione': item.ord_description || '',
+                'Codice': item.cust_code || 'Unknown',
+                'Nome': item.cust_name || 'Unknown',
+                'Città': item.cust_city || 'Unknown',
+                'Area di Lavoro': item.working_area || 'Unknown',
+                'Stato': item.cust_country || 'Unknown',
+                'Livello': item.grade || 'Unknown',
+                'Import di Apertura': item.opening_amt || 'Unknown',
+                'Import Ricevuto': item.receive_amt || 'Unknown',
+                'Import Pagato': item.payment_amt || 'Unknown',
+                'Importo Residuo': item.outstanding_amt || 'Unknown',
+                'Numero di Telefono': item.phone_no || 'Unknown',
+                'Codice Agente': item.cust_agentcode || 'Unknown',
             } : {
-                'Order Description': item.ord_description || '',
-                'Code': item.agent_code || 'Unknown',
-                'Name': item.agent_name || 'Unknown',
-                'Working Area': item.working_area || 'Unknown',
-                'Commission': item.commission || 'Unknown',
-                'Phone Number': item.phone_no || 'Unknown',
-                'Country': item.country || 'Unknown'
+                'Descrizione': item.ord_description || '',
+                'Codice': item.agent_code || 'Unknown',
+                'Nome': item.agent_name || 'Unknown',
+                'Area di lavoro': item.working_area || 'Unknown',
+                'Commissione': item.commission || 'Unknown',
+                'Numero di Telefono': item.phone_no || 'Unknown',
+                'Stato': item.country || 'Unknown'
             };
-            setSelectedDetails({ details, description: type === 'agent' ? 'Customer Details' : 'Agent Details' });
+            setSelectedDetails({ details, description: type === 'agent' ? 'Dettagli cliente' : 'Dettagli agente' });
         }
     }, [setEditElement, setSelectedDetails, setShowAddOrderPanel, setShowTable, type]);
 
