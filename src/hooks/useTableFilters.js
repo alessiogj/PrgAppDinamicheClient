@@ -16,6 +16,7 @@ export const useTableFilters = (orderData, columnDefinitions, type) => {
         order_date: true,
         cust_name: type === 'agent' || type === 'dirigent',
         agent_name: type === 'customer' || type === 'dirigent',
+        description: true,
     }), [type]);
 
     // Stato per la configurazione del sorting

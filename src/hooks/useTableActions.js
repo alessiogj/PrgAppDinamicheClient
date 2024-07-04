@@ -1,15 +1,22 @@
 import { useCallback } from 'react';
 
-export const useTableActions = (type, setEditElement, setShowAddOrderPanel, setShowTable, setSelectedDetails) => {
+export const useTableActions = (
+    type,
+    setEditElement,
+    setShowAddOrderPanel,
+    setShowTable,
+    setSelectedDetails,
+    setShowDescription
+) => {
     const handleRowClick = useCallback((item, column) => {
         setShowAddOrderPanel(false);
         setEditElement(null);
         setShowTable(false);
+        setShowDescription(false);
 
         if (type === 'dirigent') {
             if (column === 'cust_name') {
                 const details = {
-                    'Descrizione': item.ord_description || '',
                     'Codice': item.cust_custcode || 'Unknown',
                     'Nome': item.cust_name || 'Unknown',
                     'Città': item.cust_city || 'Unknown',
@@ -21,24 +28,21 @@ export const useTableActions = (type, setEditElement, setShowAddOrderPanel, setS
                     'Importo Pagato': item.payment_amt || 'Unknown',
                     'Importo Residuo': item.outstanding_amt || 'Unknown',
                     'Numero di Telefono': item.cust_phoneno || 'Unknown',
-                    'Codice Agente': item.cust_agentcode || 'Unknown',
                 };
                 setSelectedDetails({ details, description: 'Dettagli cliente' });
             } else if (column === 'agent_name') {
                 const details = {
-                    'Descrizione': item.ord_description || '',
                     'Codice': item.agent_agentcode || 'Unknown',
                     'Nome': item.agent_name || 'Unknown',
                     'Area di lavoro': item.agent_workingarea || 'Unknown',
                     'Commissione': item.commission || 'Unknown',
                     'Numero di Telefono': item.agent_phoneno || 'Unknown',
-                    'Stato': item.agent_country || 'Unknown'
+                    'Stato': item.agent_country || 'Unknown',
                 };
                 setSelectedDetails({ details, description: 'Dettagli agente' });
             }
         } else {
             const details = type === 'agent' ? {
-                'Descrizione': item.ord_description || '',
                 'Codice': item.cust_code || 'Unknown',
                 'Nome': item.cust_name || 'Unknown',
                 'Città': item.cust_city || 'Unknown',
@@ -50,15 +54,13 @@ export const useTableActions = (type, setEditElement, setShowAddOrderPanel, setS
                 'Import Pagato': item.payment_amt || 'Unknown',
                 'Importo Residuo': item.outstanding_amt || 'Unknown',
                 'Numero di Telefono': item.phone_no || 'Unknown',
-                'Codice Agente': item.cust_agentcode || 'Unknown',
             } : {
-                'Descrizione': item.ord_description || '',
                 'Codice': item.agent_code || 'Unknown',
                 'Nome': item.agent_name || 'Unknown',
                 'Area di lavoro': item.working_area || 'Unknown',
                 'Commissione': item.commission || 'Unknown',
                 'Numero di Telefono': item.phone_no || 'Unknown',
-                'Stato': item.country || 'Unknown'
+                'Stato': item.country || 'Unknown',
             };
             setSelectedDetails({ details, description: type === 'agent' ? 'Dettagli cliente' : 'Dettagli agente' });
         }
@@ -90,11 +92,16 @@ export const useTableActions = (type, setEditElement, setShowAddOrderPanel, setS
         setShowTable(true);
     };
 
+    const handleShowDescription = useCallback(() => {
+        setShowDescription(true);
+    }, [setShowDescription]);
+
     return {
         handleRowClick,
         handleEdit,
         handleInputChange,
         handleAddOrder,
         handleCancel,
+        handleShowDescription
     };
 };

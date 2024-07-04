@@ -117,14 +117,14 @@ function EditPanel({ editElement, displayNames, handleInputChange, handleConfirm
             <Grid container spacing={2} justifyContent="flex-end" sx={{ mt: 2 }}>
                 {type === 'agent' && (
                     <Grid item>
-                        <Button onClick={handleConfirmDelete} variant="contained" color="secondary">Delete</Button>
+                        <Button onClick={handleConfirmDelete} variant="contained" color="secondary">Cancella</Button>
                     </Grid>
                 )}
                 <Grid item>
-                    <Button onClick={handleConfirmEdit} variant="contained" color="primary">Confirm</Button>
+                    <Button onClick={handleConfirmEdit} variant="contained" color="primary">Conferma</Button>
                 </Grid>
                 <Grid item>
-                    <Button onClick={onCancel} variant="contained">Cancel</Button>
+                    <Button onClick={onCancel} variant="contained" >Chiudi</Button>
                 </Grid>
             </Grid>
         </Container>

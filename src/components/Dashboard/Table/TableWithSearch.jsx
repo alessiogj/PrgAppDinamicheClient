@@ -11,15 +11,8 @@ import { useOrderData } from '../../../hooks/useOrderData';
 import { useTableFilters } from '../../../hooks/useTableFilters';
 import { useTableActions } from '../../../hooks/useTableActions';
 import { Button } from '@mui/material';
+import DescriptionPanel from "./Panels/DescriptionPanel";
 
-/**
- * Componente principale che implementa una tabella con funzionalità di ricerca, visualizzazione,
- * aggiunta e modifica degli ordini, utilizzando vari hooks personalizzati per gestire lo stato e le azioni.
- * @param {Array} initialData - Dati iniziali per la tabella.
- * @param {string} type - Tipo di utente (agent, customer, dirigent).
- * @param {string} userCode - Codice identificativo dell'utente.
- * @param {Function} onUpdate - Funzione da eseguire dopo un aggiornamento di dati riuscito.
- */
 function TableWithSearch({ initialData, type, userCode, onUpdate }) {
     const {
         orderData,
@@ -41,6 +34,7 @@ function TableWithSearch({ initialData, type, userCode, onUpdate }) {
         order_date: { displayName: 'Data Ordine', type: 'date' },
         cust_name: { displayName: 'Cliente', type: 'string' },
         agent_name: { displayName: 'Agente', type: 'string' },
+        description: { displayName: 'Descrizione Ordine', type: 'string' },
     }), []);
 
     const {
@@ -54,14 +48,16 @@ function TableWithSearch({ initialData, type, userCode, onUpdate }) {
 
     const [selectedDetails, setSelectedDetails] = useState(null);
     const [showTable, setShowTable] = useState(true);
+    const [showDescription, setShowDescription] = useState(false);
 
     const {
         handleRowClick,
         handleEdit,
         handleInputChange,
         handleAddOrder,
+        handleShowDescription,
         handleCancel,
-    } = useTableActions(type, setEditElement, setShowAddOrderPanel, setShowTable, setSelectedDetails);
+    } = useTableActions(type, setEditElement, setShowAddOrderPanel, setShowTable, setSelectedDetails, setShowDescription);
 
     const handleConfirmEditWithUpdate = async () => {
         await handleConfirmEdit();
@@ -107,7 +103,7 @@ function TableWithSearch({ initialData, type, userCode, onUpdate }) {
                     </Button>
                 }
             </div>
-            {selectedDetails && !showAddOrderPanel && !editElement && (
+            {selectedDetails && !showAddOrderPanel && !editElement && !showDescription && (
                 <div className="info-card">
                     <VisualizePanel
                         element={selectedDetails}
@@ -145,6 +141,19 @@ function TableWithSearch({ initialData, type, userCode, onUpdate }) {
                     />
                 </div>
             )}
+            {showDescription && !showAddOrderPanel && !editElement && selectedDetails && (
+                <div className="info-card">
+                    <DescriptionPanel
+                        ord_num={selectedDetails.ord_num}
+                        element={selectedDetails.ord_description || 'No description available'}
+                        onClose={() => {
+                            setShowDescription(false);
+                            setSelectedDetails(null);
+                            setShowTable(true);
+                        }}
+                    />
+                </div>
+            )}
             {showTable && (
                 <div className="scrollable-table">
                     <DataTable
@@ -155,6 +164,11 @@ function TableWithSearch({ initialData, type, userCode, onUpdate }) {
                         handleRowClick={handleRowClick}
                         handleEdit={handleEdit}
                         type={type}
+                        handleShowDescription={(item) => {
+                            setSelectedDetails(item);
+                            setShowDescription(true);
+                            setShowTable(false);
+                        }}
                     />
                 </div>
             )}

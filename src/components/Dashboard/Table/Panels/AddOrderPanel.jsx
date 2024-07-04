@@ -141,10 +141,10 @@ function AddOrderPanel({ addElement, displayNames, handleInputChange, handleConf
             </Grid>
             <Grid container spacing={2} justifyContent="flex-end" sx={{ mt: 2 }}>
                 <Grid item>
-                    <Button onClick={onCancel} variant="contained" color="secondary">Cancel</Button>
+                    <Button onClick={onCancel} variant="contained" color="secondary">Chiudi</Button>
                 </Grid>
                 <Grid item>
-                    <Button onClick={handleConfirmAdd} variant="contained" color="primary">Add Order</Button>
+                    <Button onClick={handleConfirmAdd} variant="contained" color="primary">Conferma</Button>
                 </Grid>
             </Grid>
         </Container>

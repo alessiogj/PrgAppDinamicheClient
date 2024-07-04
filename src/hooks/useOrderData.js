@@ -122,7 +122,6 @@ export const useOrderData = (initialData, type, userCode) => {
 
     const handleConfirmAdd = useCallback(async () => {
         try {
-
             const ordAmount = Number(addElement.ord_amount);
             const advanceAmount = Number(addElement.advance_amount);
             const ordDate = addElement.order_date;
