@@ -1,49 +1,27 @@
-import React, { useState, useCallback, useMemo } from 'react';
+import React from 'react';
 import PropTypes from 'prop-types';
 import { Checkbox, FormControlLabel, Button, Menu, MenuItem, FormGroup } from '@mui/material';
+import useAnchorEl from '../../../hooks/useAnchorEl';
+import useFilteredColumns from '../../../hooks/useFilteredColumns';
 
 /**
- * FilterCheckboxes permette agli utenti di selezionare quali colonne visualizzare in una tabella.
- * Le opzioni disponibili possono variare in base al tipo di utente.
+ * Componente React per la selezione di colonne in una tabella.
+ * Utilizza un approccio funzionale con hooks per gestire lo stato e le ottimizzazioni.
  *
- * @param {Object} columnDefinitions - Definizioni delle colonne con i nomi visualizzati.
- * @param {Object} visibleColumns - Stato che traccia quali colonne sono attualmente visibili.
- * @param {Function} handleColumnVisibilityChange - Funzione per aggiornare la visibilità di una colonna.
- * @param {String} type - Tipo di utente, che può limitare le colonne disponibili.
+ * @param {Object} props Proprietà del componente.
+ * @param {Object} props.columnDefinitions Definizioni delle colonne con i nomi visualizzati.
+ * @param {Object} props.visibleColumns Stato che traccia quali colonne sono attualmente visibili.
+ * @param {Function} props.handleColumnVisibilityChange Funzione per aggiornare la visibilità di una colonna.
+ * @param {String} props.type Tipo di utente, che può limitare le colonne disponibili.
  */
-const FilterCheckboxes = React.memo(({ columnDefinitions, visibleColumns, handleColumnVisibilityChange, type }) => {
-    const [anchorEl, setAnchorEl] = useState(null);
-
-    /**
-     * Gestisce il click sul pulsante che apre il menu.
-     *
-     * @param {Object} event - L'evento di click.
-     */
-    const handleClick = useCallback((event) => {
-        setAnchorEl(event.currentTarget);
-    }, []);
-
-    /**
-     * Chiude il menu di selezione delle colonne.
-     */
-    const handleClose = useCallback(() => {
-        setAnchorEl(null);
-    }, []);
-
-    /**
-     * Filtra le colonne disponibili per la selezione basandosi sul tipo di utente e le regole specifiche.
-     *
-     * @returns {Array} - Un array di nomi di colonne filtrate.
-     */
-    const filteredColumns = useMemo(() => {
-        return Object.keys(columnDefinitions).filter(column => {
-            if ((column === 'cust_name' && (type === 'agent' || type === 'dirigent')) ||
-                ((column === 'agent_name' || column === 'commission') && (type === 'customer' || type === 'dirigent'))) {
-                return true;
-            }
-            return column !== 'cust_name' && column !== 'agent_name' && column !== 'commission';
-        });
-    }, [columnDefinitions, type]);
+function FilterCheckboxes({
+                              columnDefinitions,
+                              visibleColumns,
+                              handleColumnVisibilityChange,
+                              type
+                          }) {
+    const { anchorEl, handleClick, handleClose } = useAnchorEl();
+    const filteredColumns = useFilteredColumns(columnDefinitions, type);
 
     return (
         <div className="filter-checkboxes">
@@ -76,7 +54,7 @@ const FilterCheckboxes = React.memo(({ columnDefinitions, visibleColumns, handle
             </Menu>
         </div>
     );
-});
+}
 
 FilterCheckboxes.propTypes = {
     columnDefinitions: PropTypes.object.isRequired,
@@ -85,4 +63,4 @@ FilterCheckboxes.propTypes = {
     type: PropTypes.oneOf(['agent', 'customer', 'dirigent']).isRequired,
 };
 
-export default FilterCheckboxes;
+export default React.memo(FilterCheckboxes);

@@ -10,26 +10,6 @@ function VisualizePanel({ element, displayNames, onClose }) {
                 {Object.keys(element.details).map(key => {
                     const label = displayNames[key] || key;
                     const value = element.details[key] || 'N/A';
-
-                    if (key === 'Order Description') {
-                        return (
-                            <Grid item xs={12} key={key}>
-                                <TextField
-                                    fullWidth
-                                    label={label}
-                                    value={value}
-                                    multiline
-                                    rows={3}
-                                    InputProps={{
-                                        readOnly: true,
-                                        style: { color: 'gray' },
-                                    }}
-                                    variant="outlined"
-                                    size="small"
-                                />
-                            </Grid>
-                        );
-                    }
                     return (
                         <Grid item xs={12} sm={6} key={key}>
                             <Box sx={{ mb: 1 }}>

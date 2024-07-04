@@ -1,116 +1,88 @@
 import React, { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import { formatDate } from '../../../utils/formatDate';
-import { getAvailableCustomers } from "../../../../Services/OrderService";
 import { TextField, Button, Grid, Paper, Typography, Container } from '@mui/material';
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
 import { NumericFormat } from 'react-number-format';
 
 function EditPanel({ editElement, displayNames, handleInputChange, handleConfirmEdit, handleConfirmDelete, onCancel, token, type }) {
-    const [setCustomerCodes] = useState([]);
-
-    useEffect(() => {
-        const fetchCustomerCodes = async () => {
-            try {
-                const result = await getAvailableCustomers(token);
-                if (result && result.customers) {
-                    setCustomerCodes(result.customers.map(customer => customer.cust_code));
-                } else {
-                    console.error('Formato di risposta non valido:', result);
-                }
-            } catch (error) {
-                console.error('Errore nel recupero dei codici cliente:', error);
-            }
-        };
-
-        fetchCustomerCodes();
-    }, [setCustomerCodes, token]);
 
     const handleNumberInputChange = (key, value) => {
         const parsedValue = parseFloat(value);
-        if (!isNaN(parsedValue)) {
-            handleInputChange(key, parsedValue.toFixed(2));
-        } else {
-            handleInputChange(key, '');
-        }
+        handleInputChange(key, !isNaN(parsedValue) ? parsedValue.toFixed(2) : '');
     };
 
     const handleDateChange = (key, date) => {
-        if (date) {
-            handleInputChange(key, formatDate(date));
-        } else {
-            handleInputChange(key, '');
-        }
+        handleInputChange(key, date ? formatDate(date) : '');
     };
+
+    const renderTextField = (key) => (
+        <Grid item xs={12} sm={6} key={key}>
+            <TextField
+                fullWidth
+                label={displayNames[key]}
+                value={editElement[key] || 'N/A'}
+                InputProps={{
+                    readOnly: true,
+                    style: { color: 'gray' },
+                }}
+                variant="outlined"
+            />
+        </Grid>
+    );
+
+    const renderDateField = (key) => (
+        <Grid item xs={12} sm={6} key={key}>
+            <DatePicker
+                selected={editElement[key] ? new Date(editElement[key]) : null}
+                onChange={(date) => handleDateChange(key, date)}
+                customInput={<TextField fullWidth label={displayNames[key]} variant="outlined" />}
+                dateFormat="yyyy-MM-dd"
+            />
+        </Grid>
+    );
+
+    const renderNumberField = (key) => (
+        <Grid item xs={12} sm={6} key={key}>
+            <NumericFormat
+                fullWidth
+                label={displayNames[key]}
+                value={editElement[key] || ''}
+                customInput={TextField}
+                thousandSeparator
+                decimalScale={2}
+                fixedDecimalScale
+                prefix={'€'}
+                onValueChange={(values) => handleNumberInputChange(key, values.value)}
+            />
+        </Grid>
+    );
+
+    const renderDescriptionField = (key) => (
+        <Grid item xs={12} key={key}>
+            <TextField
+                fullWidth
+                label={displayNames[key]}
+                value={editElement[key] || ''}
+                onChange={e => handleInputChange(key, e.target.value)}
+                multiline
+                rows={4}
+                variant="outlined"
+            />
+        </Grid>
+    );
 
     return (
         <Container component={Paper} elevation={3} sx={{ p: 4, mt: 4 }}>
             <Typography variant="h4" gutterBottom>Modifica Ordine</Typography>
             <Grid container spacing={3}>
-                {/* Field di sola lettura */}
-                {['ord_num', 'agent_code', 'cust_code'].map(key => (
-                    <Grid item xs={12} sm={6} key={key}>
-                        <TextField
-                            fullWidth
-                            label={displayNames[key]}
-                            value={editElement[key] || 'N/A'}
-                            InputProps={{
-                                readOnly: true,
-                                style: { color: 'gray' },
-                            }}
-                            variant="outlined"
-                        />
-                    </Grid>
-                ))}
+                {['ord_num', 'agent_code', 'cust_code'].map(renderTextField)}
 
                 {Object.keys(editElement).map(key => {
-                    if (key === 'order_date') {
-                        return (
-                            <Grid item xs={12} sm={6} key={key}>
-                                <DatePicker
-                                    selected={editElement[key] ? new Date(editElement[key]) : null}
-                                    onChange={(date) => handleDateChange(key, date)}
-                                    customInput={<TextField fullWidth label={displayNames[key]} />}
-                                    dateFormat="yyyy-MM-dd"
-                                />
-                            </Grid>
-                        );
-                    }
-
-                    if (key === 'ord_amount' || key === 'advance_amount') {
-                        return (
-                            <Grid item xs={12} sm={6} key={key}>
-                                <NumericFormat
-                                    fullWidth
-                                    label={displayNames[key]}
-                                    value={editElement[key]}
-                                    customInput={TextField}
-                                    thousandSeparator={true}
-                                    decimalScale={2}
-                                    fixedDecimalScale={true}
-                                    prefix={'€'}
-                                    onValueChange={(values) => handleNumberInputChange(key, values.value)}
-                                />
-                            </Grid>
-                        );
-                    }
-
-                    if (key === 'ord_description') {
-                        return (
-                            <Grid item xs={12} key={key}>
-                                <TextField
-                                    fullWidth
-                                    label={displayNames[key]}
-                                    value={editElement[key]}
-                                    onChange={e => handleInputChange(key, e.target.value)}
-                                    multiline
-                                    rows={4}
-                                />
-                            </Grid>
-                        );
-                    }
-
+                    if (key === 'order_date') return renderDateField(key);
+                    if (key === 'ord_amount' || key === 'advance_amount') return renderNumberField(key);
+                    if (key === 'ord_description') return renderDescriptionField(key);
                     return null;
                 })}
             </Grid>
@@ -124,7 +96,7 @@ function EditPanel({ editElement, displayNames, handleInputChange, handleConfirm
                     <Button onClick={handleConfirmEdit} variant="contained" color="primary">Conferma</Button>
                 </Grid>
                 <Grid item>
-                    <Button onClick={onCancel} variant="contained" >Chiudi</Button>
+                    <Button onClick={onCancel} variant="contained">Chiudi</Button>
                 </Grid>
             </Grid>
         </Container>

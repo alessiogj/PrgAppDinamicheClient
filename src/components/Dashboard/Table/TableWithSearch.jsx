@@ -7,11 +7,12 @@ import DataTable from './DataTable';
 import EditPanel from './Panels/EditPanel';
 import VisualizePanel from './Panels/VisualizePanel';
 import AddOrderPanel from './Panels/AddOrderPanel';
+import DescriptionPanel from './Panels/DescriptionPanel';
 import { useOrderData } from '../../../hooks/useOrderData';
 import { useTableFilters } from '../../../hooks/useTableFilters';
 import { useTableActions } from '../../../hooks/useTableActions';
+import { useTableUpdates } from '../../../hooks/useTableUpdates';
 import { Button } from '@mui/material';
-import DescriptionPanel from "./Panels/DescriptionPanel";
 
 function TableWithSearch({ initialData, type, userCode, onUpdate }) {
     const {
@@ -37,6 +38,16 @@ function TableWithSearch({ initialData, type, userCode, onUpdate }) {
         description: { displayName: 'Descrizione Ordine', type: 'string' },
     }), []);
 
+    const displayNames = useMemo(() => ({
+        ord_num: 'Numero Ordine',
+        ord_amount: 'Importo Ordine',
+        advance_amount: 'Importo Anticipato',
+        order_date: 'Data Ordine',
+        cust_code: 'Codice Cliente',
+        agent_code: 'Codice Agente',
+        ord_description: 'Descrizione Ordine',
+    }), []);
+
     const {
         search,
         setSearch,
@@ -55,37 +66,14 @@ function TableWithSearch({ initialData, type, userCode, onUpdate }) {
         handleEdit,
         handleInputChange,
         handleAddOrder,
-        handleShowDescription,
         handleCancel,
     } = useTableActions(type, setEditElement, setShowAddOrderPanel, setShowTable, setSelectedDetails, setShowDescription);
 
-    const handleConfirmEditWithUpdate = async () => {
-        await handleConfirmEdit();
-        onUpdate();
-        setShowTable(true);
-    };
-
-    const handleConfirmDeleteWithUpdate = async () => {
-        await handleConfirmDelete();
-        onUpdate();
-        setShowTable(true);
-    };
-
-    const handleConfirmAddWithUpdate = async () => {
-        await handleConfirmAdd();
-        onUpdate();
-        setShowTable(true);
-    };
-
-    const displayNames = {
-        ord_num: 'Numero Ordine',
-        ord_amount: 'Importo Ordine',
-        advance_amount: 'Importo Anticipato',
-        order_date: 'Data Ordine',
-        cust_code: 'Codice Cliente',
-        agent_code: 'Codice Agente',
-        ord_description: 'Descrizione Ordine',
-    };
+    const {
+        handleConfirmEditWithUpdate,
+        handleConfirmDeleteWithUpdate,
+        handleConfirmAddWithUpdate,
+    } = useTableUpdates(handleConfirmEdit, handleConfirmDelete, handleConfirmAdd, onUpdate, setShowTable);
 
     return (
         <div className="table-container">

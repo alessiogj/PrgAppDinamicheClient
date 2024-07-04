@@ -92,16 +92,11 @@ export const useTableActions = (
         setShowTable(true);
     };
 
-    const handleShowDescription = useCallback(() => {
-        setShowDescription(true);
-    }, [setShowDescription]);
-
     return {
         handleRowClick,
         handleEdit,
         handleInputChange,
         handleAddOrder,
-        handleCancel,
-        handleShowDescription
+        handleCancel
     };
 };

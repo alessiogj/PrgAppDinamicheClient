@@ -1,6 +1,7 @@
 import { useState, useEffect, useCallback } from 'react';
 import { useSnackbar } from 'notistack';
 import { deleteOrder, putOrder, postOrder, getOrders } from '../Services/OrderService';
+import { validateOrder } from './orderValidation';
 
 export const useOrderData = (initialData, type, userCode) => {
     const { enqueueSnackbar } = useSnackbar();
@@ -45,57 +46,10 @@ export const useOrderData = (initialData, type, userCode) => {
 
     const handleConfirmEdit = useCallback(async () => {
         try {
-            const ordNum = Number(editElement.ord_num);
-            const ordAmount = Number(editElement.ord_amount.trim());
-            const advanceAmount = Number(editElement.advance_amount.trim());
-            const ordDate = editElement.order_date.trim();
-            const custCode = editElement.cust_code.trim();
-            const agentCode = editElement.agent_code.trim();
-            const ordDescription = editElement.ord_description.trim();
-
-            if (isNaN(ordNum) || ordNum <= 0) {
-                throw new Error('Il numero di ordine è richiesto e deve essere un numero valido.');
-            }
-
-            if (isNaN(ordAmount) || ordAmount <= 0) {
-                throw new Error('L\'importo dell\'ordine è richiesto e deve essere un numero valido.');
-            }
-
-            if (advanceAmount < 0) {
-                throw new Error('L\'importo anticipato è richiesto e deve essere un numero valido.');
-            }
-
-            if (advanceAmount > ordAmount) {
-                throw new Error('L\'importo anticipato non può essere maggiore dell\'importo dell\'ordine.');
-            }
-
-            if (!ordDate) {
-                throw new Error('La data dell\'ordine è richiesta.');
-            }
-            if (new Date(ordDate) > new Date()) {
-                throw new Error('La data dell\'ordine non può essere futura.');
-            }
-
-            if (!custCode) {
-                throw new Error('Il codice cliente è richiesto.');
-            }
-
-            if (!ordDescription) {
-                throw new Error('La descrizione dell\'ordine è richiesta.');
-            }
-
+            validateOrder(editElement);
             const element = {
-                modifiedOrder: {
-                    ord_num: ordNum,
-                    ord_amount: ordAmount,
-                    advance_amount: advanceAmount,
-                    ord_date: ordDate,
-                    cust_code: custCode,
-                    agent_code: agentCode,
-                    ord_description: ordDescription
-                }
+                modifiedOrder: { ...editElement, ord_num: Number(editElement.ord_num) }
             };
-
             await putOrder(token, element, type);
             enqueueSnackbar('Ordine aggiornato con successo!', { variant: 'success' });
             await fetchOrders();
@@ -108,9 +62,7 @@ export const useOrderData = (initialData, type, userCode) => {
 
     const handleConfirmDelete = useCallback(async () => {
         try {
-            const element = {
-                ord_num: Number(editElement.ord_num)
-            };
+            const element = { ord_num: Number(editElement.ord_num) };
             await deleteOrder(token, element);
             enqueueSnackbar('Ordine eliminato con successo!', { variant: 'success' });
             await fetchOrders();
@@ -122,49 +74,8 @@ export const useOrderData = (initialData, type, userCode) => {
 
     const handleConfirmAdd = useCallback(async () => {
         try {
-            const ordAmount = Number(addElement.ord_amount);
-            const advanceAmount = Number(addElement.advance_amount);
-            const ordDate = addElement.order_date;
-            const custCode = addElement.cust_code;
-            const agentCode = addElement.agent_code.trim();
-            const ordDescription = addElement.ord_description.trim();
-
-            if (!ordAmount || isNaN(ordAmount)) {
-                throw new Error('L\'importo dell\'ordine è richiesto e deve essere un numero valido.');
-            }
-
-            if (advanceAmount < 0) {
-                throw new Error('L\'importo anticipato è richiesto e deve essere un numero valido.');
-            }
-
-            if (advanceAmount > ordAmount) {
-                throw new Error('L\'importo anticipato non può essere maggiore dell\'importo dell\'ordine.');
-            }
-
-            if (!ordDate) {
-                throw new Error('La data dell\'ordine è richiesta.');
-            }
-            if (new Date(ordDate) > new Date()) {
-                throw new Error('La data dell\'ordine non può essere futura.');
-            }
-
-            if (!custCode) {
-                throw new Error('Il codice cliente è richiesto.');
-            }
-
-            if (!ordDescription) {
-                throw new Error('La descrizione dell\'ordine è richiesta.');
-            }
-
-            const newOrder = {
-                ord_amount: ordAmount,
-                advance_amount: advanceAmount,
-                ord_date: ordDate,
-                cust_code: custCode,
-                agent_code: agentCode,
-                ord_description: ordDescription
-            };
-
+            validateOrder(addElement);
+            const newOrder = { ...addElement };
             await postOrder(token, { newOrder });
             enqueueSnackbar('Ordine aggiunto con successo!', { variant: 'success' });
             await fetchOrders();
@@ -172,7 +83,6 @@ export const useOrderData = (initialData, type, userCode) => {
             console.error('Error adding order:', error);
             enqueueSnackbar(error.message || 'Errore nell\'aggiunta dell\'ordine. Riprova.', { variant: 'error' });
         }
-
         setShowAddOrderPanel(false);
         setAddElement({
             agent_code: userCode,
