@@ -1,8 +1,11 @@
-// src/Common/Statistics.js
 import React from 'react';
 import OrderChart from './OrderChart';
 
 const Statistics = ({ chartData }) => {
+    if (!chartData) {
+        return <p>Caricamento dati...</p>;
+    }
+
     return (
         <div className="widget">
             <h2>Statistiche</h2>

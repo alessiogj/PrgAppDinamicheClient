@@ -25,7 +25,7 @@ function DescriptionPanel({ ord_num, element, onClose }) {
             </Grid>
             <Grid container spacing={1} justifyContent="flex-end" sx={{ mt: 2 }}>
                 <Grid item>
-                    <Button onClick={onClose} variant="contained" color="primary" size="small">Chiudi</Button>
+                    <Button onClick={onClose} variant="contained" color="tertiary" size="small">Chiudi</Button>
                 </Grid>
             </Grid>
         </Container>

@@ -96,7 +96,7 @@ function EditPanel({ editElement, displayNames, handleInputChange, handleConfirm
                     <Button onClick={handleConfirmEdit} variant="contained" color="primary">Conferma</Button>
                 </Grid>
                 <Grid item>
-                    <Button onClick={onCancel} variant="contained">Chiudi</Button>
+                    <Button onClick={onCancel} variant="contained" color="tertiary">Chiudi</Button>
                 </Grid>
             </Grid>
         </Container>
