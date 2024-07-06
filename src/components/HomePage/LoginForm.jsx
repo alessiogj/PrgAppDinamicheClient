@@ -11,19 +11,12 @@ import { Person as PersonIcon, Lock as LockIcon } from '@mui/icons-material';
  * @param {Function} setPassword - Funzione per aggiornare lo stato della password.
  * @param {Function} handleSubmit - Funzione chiamata al submit del form.
  * @param {boolean} isFlipped - Stato che indica se il form di login è visibile.
+ * @param {boolean} usernameError - Stato che indica se l'username è errato.
+ * @param {boolean} passwordError - Stato che indica se la password è errata.
  */
-const LoginForm = ({ username, setUsername, password, setPassword, handleSubmit, isFlipped }) => {
+const LoginForm = ({ username, setUsername, password, setPassword, handleSubmit, isFlipped, usernameError, passwordError }) => {
     const usernameRef = useRef(); // Ref per l'input dell'username.
     const passwordRef = useRef(); // Ref per l'input della password.
-
-    /**
-     * Effetto che mette il focus sull'input dell'username quando il form diventa visibile.
-     */
-    useEffect(() => {
-        if (isFlipped) {
-            usernameRef.current.focus();
-        }
-    }, [isFlipped]);
 
     return (
         <form className="form" onSubmit={handleSubmit}>
@@ -36,6 +29,8 @@ const LoginForm = ({ username, setUsername, password, setPassword, handleSubmit,
                             placeholder="Username"
                             value={username}
                             onChange={(e) => setUsername(e.target.value)}
+                            error={usernameError}
+                            helperText={usernameError ? 'Username richiesto' : ''}
                             InputProps={{
                                 startAdornment: (
                                     <InputAdornment position="start">
@@ -54,6 +49,8 @@ const LoginForm = ({ username, setUsername, password, setPassword, handleSubmit,
                             placeholder="Password"
                             value={password}
                             onChange={(e) => setPassword(e.target.value)}
+                            error={passwordError}
+                            helperText={passwordError ? 'Password richiesta' : ''}
                             InputProps={{
                                 startAdornment: (
                                     <InputAdornment position="start">

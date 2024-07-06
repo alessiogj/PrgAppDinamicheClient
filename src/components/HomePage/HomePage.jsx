@@ -13,9 +13,11 @@ const HomePage = () => {
     const navigate = useNavigate();
     const { enqueueSnackbar } = useSnackbar();
     const [isFlipped, setIsFlipped] = useState(false);
-    const [hasFlipped, setHasFlipped] = useState(false); // Stato per tracciare il primo ribaltamento
+    const [hasFlipped, setHasFlipped] = useState(false);
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
+    const [usernameError, setUsernameError] = useState(false);
+    const [passwordError, setPasswordError] = useState(false);
 
     /**
      * Aggiunge e rimuove una classe CSS al body e gestisce il keydown per il ribaltamento della card.
@@ -25,7 +27,13 @@ const HomePage = () => {
 
         const handleKeyDown = (event) => {
             if (event.key === 'Enter' && !hasFlipped) {
-                setIsFlipped((prev) => !prev);
+                if (!isFlipped) {
+                    setIsFlipped(true);
+                    setUsername('');
+                    setPassword('');
+                } else {
+                    handleSubmit(event);
+                }
                 setHasFlipped(true);
             }
         };
@@ -36,16 +44,26 @@ const HomePage = () => {
             document.body.classList.remove('home-body');
             document.removeEventListener('keydown', handleKeyDown);
         };
-    }, [hasFlipped]);
+    }, [isFlipped, hasFlipped]);
 
     /**
      * Gestisce il ribaltamento della card quando viene cliccato l'elemento giusto.
      */
     const handleFlip = useCallback((event) => {
-        if (event.type === 'click' && event.target.closest('.flip-card') && !event.target.closest('input, button')) {
+        if (
+            event.type === 'click' &&
+            event.target.closest('.flip-card') &&
+            !event.target.closest('input, button') &&
+            !hasFlipped
+        ) {
             setIsFlipped((prev) => !prev);
+            setUsername('');
+            setPassword('');
+            setUsernameError(false);
+            setPasswordError(false);
+            setHasFlipped(true);
         }
-    }, []);
+    }, [hasFlipped]);
 
     /**
      * Gestisce la sottomissione del form di login.
@@ -54,6 +72,9 @@ const HomePage = () => {
      */
     const handleSubmit = async (event) => {
         event.preventDefault();
+
+        setUsernameError(!username);
+        setPasswordError(!password);
 
         if (!username || !password) {
             enqueueSnackbar('Compila tutti i campi', { variant: 'warning' });
@@ -95,6 +116,8 @@ const HomePage = () => {
                             setPassword={setPassword}
                             handleSubmit={handleSubmit}
                             isFlipped={isFlipped}
+                            usernameError={usernameError}
+                            passwordError={passwordError}
                         />
                     </Box>
                 </Box>

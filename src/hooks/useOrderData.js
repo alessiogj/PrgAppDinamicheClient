@@ -19,10 +19,6 @@ export const useOrderData = (initialData, type, userCode) => {
     });
     const [showAddOrderPanel, setShowAddOrderPanel] = useState(false);
 
-    useEffect(() => {
-        setOrderData(initialData);
-    }, [initialData]);
-
     const fetchOrders = useCallback(async () => {
         if (!token) {
             enqueueSnackbar('Token non disponibile. Prova a fare il login.', { variant: 'error' });

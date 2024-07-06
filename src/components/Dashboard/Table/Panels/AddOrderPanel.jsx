@@ -25,7 +25,10 @@ function AddOrderPanel({ addElement, displayNames, handleInputChange, handleConf
                 fullWidth
                 label={displayNames[key]}
                 value={addElement[key] || ''}
-                onChange={e => handleInputChange(key, e.target.value)}
+                InputProps={{
+                    readOnly: true,
+                    style: { color: 'gray' },
+                }}
                 variant="outlined"
             />
         </Grid>
