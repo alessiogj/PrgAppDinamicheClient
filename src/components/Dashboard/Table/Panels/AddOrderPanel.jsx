@@ -98,7 +98,7 @@ function AddOrderPanel({ addElement, displayNames, handleInputChange, handleConf
                 {['agent_code'].map(renderTextField)}
 
                 {Object.keys(addElement).map(key => {
-                    if (key === 'order_date') return renderDateField(key);
+                    if (key === 'ord_date') return renderDateField(key);
                     if (key === 'ord_amount' || key === 'advance_amount') return renderNumberField(key);
                     if (key === 'cust_code') return renderSelectField(key);
                     if (key === 'ord_description') return renderDescriptionField(key);

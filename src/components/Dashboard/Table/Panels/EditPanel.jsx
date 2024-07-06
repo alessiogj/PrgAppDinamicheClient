@@ -80,7 +80,7 @@ function EditPanel({ editElement, displayNames, handleInputChange, handleConfirm
                 {['ord_num', 'agent_code', 'cust_code'].map(renderTextField)}
 
                 {Object.keys(editElement).map(key => {
-                    if (key === 'order_date') return renderDateField(key);
+                    if (key === 'ord_date') return renderDateField(key);
                     if (key === 'ord_amount' || key === 'advance_amount') return renderNumberField(key);
                     if (key === 'ord_description') return renderDescriptionField(key);
                     return null;

@@ -13,7 +13,7 @@ export const useTableFilters = (orderData, columnDefinitions, type) => {
         ord_num: true,
         ord_amount: true,
         advance_amount: true,
-        order_date: true,
+        ord_date: true,
         cust_name: type === 'agent' || type === 'dirigent',
         agent_name: type === 'customer' || type === 'dirigent',
         description: true,
@@ -32,7 +32,7 @@ export const useTableFilters = (orderData, columnDefinitions, type) => {
     const processedData = useMemo(() =>
         orderData.map(item => ({
             ...item,
-            order_date: item.ord_date ? item.ord_date.split('T')[0] : 'N/A',
+            ord_date: item.ord_date ? item.ord_date.split('T')[0] : 'N/A',
         })), [orderData]);
 
     // Filtraggio e ordinamento dei dati

@@ -2,6 +2,7 @@ import { useState, useEffect, useCallback } from 'react';
 import { useSnackbar } from 'notistack';
 import { deleteOrder, putOrder, postOrder, getOrders } from '../Services/OrderService';
 import { validateOrder } from './orderValidation';
+import {formatDate} from "../components/utils/formatDate";
 
 export const useOrderData = (initialData, type, userCode) => {
     const { enqueueSnackbar } = useSnackbar();
@@ -12,7 +13,7 @@ export const useOrderData = (initialData, type, userCode) => {
         agent_code: userCode,
         ord_amount: '',
         advance_amount: '',
-        order_date: '',
+        ord_date: '',
         cust_code: '',
         ord_description: ''
     });
@@ -46,7 +47,11 @@ export const useOrderData = (initialData, type, userCode) => {
 
     const handleConfirmEdit = useCallback(async () => {
         try {
+            editElement.ord_amount = parseFloat(editElement.ord_amount);
+            editElement.advance_amount = parseFloat(editElement.advance_amount);
+
             validateOrder(editElement);
+
             const element = {
                 modifiedOrder: { ...editElement, ord_num: Number(editElement.ord_num) }
             };
@@ -73,8 +78,14 @@ export const useOrderData = (initialData, type, userCode) => {
     }, [editElement, token, enqueueSnackbar, fetchOrders]);
 
     const handleConfirmAdd = useCallback(async () => {
+        console.log('Adding order:', addElement);
         try {
+            addElement.ord_amount = parseFloat(addElement.ord_amount);
+            addElement.advance_amount = parseFloat(addElement.advance_amount);
+
             validateOrder(addElement);
+
+            formatDate(addElement.ord_date);
             const newOrder = { ...addElement };
             await postOrder(token, { newOrder });
             enqueueSnackbar('Ordine aggiunto con successo!', { variant: 'success' });
@@ -88,7 +99,7 @@ export const useOrderData = (initialData, type, userCode) => {
             agent_code: userCode,
             ord_amount: '',
             advance_amount: '',
-            order_date: '',
+            ord_date: '',
             cust_code: '',
             ord_description: ''
         });
