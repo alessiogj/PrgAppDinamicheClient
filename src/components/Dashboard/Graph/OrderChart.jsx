@@ -12,11 +12,12 @@ import {
     ResponsiveContainer
 } from 'recharts';
 import { Switch, FormControlLabel, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper } from '@mui/material';
+import useLocalStorage from '../../../hooks/useLocalStorage';
 
 function OrderChart({ data }) {
     const theme = useTheme();
     const [chartHeight, setChartHeight] = useState(400);
-    const [showTable, setShowTable] = useState(false);
+    const [showTable, setShowTable] = useLocalStorage('showTable', false); // Use the custom hook
 
     useEffect(() => {
         const handleResize = () => {
@@ -40,28 +41,32 @@ function OrderChart({ data }) {
                 label={showTable ? "Mostra Grafico" : "Mostra Dati Tabellari"}
             />
             {showTable ? (
-                <TableContainer component={Paper}>
-                    <Table className="data-table">
-                        <TableHead>
-                            <TableRow>
-                                <TableCell>Data Ordine</TableCell>
-                                <TableCell>Importo Ordine</TableCell>
-                                <TableCell>Importo Anticipato</TableCell>
-                                <TableCell>Importo Residuo</TableCell>
-                            </TableRow>
-                        </TableHead>
-                        <TableBody>
-                            {data.map((row, index) => (
-                                <TableRow key={index}>
-                                    <TableCell>{row.ord_date}</TableCell>
-                                    <TableCell>{row.ord_amount}</TableCell>
-                                    <TableCell>{row.advance_amount || 0}</TableCell>
-                                    <TableCell>{row.outstanding_amt || 0}</TableCell>
-                                </TableRow>
-                            ))}
-                        </TableBody>
-                    </Table>
-                </TableContainer>
+                <div className="table-container">
+                    <div className="scrollable-table">
+                        <TableContainer component={Paper}>
+                            <Table className="data-table">
+                                <TableHead>
+                                    <TableRow>
+                                        <TableCell>Data Ordine</TableCell>
+                                        <TableCell>Importo Ordine</TableCell>
+                                        <TableCell>Importo Anticipato</TableCell>
+                                        <TableCell>Importo Residuo</TableCell>
+                                    </TableRow>
+                                </TableHead>
+                                <TableBody>
+                                    {data.map((row, index) => (
+                                        <TableRow key={index}>
+                                            <TableCell>{row.ord_date}</TableCell>
+                                            <TableCell>{row.ord_amount}</TableCell>
+                                            <TableCell>{row.advance_amount || 0}</TableCell>
+                                            <TableCell>{row.outstanding_amt || 0}</TableCell>
+                                        </TableRow>
+                                    ))}
+                                </TableBody>
+                            </Table>
+                        </TableContainer>
+                    </div>
+                </div>
             ) : (
                 <ResponsiveContainer width="100%" height={chartHeight}>
                     <LineChart data={data}>
