@@ -1,24 +1,25 @@
 import React, { useMemo } from 'react';
 import PropTypes from 'prop-types';
 import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, Button } from '@mui/material';
+import ArrowUpwardIcon from '@mui/icons-material/ArrowUpward';
+import ArrowDownwardIcon from '@mui/icons-material/ArrowDownward';
 
 function DataTable({
                        filteredData,
                        visibleColumns,
                        columnDefinitions,
                        handleSort,
+                       sortConfig,
                        type,
                        handleRowClick,
                        handleEdit,
                        handleShowDescription
                    }) {
-    /**
-     * Renderizza il contenuto di una cella in base al tipo di colonna e alle regole specifiche.
-     *
-     * @param {Object} item L'oggetto dati della riga corrente.
-     * @param {String} column Il nome della colonna da renderizzare.
-     * @returns {React.JSX.Element} Il contenuto della cella renderizzato come elemento React.
-     */
+    const onSort = (column) => {
+        const direction = sortConfig.key === column && sortConfig.direction === 'ascending' ? 'descending' : 'ascending';
+        handleSort(column, direction);
+    };
+
     const renderCellContent = (item, column) => {
         const isClickable = (column === 'cust_name' && (type === 'agent' || type === 'dirigent')) ||
             (column === 'agent_name' && (type === 'customer' || type === 'dirigent'));
@@ -31,7 +32,7 @@ function DataTable({
             return (
                 <Button variant="contained" color="primary" onClick={(e) => {
                     handleShowDescription(item);
-                    e.stopPropagation(); // Previene il triggering di eventi del TableRow
+                    e.stopPropagation(); // Prevent TableRow events from triggering
                 }}>
                     Dettagli
                 </Button>
@@ -41,20 +42,19 @@ function DataTable({
         return item[column];
     };
 
-    /**
-     * Memorizza le intestazioni delle colonne per evitare ricalcoli inutili.
-     */
     const tableHeaders = useMemo(() => (
         Object.keys(visibleColumns).filter(key => visibleColumns[key]).map(column => (
-            <TableCell key={column} onClick={() => handleSort(column)}>
-                {columnDefinitions[column].displayName}
+            <TableCell key={column} onClick={() => onSort(column)} style={{ cursor: 'pointer' }}>
+                <div style={{ display: 'flex', alignItems: 'center' }}>
+                    {columnDefinitions[column].displayName}
+                    {sortConfig.key === column && (
+                        sortConfig.direction === 'ascending' ? <ArrowUpwardIcon fontSize="small" /> : <ArrowDownwardIcon fontSize="small" />
+                    )}
+                </div>
             </TableCell>
         ))
-    ), [visibleColumns, columnDefinitions, handleSort]);
+    ), [visibleColumns, columnDefinitions, sortConfig]);
 
-    /**
-     * Renderizza le righe della tabella.
-     */
     const renderRows = () => (
         filteredData.map((item) => (
             <TableRow key={item.id || item.ord_num}>
@@ -66,7 +66,7 @@ function DataTable({
                 {(type === 'agent' || type === 'dirigent') && (
                     <TableCell>
                         <Button variant="contained" color="primary" onClick={(e) => {
-                            e.stopPropagation(); // Impedisce il bubbling del click al TableRow
+                            e.stopPropagation(); // Prevent click bubbling to TableRow
                             handleEdit(item);
                         }}>
                             Modifica
@@ -99,6 +99,10 @@ DataTable.propTypes = {
     visibleColumns: PropTypes.object.isRequired,
     columnDefinitions: PropTypes.object.isRequired,
     handleSort: PropTypes.func.isRequired,
+    sortConfig: PropTypes.shape({
+        key: PropTypes.string,
+        direction: PropTypes.oneOf(['ascending', 'descending']),
+    }).isRequired,
     handleRowClick: PropTypes.func.isRequired,
     handleEdit: PropTypes.func.isRequired,
     type: PropTypes.oneOf(['agent', 'customer', 'dirigent']).isRequired,

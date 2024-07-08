@@ -1,4 +1,4 @@
-import { useMemo, useState, useCallback } from 'react';
+import { useMemo, useState, useCallback, useEffect } from 'react';
 
 /**
  * Hook personalizzato per la gestione dei filtri della tabella.
@@ -8,7 +8,6 @@ import { useMemo, useState, useCallback } from 'react';
  * @returns {Object} - Oggetto contenente variabili e funzioni per gestire i filtri della tabella.
  */
 export const useTableFilters = (orderData, columnDefinitions, type) => {
-    // Stato iniziale delle colonne visibili, dipendente dal tipo di utente
     const initialVisibleColumns = useMemo(() => ({
         ord_num: true,
         ord_amount: true,
@@ -19,27 +18,28 @@ export const useTableFilters = (orderData, columnDefinitions, type) => {
         description: true,
     }), [type]);
 
-    // Stato per la configurazione del sorting
-    const [sortConfig, setSortConfig] = useState({ key: null, direction: 'ascending' });
+    const getSessionSortConfig = () => {
+        const savedSortConfig = sessionStorage.getItem('sortConfig');
+        return savedSortConfig ? JSON.parse(savedSortConfig) : { key: null, direction: 'ascending' };
+    };
 
-    // Stato per la ricerca
+    const [sortConfig, setSortConfig] = useState(getSessionSortConfig);
     const [search, setSearch] = useState('');
-
-    // Stato per la visibilità delle colonne
     const [visibleColumns, setVisibleColumns] = useState(initialVisibleColumns);
 
-    // Elaborazione iniziale dei dati: formattazione della data dell'ordine
+    useEffect(() => {
+        sessionStorage.setItem('sortConfig', JSON.stringify(sortConfig));
+    }, [sortConfig]);
+
     const processedData = useMemo(() =>
         orderData.map(item => ({
             ...item,
             ord_date: item.ord_date ? item.ord_date.split('T')[0] : 'N/A',
         })), [orderData]);
 
-    // Filtraggio e ordinamento dei dati
     const filteredData = useMemo(() => {
         let sortableItems = [...processedData];
 
-        // Ordinamento dei dati in base alla configurazione del sorting
         if (sortConfig.key) {
             sortableItems.sort((a, b) => {
                 const aValue = a[sortConfig.key];
@@ -57,7 +57,6 @@ export const useTableFilters = (orderData, columnDefinitions, type) => {
             });
         }
 
-        // Filtraggio dei dati in base alla ricerca e alla visibilità delle colonne
         const searchString = search.toLowerCase();
         return sortableItems.filter(item =>
             Object.keys(visibleColumns).some(column =>
@@ -66,15 +65,10 @@ export const useTableFilters = (orderData, columnDefinitions, type) => {
         );
     }, [processedData, sortConfig, search, visibleColumns, columnDefinitions]);
 
-    // Funzione per gestire il sorting delle colonne
-    const handleSort = useCallback(key => {
-        setSortConfig(prevConfig => ({
-            key,
-            direction: prevConfig.key === key && prevConfig.direction === 'ascending' ? 'descending' : 'ascending'
-        }));
-    }, []);
+    const handleSort = useCallback((key, direction) => {
+        setSortConfig({ key, direction: direction || (sortConfig.key === key && sortConfig.direction === 'ascending' ? 'descending' : 'ascending') });
+    }, [sortConfig]);
 
-    // Funzione per gestire la visibilità delle colonne
     const handleColumnVisibilityChange = useCallback(column => {
         setVisibleColumns(prev => ({ ...prev, [column]: !prev[column] }));
     }, []);

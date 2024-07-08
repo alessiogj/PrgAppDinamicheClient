@@ -53,6 +53,7 @@ function TableWithSearch({ initialData, type, userCode, onUpdate }) {
         setSearch,
         visibleColumns,
         handleSort,
+        sortConfig,
         handleColumnVisibilityChange,
         filteredData
     } = useTableFilters(orderData, columnDefinitions, type);
@@ -149,6 +150,7 @@ function TableWithSearch({ initialData, type, userCode, onUpdate }) {
                         visibleColumns={visibleColumns}
                         columnDefinitions={columnDefinitions}
                         handleSort={handleSort}
+                        sortConfig={sortConfig}
                         handleRowClick={handleRowClick}
                         handleEdit={handleEdit}
                         type={type}
