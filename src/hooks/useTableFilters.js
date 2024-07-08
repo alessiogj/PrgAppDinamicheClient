@@ -23,13 +23,22 @@ export const useTableFilters = (orderData, columnDefinitions, type) => {
         return savedSortConfig ? JSON.parse(savedSortConfig) : { key: null, direction: 'ascending' };
     };
 
+    const getSessionSearch = () => {
+        const savedSearch = sessionStorage.getItem('search');
+        return savedSearch ? savedSearch : '';
+    };
+
     const [sortConfig, setSortConfig] = useState(getSessionSortConfig);
-    const [search, setSearch] = useState('');
+    const [search, setSearch] = useState(getSessionSearch);
     const [visibleColumns, setVisibleColumns] = useState(initialVisibleColumns);
 
     useEffect(() => {
         sessionStorage.setItem('sortConfig', JSON.stringify(sortConfig));
     }, [sortConfig]);
+
+    useEffect(() => {
+        sessionStorage.setItem('search', search);
+    }, [search]);
 
     const processedData = useMemo(() =>
         orderData.map(item => ({
