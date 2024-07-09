@@ -13,7 +13,7 @@ function Navbar({user, onLogout}) {
     return (
         <AppBar position="static">
             <Toolbar>
-                <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
+                <Typography variant="h6" component="div" sx={{ flexGrow: 1 }} tabIndex={0}>
                     {user}
                 </Typography>
                 <Button color="inherit" onClick={onLogout} startIcon={<LogoutIcon />}>

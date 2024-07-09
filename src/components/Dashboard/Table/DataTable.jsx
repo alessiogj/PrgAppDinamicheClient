@@ -16,6 +16,7 @@ function DataTable({
                        handleShowDescription
                    }) {
     const onSort = (column) => {
+        if (column === 'description') return; // la descrizione non si ordina!
         const direction = sortConfig.key === column && sortConfig.direction === 'ascending' ? 'descending' : 'ascending';
         handleSort(column, direction);
     };
@@ -42,13 +43,23 @@ function DataTable({
         return item[column];
     };
 
+    const handleKeywoard = (event, column) => {
+        if (event.key === 'Enter') {
+            event.preventDefault();
+            onSort(column);
+        }
+    }
+
     const tableHeaders = useMemo(() => (
         Object.keys(visibleColumns).filter(key => visibleColumns[key]).map(column => (
             <TableCell
                 key={column}
                 onClick={() => onSort(column)}
                 style={{ cursor: 'pointer' }}
-                tabIndex={0}>
+                tabIndex={0}
+                onKeyDown={(event) => handleKeywoard(event, column)}
+                inputProps={{ 'aria-label': 'Ordina per ' + columnDefinitions[column].displayName }}
+            >
                 <div style={{ display: 'flex', alignItems: 'center' }}>
                     {columnDefinitions[column].displayName}
                     {sortConfig.key === column && (
