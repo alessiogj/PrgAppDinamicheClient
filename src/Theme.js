@@ -1,6 +1,6 @@
 import { createTheme } from '@mui/material/styles';
 
-// Palette di colori che rispettano le linee guida di accessibilità WCAG AAA
+// Palette di colori che rispettano le linee guida di accessibilità WCAG AA
 
 const theme = createTheme({
     palette: {
@@ -20,7 +20,7 @@ const theme = createTheme({
             main: '#c62828', // Rosso scuro, buon contrasto su sfondo bianco
         },
         background: {
-            default: '#fafafa', // Uno sfondo chiaro
+            default: '#757575', // Uno sfondo chiaro
             paper: '#ffffff',
         },
         text: {

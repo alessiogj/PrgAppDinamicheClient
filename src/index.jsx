@@ -7,6 +7,8 @@ import {ThemeProvider} from "@mui/material";
 
 const root = createRoot(document.getElementById('root'));
 
+//punto di ingresso per la configurazione
+//dell'applicazione React
 root.render(
     <ThemeProvider theme={theme}>
         <SnackbarProvider maxSnack={3}>

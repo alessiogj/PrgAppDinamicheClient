@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useRef } from 'react';
 import PropTypes from 'prop-types';
 import { Checkbox, FormControlLabel, Button, Menu, MenuItem, FormGroup } from '@mui/material';
 import useAnchorEl from '../../../hooks/useAnchorEl';
@@ -7,11 +7,19 @@ import useFilteredColumns from '../../../hooks/useFilteredColumns';
 function FilterCheckboxes({ columnDefinitions, visibleColumns, handleColumnVisibilityChange, type }) {
     const { anchorEl, handleClick, handleClose } = useAnchorEl();
     const filteredColumns = useFilteredColumns(columnDefinitions, type);
+    const firstMenuItemRef = useRef(null);
+    const lastMenuItemRef = useRef(null);
+
+    useEffect(() => {
+        if (anchorEl && firstMenuItemRef.current) {
+            firstMenuItemRef.current.focus();
+        }
+    }, [anchorEl]);
 
     const handleKeyDown = (event, column) => {
         if (event.key === 'Enter' || event.key === ' ') {
             handleColumnVisibilityChange(column);
-            event.preventDefault(); // Prevents the default action to avoid potential side effects
+            event.preventDefault();
         }
     };
 
@@ -22,7 +30,7 @@ function FilterCheckboxes({ columnDefinitions, visibleColumns, handleColumnVisib
                 aria-haspopup="true"
                 onClick={handleClick}
                 variant="contained"
-                tabIndex={0} // Make the button focusable
+                tabIndex={0}
                 onKeyDown={(event) => {
                     if (event.key === 'Enter' || event.key === ' ') {
                         handleClick(event);
@@ -39,35 +47,46 @@ function FilterCheckboxes({ columnDefinitions, visibleColumns, handleColumnVisib
                 onClose={handleClose}
                 PaperProps={{
                     onKeyDown: (event) => {
-                        if (event.key === 'Tab' && !event.shiftKey) {
-                            event.preventDefault(); // Prevent tabbing out
-                            const nextFocusable = document.activeElement.nextElementSibling;
-                            if (nextFocusable && nextFocusable.tagName === 'INPUT') {
-                                nextFocusable.focus();
+                        if (event.key === 'Tab') {
+                            const focusableElements = event.currentTarget.querySelectorAll('[tabindex="0"]');
+                            const index = Array.prototype.indexOf.call(focusableElements, document.activeElement);
+                            if (event.shiftKey) {
+                                if (index === 0) {
+                                    focusableElements[focusableElements.length - 1].focus();
+                                    event.preventDefault();
+                                }
+                            } else {
+                                if (index === focusableElements.length - 1) {
+                                    focusableElements[0].focus();
+                                    event.preventDefault();
+                                }
                             }
                         }
                     }
                 }}
             >
                 <FormGroup>
-                    {filteredColumns.map(column => (
-                        <MenuItem key={column} tabIndex={0} onKeyDown={(event) => {
-                            if (event.key === 'Enter' || event.key === ' ') {
-                                handleColumnVisibilityChange(column);
-                                event.preventDefault();
-                            }
-                        }}>
+                    {filteredColumns.map((column, index) => (
+                        <MenuItem
+                            key={column}
+                            tabIndex={0}
+                            ref={index === 0 ? firstMenuItemRef : index === filteredColumns.length - 1 ? lastMenuItemRef : null}
+                            onKeyDown={(event) => {
+                                if (event.key === 'Enter' || event.key === ' ') {
+                                    handleColumnVisibilityChange(column);
+                                    event.preventDefault();
+                                }
+                            }}
+                        >
                             <FormControlLabel
                                 control={
                                     <Checkbox
                                         checked={visibleColumns[column]}
                                         onChange={() => handleColumnVisibilityChange(column)}
                                         color="primary"
-                                        tabIndex={-1} // Do not make the checkbox focusable directly
                                     />
                                 }
                                 label={columnDefinitions[column].displayName}
-                                tabIndex={-1} // Do not make the label focusable directly
                             />
                         </MenuItem>
                     ))}
