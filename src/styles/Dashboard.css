@@ -149,7 +149,6 @@ button:hover {
     }
 }
 
-/* CSS for table and panels */
 
 .scrollable-table {
     overflow-x: auto; /* Abilita lo scrolling orizzontale */
@@ -185,7 +184,7 @@ button:hover {
 
 .data-table {
     width: 100%;
-    min-width: 600px; /* Minimum width to avoid too much compression */
+    min-width: 600px; /* Per evitare troppa compressione */
     border-collapse: collapse;
 }
 
@@ -194,7 +193,7 @@ button:hover {
     border: 1px solid #dddddd;
     text-align: left;
     font-size: 0.875rem;
-    white-space: nowrap; /* Avoids text breaking */
+    white-space: nowrap; /* Per fare restare il testo su una riga sola  */
 }
 
 .data-table th {
@@ -205,7 +204,7 @@ button:hover {
     background-color: #f1f1f1;
 }
 
-/* Additional Media Queries for finer control */
+/* larghezza massima del dispositivo di 1024 pixel o meno. */
 @media (max-width: 1024px) {
     .data-table th, .data-table td {
         padding: 0.4rem;
