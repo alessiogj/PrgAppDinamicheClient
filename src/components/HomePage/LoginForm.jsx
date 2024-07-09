@@ -10,7 +10,7 @@ import { Person as PersonIcon, Lock as LockIcon } from '@mui/icons-material';
  * @param {string} password - Password dell'utente.
  * @param {Function} setPassword - Funzione per aggiornare lo stato della password.
  * @param {Function} handleSubmit - Funzione chiamata al submit del form.
- * @param {boolean} isFlipped - Stato che indica se il form di login è visibile.
+ * @param {boolean} isFlipped - Stato che indica se il form di login è  visibile.
  * @param {boolean} usernameError - Stato che indica se l'username è errato.
  * @param {boolean} passwordError - Stato che indica se la password è errata.
  */

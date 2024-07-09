@@ -23,6 +23,11 @@ function FilterCheckboxes({ columnDefinitions, visibleColumns, handleColumnVisib
                 onClick={handleClick}
                 variant="contained"
                 tabIndex={0} // Make the button focusable
+                onKeyDown={(event) => {
+                    if (event.key === 'Enter' || event.key === ' ') {
+                        handleClick(event);
+                    }
+                }}
             >
                 Selezione colonne
             </Button>
@@ -32,23 +37,37 @@ function FilterCheckboxes({ columnDefinitions, visibleColumns, handleColumnVisib
                 keepMounted
                 open={Boolean(anchorEl)}
                 onClose={handleClose}
+                PaperProps={{
+                    onKeyDown: (event) => {
+                        if (event.key === 'Tab' && !event.shiftKey) {
+                            event.preventDefault(); // Prevent tabbing out
+                            const nextFocusable = document.activeElement.nextElementSibling;
+                            if (nextFocusable && nextFocusable.tagName === 'INPUT') {
+                                nextFocusable.focus();
+                            }
+                        }
+                    }
+                }}
             >
                 <FormGroup>
                     {filteredColumns.map(column => (
-                        <MenuItem key={column} tabIndex={0}>
+                        <MenuItem key={column} tabIndex={0} onKeyDown={(event) => {
+                            if (event.key === 'Enter' || event.key === ' ') {
+                                handleColumnVisibilityChange(column);
+                                event.preventDefault();
+                            }
+                        }}>
                             <FormControlLabel
                                 control={
                                     <Checkbox
                                         checked={visibleColumns[column]}
                                         onChange={() => handleColumnVisibilityChange(column)}
                                         color="primary"
-                                        onKeyDown={(event) => handleKeyDown(event, column)}
-                                        tabIndex={0}
+                                        tabIndex={-1} // Do not make the checkbox focusable directly
                                     />
                                 }
                                 label={columnDefinitions[column].displayName}
-                                tabIndex={0} // Make the label focusable
-                                onKeyDown={(event) => handleKeyDown(event, column)} // Handle keyboard events on the label
+                                tabIndex={-1} // Do not make the label focusable directly
                             />
                         </MenuItem>
                     ))}
