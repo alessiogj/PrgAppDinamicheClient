@@ -108,7 +108,7 @@ function Dashboard() {
 
 
     return (
-        <div className="dashboard-app">
+        <div className="dashboard-app" >
             <Navbar
                 user={userCode}
                 onLogout={() => {
@@ -117,10 +117,10 @@ function Dashboard() {
                 }}
             />
             <header className="dashboard-header">
-                <h1>Benvenuto nella tua dashboard</h1>
-                <p>Gestisci i tuoi ordini e visualizza le statistiche</p>
+                <h1 tabIndex={0}>Benvenuto nella tua dashboard</h1>
+                <h3 tabIndex={0} >Gestisci i tuoi ordini e visualizza le statistiche</h3>
                 <div className="dashboard-content">
-                    <div className="dashboard-card">
+                    <div className="dashboard-card" >
                         <ManageOrders
                             tableData={tableData}
                             userRole={userRole}

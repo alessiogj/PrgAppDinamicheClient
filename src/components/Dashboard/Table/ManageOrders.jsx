@@ -14,7 +14,7 @@ import TableWithSearch from './TableWithSearch';
 function ManageOrders({ tableData, userRole, userCode, onUpdate }) {
     return (
         <div className="widget">
-            <h2>Gestisci gli ordini</h2>
+            <h2 tabIndex={0}>Gestisci gli ordini</h2>
             <TableWithSearch
                 initialData={tableData}
                 type={userRole}

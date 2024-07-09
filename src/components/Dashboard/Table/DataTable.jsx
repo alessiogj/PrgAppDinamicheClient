@@ -44,7 +44,11 @@ function DataTable({
 
     const tableHeaders = useMemo(() => (
         Object.keys(visibleColumns).filter(key => visibleColumns[key]).map(column => (
-            <TableCell key={column} onClick={() => onSort(column)} style={{ cursor: 'pointer' }}>
+            <TableCell
+                key={column}
+                onClick={() => onSort(column)}
+                style={{ cursor: 'pointer' }}
+                tabIndex={0}>
                 <div style={{ display: 'flex', alignItems: 'center' }}>
                     {columnDefinitions[column].displayName}
                     {sortConfig.key === column && (
@@ -57,14 +61,14 @@ function DataTable({
 
     const renderRows = () => (
         filteredData.map((item) => (
-            <TableRow key={item.id || item.ord_num}>
+            <TableRow key={item.id || item.ord_num} >
                 {Object.keys(visibleColumns).filter(key => visibleColumns[key]).map(column => (
-                    <TableCell key={column}>
+                    <TableCell key={column} tabIndex={0}>
                         {renderCellContent(item, column)}
                     </TableCell>
                 ))}
                 {(type === 'agent' || type === 'dirigent') && (
-                    <TableCell>
+                    <TableCell tabIndex={0}>
                         <Button variant="contained" color="primary" onClick={(e) => {
                             e.stopPropagation(); // Prevent click bubbling to TableRow
                             handleEdit(item);
@@ -83,7 +87,7 @@ function DataTable({
                 <TableHead>
                     <TableRow>
                         {tableHeaders}
-                        {(type === 'agent' || type === 'dirigent') && <TableCell>Azioni</TableCell>}
+                        {(type === 'agent' || type === 'dirigent') && <TableCell tabIndex={0}>Azioni</TableCell>}
                     </TableRow>
                 </TableHead>
                 <TableBody>

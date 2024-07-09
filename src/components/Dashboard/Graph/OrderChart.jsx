@@ -30,6 +30,13 @@ function OrderChart({ data }) {
         return () => window.removeEventListener('resize', handleResize);
     }, []);
 
+    const handleKeyPress = (event) => {
+        if (event.key === 'Enter') {
+            event.preventDefault();
+            toggleDisplay();
+        }
+    };
+
     const toggleDisplay = () => {
         setShowTable(!showTable);
     };
@@ -37,29 +44,36 @@ function OrderChart({ data }) {
     return (
         <div>
             <FormControlLabel
-                control={<Switch checked={showTable} onChange={toggleDisplay} />}
-                label={showTable ? "Mostra Grafico" : "Mostra Dati Tabellari"}
+                control={<Switch
+                    checked={showTable}
+                    onChange={toggleDisplay}
+                    tabIndex={0}
+                    onKeyDown={handleKeyPress}
+                    inputProps={{ 'aria-label': 'Mostra Grafico' }}
+                />
+                }
+                    label={showTable ? "Mostra Grafico" : "Mostra Dati Tabellari"}
             />
             {showTable ? (
                 <div className="table-container">
-                    <div className="scrollable-table">
+                    <div className="scrollable-table" tabIndex="0">
                         <TableContainer component={Paper}>
                             <Table className="data-table">
                                 <TableHead>
                                     <TableRow>
-                                        <TableCell>Data Ordine</TableCell>
-                                        <TableCell>Importo Ordine</TableCell>
-                                        <TableCell>Importo Anticipato</TableCell>
-                                        <TableCell>Importo Residuo</TableCell>
+                                        <TableCell tabIndex={0}>Data Ordine</TableCell>
+                                        <TableCell tabIndex={0}>Importo Ordine</TableCell>
+                                        <TableCell tabIndex={0}>Importo Anticipato</TableCell>
+                                        <TableCell tabIndex={0} >Importo Residuo</TableCell>
                                     </TableRow>
                                 </TableHead>
                                 <TableBody>
                                     {data.map((row, index) => (
                                         <TableRow key={index}>
-                                            <TableCell>{row.ord_date}</TableCell>
-                                            <TableCell>{row.ord_amount}</TableCell>
-                                            <TableCell>{row.advance_amount || 0}</TableCell>
-                                            <TableCell>{row.outstanding_amt || 0}</TableCell>
+                                            <TableCell tabIndex={0}>{row.ord_date}</TableCell>
+                                            <TableCell tabIndex={0}>{row.ord_amount}</TableCell>
+                                            <TableCell tabIndex={0}>{row.advance_amount || 0}</TableCell>
+                                            <TableCell tabIndex={0}>{row.outstanding_amt || 0}</TableCell>
                                         </TableRow>
                                     ))}
                                 </TableBody>

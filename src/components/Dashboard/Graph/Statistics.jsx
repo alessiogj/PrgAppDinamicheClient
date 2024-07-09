@@ -8,7 +8,7 @@ const Statistics = ({ chartData }) => {
 
     return (
         <div className="widget">
-            <h2>Statistiche</h2>
+            <h2 tabIndex={0}>Statistiche</h2>
             <OrderChart data={chartData} />
         </div>
     );

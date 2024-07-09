@@ -25,7 +25,12 @@ function FilterCheckboxes({
 
     return (
         <div className="filter-checkboxes">
-            <Button aria-controls="simple-menu" aria-haspopup="true" onClick={handleClick} variant="contained">
+            <Button aria-controls="simple-menu"
+                    aria-haspopup="true"
+                    onClick={handleClick}
+                    variant="contained"
+                    tabIndex={0}
+            >
                 Selezione colonne
             </Button>
             <Menu
@@ -34,16 +39,18 @@ function FilterCheckboxes({
                 keepMounted
                 open={Boolean(anchorEl)}
                 onClose={handleClose}
+                tabIndex={-1}
             >
                 <FormGroup>
                     {filteredColumns.map(column => (
-                        <MenuItem key={column}>
+                        <MenuItem key={column} tabIndex={0}>
                             <FormControlLabel
                                 control={
                                     <Checkbox
                                         checked={visibleColumns[column]}
                                         onChange={() => handleColumnVisibilityChange(column)}
                                         color="primary"
+                                        tabIndex={0}
                                     />
                                 }
                                 label={columnDefinitions[column].displayName}

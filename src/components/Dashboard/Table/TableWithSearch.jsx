@@ -144,7 +144,7 @@ function TableWithSearch({ initialData, type, userCode, onUpdate }) {
                 </div>
             )}
             {showTable && (
-                <div className="scrollable-table">
+                <div className="scrollable-table" tabIndex="0">
                     <DataTable
                         filteredData={filteredData}
                         visibleColumns={visibleColumns}
