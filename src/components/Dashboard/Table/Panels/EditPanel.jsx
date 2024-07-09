@@ -75,7 +75,7 @@ function EditPanel({ editElement, displayNames, handleInputChange, handleConfirm
 
     return (
         <Container component={Paper} elevation={3} sx={{ p: 4, mt: 4 }}>
-            <Typography variant="h4" gutterBottom>Modifica Ordine</Typography>
+            <Typography variant="h4" gutterBottom tabIndex={0}>Modifica Ordine</Typography>
             <Grid container spacing={3}>
                 {['ord_num', 'agent_code', 'cust_code'].map(renderTextField)}
 

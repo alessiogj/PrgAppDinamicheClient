@@ -5,7 +5,7 @@ import { Paper, Typography, Grid, TextField, Container, Button } from '@mui/mate
 function DescriptionPanel({ ord_num, element, onClose }) {
     return (
         <Container component={Paper} elevation={3} sx={{ p: 2, mt: 4 }}>
-            <Typography variant="h5" gutterBottom>Descrizione Ordine {ord_num}</Typography>
+            <Typography variant="h5" gutterBottom tabIndex={0}>Descrizione Ordine {ord_num}</Typography>
             <Grid container spacing={2}>
                 <Grid item xs={12}>
                     <TextField

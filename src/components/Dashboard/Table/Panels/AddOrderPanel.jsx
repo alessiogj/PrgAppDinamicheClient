@@ -95,7 +95,7 @@ function AddOrderPanel({ addElement, displayNames, handleInputChange, handleConf
 
     return (
         <Container component={Paper} elevation={3} sx={{ p: 4, mt: 4 }}>
-            <Typography variant="h4" gutterBottom>Aggiungi Ordine</Typography>
+            <Typography variant="h4" gutterBottom tabIndex={0}>Aggiungi Ordine</Typography>
             <Grid container spacing={3}>
                 {/* Read-only field for agent_code */}
                 {['agent_code'].map(renderTextField)}

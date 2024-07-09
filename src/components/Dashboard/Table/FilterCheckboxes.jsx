@@ -4,32 +4,25 @@ import { Checkbox, FormControlLabel, Button, Menu, MenuItem, FormGroup } from '@
 import useAnchorEl from '../../../hooks/useAnchorEl';
 import useFilteredColumns from '../../../hooks/useFilteredColumns';
 
-/**
- * Componente React per la selezione di colonne in una tabella.
- * Utilizza un approccio funzionale con hooks per gestire lo stato e le ottimizzazioni.
- *
- * @param {Object} props Proprietà del componente.
- * @param {Object} props.columnDefinitions Definizioni delle colonne con i nomi visualizzati.
- * @param {Object} props.visibleColumns Stato che traccia quali colonne sono attualmente visibili.
- * @param {Function} props.handleColumnVisibilityChange Funzione per aggiornare la visibilità di una colonna.
- * @param {String} props.type Tipo di utente, che può limitare le colonne disponibili.
- */
-function FilterCheckboxes({
-                              columnDefinitions,
-                              visibleColumns,
-                              handleColumnVisibilityChange,
-                              type
-                          }) {
+function FilterCheckboxes({ columnDefinitions, visibleColumns, handleColumnVisibilityChange, type }) {
     const { anchorEl, handleClick, handleClose } = useAnchorEl();
     const filteredColumns = useFilteredColumns(columnDefinitions, type);
 
+    const handleKeyDown = (event, column) => {
+        if (event.key === 'Enter' || event.key === ' ') {
+            handleColumnVisibilityChange(column);
+            event.preventDefault(); // Prevents the default action to avoid potential side effects
+        }
+    };
+
     return (
         <div className="filter-checkboxes">
-            <Button aria-controls="simple-menu"
-                    aria-haspopup="true"
-                    onClick={handleClick}
-                    variant="contained"
-                    tabIndex={0}
+            <Button
+                aria-controls="simple-menu"
+                aria-haspopup="true"
+                onClick={handleClick}
+                variant="contained"
+                tabIndex={0} // Make the button focusable
             >
                 Selezione colonne
             </Button>
@@ -39,7 +32,6 @@ function FilterCheckboxes({
                 keepMounted
                 open={Boolean(anchorEl)}
                 onClose={handleClose}
-                tabIndex={-1}
             >
                 <FormGroup>
                     {filteredColumns.map(column => (
@@ -50,10 +42,13 @@ function FilterCheckboxes({
                                         checked={visibleColumns[column]}
                                         onChange={() => handleColumnVisibilityChange(column)}
                                         color="primary"
+                                        onKeyDown={(event) => handleKeyDown(event, column)}
                                         tabIndex={0}
                                     />
                                 }
                                 label={columnDefinitions[column].displayName}
+                                tabIndex={0} // Make the label focusable
+                                onKeyDown={(event) => handleKeyDown(event, column)} // Handle keyboard events on the label
                             />
                         </MenuItem>
                     ))}
