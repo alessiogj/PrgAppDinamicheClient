@@ -57,7 +57,6 @@ function Dashboard() {
             const data = await getOrders(token, role);
             if (data && Array.isArray(data.orders)) {
                 setTableData(data.orders);
-                console.log('Dati degli ordini:', data.orders);
             } else {
                 console.error("Struttura dei dati inaspettata:", data);
                 setError('Errore nella struttura dei dati');

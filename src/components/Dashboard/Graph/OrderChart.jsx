@@ -17,7 +17,7 @@ import useLocalStorage from '../../../hooks/useLocalStorage';
 function OrderChart({ data }) {
     const theme = useTheme();
     const [chartHeight, setChartHeight] = useState(400);
-    const [showTable, setShowTable] = useLocalStorage('showTable', false); // Use the custom hook
+    const [showTable, setShowTable] = useLocalStorage('showTable', false);
 
     useEffect(() => {
         const handleResize = () => {
@@ -89,9 +89,9 @@ function OrderChart({ data }) {
                         <YAxis />
                         <Tooltip />
                         <Legend />
-                        <Line type="monotone" dataKey="ord_amount" stroke={theme.palette.line.orderAmount} strokeWidth={2} dot={true} activeDot={{ r: 8 }} />
-                        <Line type="monotone" dataKey="advance_amount" stroke={theme.palette.line.advanceAmount} strokeWidth={2} dot={true} activeDot={{ r: 8 }} />
-                        <Line type="monotone" dataKey="outstanding_amt" stroke={theme.palette.line.outstandingAmount} strokeWidth={2} dot={true} activeDot={{ r: 8 }} />
+                        <Line type="monotone" dataKey="ord_amount" stroke={theme.palette.line.orderAmount} strokeWidth={2} dot={true} activeDot={{ r: 8 }} tabIndex={0} />
+                        <Line type="monotone" dataKey="advance_amount" stroke={theme.palette.line.advanceAmount} strokeWidth={2} dot={true} activeDot={{ r: 8 }} tabIndex={0} />
+                        <Line type="monotone" dataKey="outstanding_amt" stroke={theme.palette.line.outstandingAmount} strokeWidth={2} dot={true} activeDot={{ r: 8 }} tabIndex={0} />
                     </LineChart>
                 </ResponsiveContainer>
             )}
