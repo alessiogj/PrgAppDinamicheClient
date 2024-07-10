@@ -53,7 +53,7 @@ const DataTable = ({
           color="primary"
           onClick={(e) => {
             handleShowDescription(item);
-            e.stopPropagation(); // Prevent TableRow events from triggering
+            e.stopPropagation(); // evita il bubble up dell'evento
           }}
         >
           Dettagli
