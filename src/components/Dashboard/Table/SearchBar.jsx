@@ -11,30 +11,30 @@ import SearchIcon from '@mui/icons-material/Search';
  * @param {Function} onSearchChange - Funzione chiamata quando il valore di ricerca cambia.
  */
 const SearchBar = ({ search, onSearchChange }) => {
-    return (
-        <TextField
-            value={search}
-            onChange={(e) => onSearchChange(e.target.value)}
-            placeholder="Cerca..."
-            variant="outlined"
-            size="small"
-            InputProps={{
-                startAdornment: (
-                    <InputAdornment position="start">
-                        <SearchIcon />
-                    </InputAdornment>
-                ),
-            }}
-            aria-label="Barra di ricerca"
-            label="Cerca"
-            fullWidth
-        />
-    );
-}
+  return (
+    <TextField
+      value={search}
+      onChange={(e) => onSearchChange(e.target.value)}
+      placeholder="Cerca..."
+      variant="outlined"
+      size="small"
+      InputProps={{
+        startAdornment: (
+          <InputAdornment position="start">
+            <SearchIcon />
+          </InputAdornment>
+        ),
+      }}
+      aria-label="Barra di ricerca"
+      label="Cerca"
+      fullWidth
+    />
+  );
+};
 
 SearchBar.propTypes = {
-    search: PropTypes.string.isRequired,
-    onSearchChange: PropTypes.func.isRequired,
+  search: PropTypes.string.isRequired,
+  onSearchChange: PropTypes.func.isRequired,
 };
 
 export default SearchBar;

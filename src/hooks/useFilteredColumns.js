@@ -2,9 +2,9 @@ import { useMemo } from 'react';
 
 // Regole di visibilità specificate per ogni colonna in base al tipo di utente.
 const columnVisibilityRules = {
-    cust_name: ['agent', 'dirigent'],
-    agent_name: ['customer', 'dirigent'],
-    commission: ['customer', 'dirigent']
+  cust_name: ['agent', 'dirigent'],
+  agent_name: ['customer', 'dirigent'],
+  commission: ['customer', 'dirigent'],
 };
 
 /**
@@ -15,7 +15,9 @@ const columnVisibilityRules = {
  * @returns {Boolean} Ritorna true se la colonna deve essere mostrata, altrimenti false.
  */
 const shouldShowColumn = (column, type) => {
-    return columnVisibilityRules[column] ? columnVisibilityRules[column].includes(type) : true;
+  return columnVisibilityRules[column]
+    ? columnVisibilityRules[column].includes(type)
+    : true;
 };
 
 /**
@@ -26,9 +28,11 @@ const shouldShowColumn = (column, type) => {
  * @returns {Array} Ritorna un array di colonne filtrate.
  */
 const useFilteredColumns = (columnDefinitions, type) => {
-    return useMemo(() => {
-        return Object.keys(columnDefinitions).filter(column => shouldShowColumn(column, type));
-    }, [columnDefinitions, type]);
+  return useMemo(() => {
+    return Object.keys(columnDefinitions).filter((column) =>
+      shouldShowColumn(column, type)
+    );
+  }, [columnDefinitions, type]);
 };
 
 export default useFilteredColumns;

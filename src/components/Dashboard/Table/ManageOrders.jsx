@@ -12,17 +12,17 @@ import TableWithSearch from './TableWithSearch';
  * @param {Function} onUpdate - Callback chiamata dopo operazioni che richiedono un aggiornamento dei dati.
  */
 const ManageOrders = ({ tableData, userRole, userCode, onUpdate }) => {
-    return (
-        <div className="widget">
-            <h2 tabIndex={0}>Gestisci gli ordini</h2>
-            <TableWithSearch
-                initialData={tableData}
-                type={userRole}
-                userCode={userCode}
-                onUpdate={onUpdate}
-            />
-        </div>
-    );
+  return (
+    <div className="widget">
+      <h2 tabIndex={0}>Gestisci gli ordini</h2>
+      <TableWithSearch
+        initialData={tableData}
+        type={userRole}
+        userCode={userCode}
+        onUpdate={onUpdate}
+      />
+    </div>
+  );
 };
 
 export default ManageOrders;
