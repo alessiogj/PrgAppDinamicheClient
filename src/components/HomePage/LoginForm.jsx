@@ -15,9 +15,6 @@ import { Person as PersonIcon, Lock as LockIcon } from '@mui/icons-material';
  * @param {boolean} passwordError - Stato che indica se la password è errata.
  */
 const LoginForm = ({ username, setUsername, password, setPassword, handleSubmit, isFlipped, usernameError, passwordError }) => {
-    const usernameRef = useRef(); // Ref per l'input dell'username.
-    const passwordRef = useRef(); // Ref per l'input della password.
-
     return (
         <form className="form" onSubmit={handleSubmit}>
             {isFlipped && (
@@ -36,8 +33,7 @@ const LoginForm = ({ username, setUsername, password, setPassword, handleSubmit,
                                     <InputAdornment position="start">
                                         <PersonIcon />
                                     </InputAdornment>
-                                ),
-                                inputRef: usernameRef,
+                                )
                             }}
                         />
                     </Box>
@@ -57,7 +53,6 @@ const LoginForm = ({ username, setUsername, password, setPassword, handleSubmit,
                                         <LockIcon />
                                     </InputAdornment>
                                 ),
-                                inputRef: passwordRef,
                             }}
                         />
                     </Box>
