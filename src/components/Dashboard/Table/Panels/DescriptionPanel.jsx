@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { Paper, Typography, Grid, TextField, Container, Button } from '@mui/material';
 
-function DescriptionPanel({ ord_num, element, onClose }) {
+const DescriptionPanel = ({ ord_num, element, onClose }) => {
     return (
         <Container component={Paper} elevation={3} sx={{ p: 2, mt: 4 }}>
             <Typography variant="h5" gutterBottom tabIndex={0}>Descrizione Ordine {ord_num}</Typography>
@@ -30,7 +30,7 @@ function DescriptionPanel({ ord_num, element, onClose }) {
             </Grid>
         </Container>
     );
-}
+};
 
 DescriptionPanel.propTypes = {
     ord_num: PropTypes.string.isRequired,

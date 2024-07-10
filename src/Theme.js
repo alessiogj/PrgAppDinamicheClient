@@ -30,7 +30,7 @@ const theme = createTheme({
         line: {
             orderAmount: '#1976d2', // Blu
             advanceAmount: '#dc004e', // Magenta scuro
-            outstandingAmount: '#f9a825', // Giallo scuro per differenziarsi e mantenere buon contrasto
+            outstandingAmount: '#975E02', // Giallo scuro per differenziarsi e mantenere buon contrasto
         }
     },
 });

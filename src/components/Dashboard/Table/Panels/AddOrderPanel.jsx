@@ -7,7 +7,7 @@ import { NumericFormat } from 'react-number-format';
 import { formatDate } from "../../../utils/formatDate";
 import { useCustomerCodes } from "../../../../hooks/useCustomerCodes";
 
-function AddOrderPanel({ addElement, displayNames, handleInputChange, handleConfirmAdd, onCancel, token }) {
+const AddOrderPanel = ({ addElement, displayNames, handleInputChange, handleConfirmAdd, onCancel, token }) => {
     const customerCodes = useCustomerCodes(token);
 
     const handleNumberInputChange = (key, value) => {
@@ -118,7 +118,7 @@ function AddOrderPanel({ addElement, displayNames, handleInputChange, handleConf
             </Grid>
         </Container>
     );
-}
+};
 
 AddOrderPanel.propTypes = {
     addElement: PropTypes.object.isRequired,

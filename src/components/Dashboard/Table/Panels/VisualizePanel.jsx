@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { Paper, Typography, Grid, TextField, Container, Button, Box } from '@mui/material';
 
-function VisualizePanel({ element, displayNames, onClose }) {
+const VisualizePanel = ({ element, displayNames, onClose }) => {
     return (
         <Container component={Paper} elevation={3} sx={{ p: 2, mt: 4 }}>
             <Typography variant="h5" gutterBottom tabIndex={0}>{element.description}</Typography>
@@ -36,7 +36,7 @@ function VisualizePanel({ element, displayNames, onClose }) {
             </Grid>
         </Container>
     );
-}
+};
 
 VisualizePanel.propTypes = {
     element: PropTypes.object.isRequired,

@@ -7,21 +7,25 @@ import LogoutIcon from '@mui/icons-material/Logout';
 import '../../styles/Navbar.css';
 import PropTypes from "prop-types";
 
-function Navbar({user, onLogout}) {
-
+const Navbar = ({ user, onLogout }) => {
     return (
-        <AppBar position="static">
+        <AppBar position="static" aria-label="Barra di navigazione">
             <Toolbar>
-                <Typography variant="h6" component="div" sx={{ flexGrow: 1 }} tabIndex={0}>
+                <Typography variant="h6" component="div" sx={{ flexGrow: 1 }} tabIndex={0} aria-label={`Utente: ${user}`}>
                     {user}
                 </Typography>
-                <Button color="inherit" onClick={onLogout} startIcon={<LogoutIcon />}>
+                <Button
+                    color="inherit"
+                    onClick={onLogout}
+                    startIcon={<LogoutIcon />}
+                    aria-label="Pulsante di logout"
+                >
                     Logout
                 </Button>
             </Toolbar>
         </AppBar>
     );
-}
+};
 
 Navbar.propTypes = {
     user: PropTypes.string.isRequired,

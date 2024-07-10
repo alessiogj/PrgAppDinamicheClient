@@ -4,7 +4,7 @@ import Dashboard from './components/Dashboard/Dashboard';
 import HomePage from './components/HomePage/HomePage';
 import ProtectedRoute from './Auth/ProtectedRoute';
 
-function App() {
+const App = () => {
     return (
         <Router>
             <Routes>

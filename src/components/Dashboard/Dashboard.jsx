@@ -6,13 +6,13 @@ import ManageOrders from './Table/ManageOrders';
 import Statistics from './Graph/Statistics';
 import '../../styles/Dashboard.css';
 import { parseISO, format } from 'date-fns';
-import {useNavigate} from "react-router-dom";
+import { useNavigate } from 'react-router-dom';
 
 /**
  * Il componente Dashboard è la pagina principale dove gli utenti possono visualizzare
  * e gestire i loro ordini e vedere le statistiche.
  */
-function Dashboard() {
+const Dashboard = () => {
     const [tableData, setTableData] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
@@ -105,35 +105,36 @@ function Dashboard() {
         await fetchData(userRole);
     };
 
-
     return (
-        <div className="dashboard-app" >
+        <div className="dashboard-app" aria-label="Dashboard principale">
             <Navbar
                 user={userCode}
                 onLogout={() => {
                     localStorage.removeItem('jwtToken');
                     navigate('/login');
                 }}
+                aria-label="Barra di navigazione con opzioni di logout"
             />
-            <header className="dashboard-header">
-                <h1 tabIndex={0}>Benvenuto nella tua dashboard</h1>
-                <h3 tabIndex={0} >Gestisci i tuoi ordini e visualizza le statistiche</h3>
-                <div className="dashboard-content">
-                    <div className="dashboard-card" >
+            <header className="dashboard-header" aria-label="Intestazione della dashboard">
+                <h1 tabIndex={0} aria-label="Titolo: Benvenuto nella tua dashboard">Benvenuto nella tua dashboard</h1>
+                <h3 tabIndex={0} aria-label="Sottotitolo: Gestisci i tuoi ordini e visualizza le statistiche">Gestisci i tuoi ordini e visualizza le statistiche</h3>
+                <div className="dashboard-content" aria-label="Contenuto della dashboard">
+                    <div className="dashboard-card" aria-label="Sezione per la gestione degli ordini">
                         <ManageOrders
                             tableData={tableData}
                             userRole={userRole}
                             userCode={userCode}
                             onUpdate={handleUpdate}
+                            aria-label="Gestione degli ordini"
                         />
                     </div>
-                    <div className="dashboard-card">
-                        <Statistics chartData={chartData}/>
+                    <div className="dashboard-card" aria-label="Sezione per la visualizzazione delle statistiche">
+                        <Statistics chartData={chartData} aria-label="Statistiche degli ordini" />
                     </div>
                 </div>
             </header>
         </div>
     );
-}
+};
 
 export default Dashboard;

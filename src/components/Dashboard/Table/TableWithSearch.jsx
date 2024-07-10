@@ -14,7 +14,7 @@ import { useTableActions } from '../../../hooks/useTableActions';
 import { useTableUpdates } from '../../../hooks/useTableUpdates';
 import { Button } from '@mui/material';
 
-function TableWithSearch({ initialData, type, userCode, onUpdate }) {
+const TableWithSearch = ({ initialData, type, userCode, onUpdate }) => {
     const {
         orderData,
         editElement,
@@ -77,23 +77,24 @@ function TableWithSearch({ initialData, type, userCode, onUpdate }) {
     } = useTableUpdates(handleConfirmEdit, handleConfirmDelete, handleConfirmAdd, onUpdate, setShowTable);
 
     return (
-        <div className="table-container">
-            <div className="controls">
-                <SearchBar search={search} onSearchChange={setSearch} />
+        <div className="table-container" aria-label="Contenitore della tabella con funzionalità di ricerca">
+            <div className="controls" aria-label="Sezione di controllo con barra di ricerca e filtri">
+                <SearchBar search={search} onSearchChange={setSearch}/>
                 <FilterCheckboxes
                     columnDefinitions={columnDefinitions}
                     visibleColumns={visibleColumns}
                     handleColumnVisibilityChange={handleColumnVisibilityChange}
                     type={type}
+                    aria-label="Filtri per selezionare le colonne da visualizzare"
                 />
                 {type === 'agent' &&
-                    <Button onClick={handleAddOrder} variant="contained" color="primary">
+                    <Button onClick={handleAddOrder} variant="contained" color="primary" aria-label="Aggiungi un nuovo ordine">
                         Aggiungi Ordine
                     </Button>
                 }
             </div>
             {selectedDetails && !showAddOrderPanel && !editElement && !showDescription && (
-                <div className="info-card">
+                <div className="info-card" aria-label="Scheda di visualizzazione dei dettagli dell'elemento selezionato">
                     <VisualizePanel
                         element={selectedDetails}
                         displayNames={displayNames}
@@ -101,11 +102,12 @@ function TableWithSearch({ initialData, type, userCode, onUpdate }) {
                             setSelectedDetails(null);
                             setShowTable(true);
                         }}
+                        aria-label="Pannello di visualizzazione dei dettagli"
                     />
                 </div>
             )}
             {editElement && !showAddOrderPanel && (
-                <div className="info-card">
+                <div className="info-card" aria-label="Scheda di modifica dell'elemento selezionato">
                     <EditPanel
                         editElement={editElement}
                         displayNames={displayNames}
@@ -115,11 +117,12 @@ function TableWithSearch({ initialData, type, userCode, onUpdate }) {
                         onCancel={handleCancel(editElement, setEditElement, setShowTable, setEditElement)}
                         type={type}
                         token={localStorage.getItem('jwtToken')}
+                        aria-label="Pannello di modifica dei dettagli"
                     />
                 </div>
             )}
             {showAddOrderPanel && !editElement && (
-                <div className="info-card">
+                <div className="info-card" aria-label="Scheda per aggiungere un nuovo ordine">
                     <AddOrderPanel
                         addElement={addElement}
                         displayNames={displayNames}
@@ -127,11 +130,12 @@ function TableWithSearch({ initialData, type, userCode, onUpdate }) {
                         handleConfirmAdd={handleConfirmAddWithUpdate}
                         onCancel={handleCancel(addElement, setAddElement, setShowTable, setShowAddOrderPanel)}
                         token={localStorage.getItem('jwtToken')}
+                        aria-label="Pannello per aggiungere un nuovo ordine"
                     />
                 </div>
             )}
             {showDescription && !showAddOrderPanel && !editElement && selectedDetails && (
-                <div className="info-card">
+                <div className="info-card" aria-label="Scheda di descrizione dell'elemento selezionato">
                     <DescriptionPanel
                         ord_num={selectedDetails.ord_num}
                         element={selectedDetails.ord_description || 'No description available'}
@@ -140,11 +144,12 @@ function TableWithSearch({ initialData, type, userCode, onUpdate }) {
                             setSelectedDetails(null);
                             setShowTable(true);
                         }}
+                        aria-label="Pannello di descrizione dell'ordine"
                     />
                 </div>
             )}
             {showTable && (
-                <div className="scrollable-table" tabIndex="0">
+                <div className="scrollable-table" tabIndex="0" aria-label="Tabella dei dati degli ordini">
                     <DataTable
                         filteredData={filteredData}
                         visibleColumns={visibleColumns}
@@ -159,12 +164,13 @@ function TableWithSearch({ initialData, type, userCode, onUpdate }) {
                             setShowDescription(true);
                             setShowTable(false);
                         }}
+                        aria-label="Tabella dei dati filtrati e ordinati"
                     />
                 </div>
             )}
         </div>
     );
-}
+};
 
 TableWithSearch.propTypes = {
     initialData: PropTypes.array.isRequired,

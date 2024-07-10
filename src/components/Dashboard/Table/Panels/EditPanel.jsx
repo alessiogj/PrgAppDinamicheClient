@@ -1,4 +1,3 @@
-import React, { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import { formatDate } from '../../../utils/formatDate';
 import { TextField, Button, Grid, Paper, Typography, Container } from '@mui/material';
@@ -6,7 +5,7 @@ import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
 import { NumericFormat } from 'react-number-format';
 
-function EditPanel({ editElement, displayNames, handleInputChange, handleConfirmEdit, handleConfirmDelete, onCancel, token, type }) {
+const EditPanel = ({ editElement, displayNames, handleInputChange, handleConfirmEdit, handleConfirmDelete, onCancel, token, type }) => {
 
     const handleNumberInputChange = (key, value) => {
         const parsedValue = parseFloat(value);
@@ -101,7 +100,7 @@ function EditPanel({ editElement, displayNames, handleInputChange, handleConfirm
             </Grid>
         </Container>
     );
-}
+};
 
 EditPanel.propTypes = {
     editElement: PropTypes.object.isRequired,

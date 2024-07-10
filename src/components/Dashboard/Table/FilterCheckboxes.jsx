@@ -4,7 +4,7 @@ import { Checkbox, FormControlLabel, Button, Menu, MenuItem, FormGroup } from '@
 import useAnchorEl from '../../../hooks/useAnchorEl';
 import useFilteredColumns from '../../../hooks/useFilteredColumns';
 
-function FilterCheckboxes({ columnDefinitions, visibleColumns, handleColumnVisibilityChange, type }) {
+const FilterCheckboxes = ({ columnDefinitions, visibleColumns, handleColumnVisibilityChange, type }) => {
     const { anchorEl, handleClick, handleClose } = useAnchorEl();
     const filteredColumns = useFilteredColumns(columnDefinitions, type);
     const firstMenuItemRef = useRef(null);
@@ -19,7 +19,7 @@ function FilterCheckboxes({ columnDefinitions, visibleColumns, handleColumnVisib
     return (
         <div className="filter-checkboxes">
             <Button
-                aria-controls="simple-menu"
+                aria-controls="Selezione colonne"
                 aria-haspopup="true"
                 onClick={handleClick}
                 variant="contained"
@@ -87,7 +87,7 @@ function FilterCheckboxes({ columnDefinitions, visibleColumns, handleColumnVisib
             </Menu>
         </div>
     );
-}
+};
 
 FilterCheckboxes.propTypes = {
     columnDefinitions: PropTypes.object.isRequired,

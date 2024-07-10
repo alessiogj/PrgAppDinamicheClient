@@ -11,7 +11,7 @@ import TableWithSearch from './TableWithSearch';
  * @param {string} userCode - Codice identificativo dell'utente, usato per operazioni specifiche.
  * @param {Function} onUpdate - Callback chiamata dopo operazioni che richiedono un aggiornamento dei dati.
  */
-function ManageOrders({ tableData, userRole, userCode, onUpdate }) {
+const ManageOrders = ({ tableData, userRole, userCode, onUpdate }) => {
     return (
         <div className="widget">
             <h2 tabIndex={0}>Gestisci gli ordini</h2>
@@ -23,6 +23,6 @@ function ManageOrders({ tableData, userRole, userCode, onUpdate }) {
             />
         </div>
     );
-}
+};
 
 export default ManageOrders;

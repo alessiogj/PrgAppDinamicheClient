@@ -10,7 +10,7 @@ import SearchIcon from '@mui/icons-material/Search';
  * @param {string} search - Valore corrente della ricerca.
  * @param {Function} onSearchChange - Funzione chiamata quando il valore di ricerca cambia.
  */
-function SearchBar({ search, onSearchChange }) {
+const SearchBar = ({ search, onSearchChange }) => {
     return (
         <TextField
             value={search}
@@ -25,6 +25,8 @@ function SearchBar({ search, onSearchChange }) {
                     </InputAdornment>
                 ),
             }}
+            aria-label="Barra di ricerca"
+            label="Cerca"
             fullWidth
         />
     );
