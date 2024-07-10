@@ -4,7 +4,7 @@ import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper
 import ArrowUpwardIcon from '@mui/icons-material/ArrowUpward';
 import ArrowDownwardIcon from '@mui/icons-material/ArrowDownward';
 
-function DataTable({
+const DataTable = ({
                        filteredData,
                        visibleColumns,
                        columnDefinitions,
@@ -14,7 +14,7 @@ function DataTable({
                        handleRowClick,
                        handleEdit,
                        handleShowDescription
-                   }) {
+                   }) => {
     const onSort = (column) => {
         if (column === 'description') return; // la descrizione non si ordina!
         const direction = sortConfig.key === column && sortConfig.direction === 'ascending' ? 'descending' : 'ascending';
@@ -43,12 +43,12 @@ function DataTable({
         return item[column];
     };
 
-    const handleKeywoard = (event, column) => {
+    const handleKeyboard = (event, column) => {
         if (event.key === 'Enter') {
             event.preventDefault();
             onSort(column);
         }
-    }
+    };
 
     const tableHeaders = useMemo(() => (
         Object.keys(visibleColumns).filter(key => visibleColumns[key]).map(column => (
@@ -57,8 +57,8 @@ function DataTable({
                 onClick={() => onSort(column)}
                 style={{ cursor: 'pointer' }}
                 tabIndex={0}
-                onKeyDown={(event) => handleKeywoard(event, column)}
-                inputProps={{ 'aria-label': 'Ordina per ' + columnDefinitions[column].displayName }}
+                onKeyDown={(event) => handleKeyboard(event, column)}
+                aria-label={`Ordina per ${columnDefinitions[column].displayName}`}
             >
                 <div style={{ display: 'flex', alignItems: 'center' }}>
                     {columnDefinitions[column].displayName}
@@ -71,17 +71,24 @@ function DataTable({
     ), [visibleColumns, columnDefinitions, sortConfig]);
 
     const renderRows = () => (
-        filteredData.map((item) => (
-            <TableRow key={item.id || item.ord_num} >
+        filteredData.map((item, rowIndex) => (
+            <TableRow
+                key={item.id || item.ord_num}
+                aria-label={`Riga numero ${rowIndex + 1} dei dati per ${item.cust_name || item.agent_name || item.id}`}
+            >
                 {Object.keys(visibleColumns).filter(key => visibleColumns[key]).map(column => (
-                    <TableCell key={column} tabIndex={0}>
+                    <TableCell
+                        key={column}
+                        tabIndex={0}
+                        aria-label={`Colonna ${columnDefinitions[column].displayName}, riga numero ${rowIndex + 1} di ${item.cust_name || item.agent_name || item.id}, valore dell'elemento: ${item[column]}`}
+                    >
                         {renderCellContent(item, column)}
                     </TableCell>
                 ))}
                 {(type === 'agent' || type === 'dirigent') && (
-                    <TableCell tabIndex={0}>
+                    <TableCell tabIndex={0} aria-label="Colonna delle azioni">
                         <Button variant="contained" color="primary" onClick={(e) => {
-                            e.stopPropagation(); // Prevent click bubbling to TableRow
+                            e.stopPropagation(); // evita il bubble up dell'evento
                             handleEdit(item);
                         }}>
                             Modifica
@@ -93,12 +100,12 @@ function DataTable({
     );
 
     return (
-        <TableContainer component={Paper}>
+        <TableContainer component={Paper} aria-label="Tabella dei dati">
             <Table className="data-table">
                 <TableHead>
-                    <TableRow>
+                    <TableRow aria-label="Intestazioni della tabella">
                         {tableHeaders}
-                        {(type === 'agent' || type === 'dirigent') && <TableCell tabIndex={0}>Azioni</TableCell>}
+                        {(type === 'agent' || type === 'dirigent') && <TableCell tabIndex={0} aria-label="Colonna delle azioni">Azioni</TableCell>}
                     </TableRow>
                 </TableHead>
                 <TableBody>
@@ -107,7 +114,7 @@ function DataTable({
             </Table>
         </TableContainer>
     );
-}
+};
 
 DataTable.propTypes = {
     filteredData: PropTypes.array.isRequired,

@@ -16,13 +16,6 @@ function FilterCheckboxes({ columnDefinitions, visibleColumns, handleColumnVisib
         }
     }, [anchorEl]);
 
-    const handleKeyDown = (event, column) => {
-        if (event.key === 'Enter' || event.key === ' ') {
-            handleColumnVisibilityChange(column);
-            event.preventDefault();
-        }
-    };
-
     return (
         <div className="filter-checkboxes">
             <Button
